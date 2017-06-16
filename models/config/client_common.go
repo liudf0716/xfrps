@@ -43,6 +43,10 @@ type ClientCommonConf struct {
 	Start             map[string]struct{}
 	HeartBeatInterval int64
 	HeartBeatTimeout  int64
+	
+	// added by liudf
+	UseEncryption	bool
+	UseCompressed	bool
 }
 
 func GetDeaultClientCommonConf() *ClientCommonConf {
@@ -63,6 +67,8 @@ func GetDeaultClientCommonConf() *ClientCommonConf {
 		Start:             make(map[string]struct{}),
 		HeartBeatInterval: 30,
 		HeartBeatTimeout:  90,
+		UseEncryption:		false,
+		UseCompressed:		false,
 	}
 }
 
