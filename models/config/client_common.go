@@ -43,6 +43,7 @@ type ClientCommonConf struct {
 	Start             map[string]struct{}
 	HeartBeatInterval int64
 	HeartBeatTimeout  int64
+	
 	// added by liudf
 	UseEncryption	bool
 	UseCompressed	bool
