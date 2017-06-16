@@ -21,7 +21,7 @@ import (
 )
 
 var (
-	MaxMsgLength int64 = 10240
+	MaxMsgLength int32 = 10240
 )
 
 func readMsg(c io.Reader) (typeByte byte, buffer []byte, err error) {
@@ -36,7 +36,7 @@ func readMsg(c io.Reader) (typeByte byte, buffer []byte, err error) {
 		return
 	}
 
-	var length int64
+	var length int32
 	err = binary.Read(c, binary.BigEndian, &length)
 	if err != nil {
 		return
@@ -52,7 +52,7 @@ func readMsg(c io.Reader) (typeByte byte, buffer []byte, err error) {
 		return
 	}
 
-	if int64(n) != length {
+	if int32(n) != length {
 		err = fmt.Errorf("Message format error")
 	}
 	return
