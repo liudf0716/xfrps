@@ -268,10 +268,15 @@ func (ctl *Control) reader() {
 		}
 	}()
 	defer close(ctl.closedCh)
-
-	encReader := crypto.NewReader(ctl.conn, []byte(config.ClientCommonCfg.PrivilegeToken))
+	
+	var xfrpReader io.Reader
+	if config.ClientCommonCfg.UseEncryption	 {
+		xfrpReader := crypto.NewReader(ctl.conn, []byte(config.ClientCommonCfg.PrivilegeToken))
+	} else {
+		xfrpReader := ctl.conn;
+	}
 	for {
-		if m, err := msg.ReadMsg(encReader); err != nil {
+		if m, err := msg.ReadMsg(xfrpReader); err != nil {
 			if err == io.EOF {
 				ctl.Debug("read from control connection EOF")
 				return
@@ -286,18 +291,23 @@ func (ctl *Control) reader() {
 }
 
 func (ctl *Control) writer() {
-	encWriter, err := crypto.NewWriter(ctl.conn, []byte(config.ClientCommonCfg.PrivilegeToken))
-	if err != nil {
-		ctl.conn.Error("crypto new writer error: %v", err)
-		ctl.conn.Close()
-		return
+	var xfrpWriter io.Writer
+	if config.ClientCommonCfg.UseEncryption	 {
+		xfrpWriter, err := crypto.NewWriter(ctl.conn, []byte(config.ClientCommonCfg.PrivilegeToken))
+		if err != nil {
+			ctl.conn.Error("crypto new writer error: %v", err)
+			ctl.conn.Close()
+			return
+		}
+	} else {
+		xfrpWriter := ctl.conn;
 	}
 	for {
 		if m, ok := <-ctl.sendCh; !ok {
 			ctl.Info("control writer is closing")
 			return
 		} else {
-			if err := msg.WriteMsg(encWriter, m); err != nil {
+			if err := msg.WriteMsg(xfrpWriter, m); err != nil {
 				ctl.Warn("write message to control connection error: %v", err)
 				return
 			}
