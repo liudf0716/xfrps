@@ -63,7 +63,7 @@ func Pack(msg Message) ([]byte, error) {
 
 	buffer := bytes.NewBuffer(nil)
 	buffer.WriteByte(typeByte)
-	binary.Write(buffer, binary.BigEndian, int64(len(content)))
+	binary.Write(buffer, binary.BigEndian, int32(len(content)))
 	buffer.Write(content)
 	return buffer.Bytes(), nil
 }
