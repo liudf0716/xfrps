@@ -37,7 +37,7 @@
         methods: {
             handleSelect(key, path) {
                 if (key == '') {
-                    window.open("http://github.com/fatedier/frp")
+                    window.open("https://github.com/KunTengRom/xfrps")
                 }
             }
         }
