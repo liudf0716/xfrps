@@ -61,7 +61,7 @@ func GetDeaultClientCommonConf() *ClientCommonConf {
 		LogMaxDays:        3,
 		PrivilegeToken:    "",
 		PoolCount:         1,
-		TcpMux:            true,
+		TcpMux:            false,
 		User:              "",
 		LoginFailExit:     true,
 		Start:             make(map[string]struct{}),
