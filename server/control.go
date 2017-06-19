@@ -235,9 +235,9 @@ func (ctl *Control) reader() {
 
 	var xfrpReader io.Reader
 	if config.ServerCommonCfg.UseEncryption	 {
-		xfrpReader := crypto.NewReader(ctl.conn, []byte(config.ServerCommonCfg.PrivilegeToken))
+		xfrpReader = crypto.NewReader(ctl.conn, []byte(config.ServerCommonCfg.PrivilegeToken))
 	} else {
-		xfrpReader := ctl.conn;
+		xfrpReader = ctl.conn;
 	}
 	for {
 		if m, err := msg.ReadMsg(xfrpReader); err != nil {
