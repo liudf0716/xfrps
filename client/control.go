@@ -293,14 +293,15 @@ func (ctl *Control) reader() {
 func (ctl *Control) writer() {
 	var xfrpWriter io.Writer
 	if config.ClientCommonCfg.UseEncryption	 {
-		xfrpWriter, err := crypto.NewWriter(ctl.conn, []byte(config.ClientCommonCfg.PrivilegeToken))
+		var err error
+		xfrpWriter, err = crypto.NewWriter(ctl.conn, []byte(config.ClientCommonCfg.PrivilegeToken))
 		if err != nil {
 			ctl.conn.Error("crypto new writer error: %v", err)
 			ctl.conn.Close()
 			return
 		}
 	} else {
-		xfrpWriter := ctl.conn;
+		xfrpWriter = ctl.conn;
 	}
 	for {
 		if m, ok := <-ctl.sendCh; !ok {
