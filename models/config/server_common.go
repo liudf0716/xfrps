@@ -82,7 +82,7 @@ func GetDefaultServerCommonConf() *ServerCommonConf {
 		PrivilegeToken:   "",
 		AuthTimeout:      900,
 		SubDomainHost:    "",
-		TcpMux:           true,
+		TcpMux:           false,
 		MaxPoolCount:     5,
 		HeartBeatTimeout: 90,
 		UserConnTimeout:  10,
