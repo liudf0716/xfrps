@@ -199,14 +199,15 @@ func (ctl *Control) writer() {
 	
 	var xfrpWriter io.Writer
 	if config.ServerCommonCfg.UseEncryption	 {
-		xfrpWriter, err := crypto.NewWriter(ctl.conn, []byte(config.ServerCommonCfg.PrivilegeToken))
+		var err error
+		xfrpWriter, err = crypto.NewWriter(ctl.conn, []byte(config.ServerCommonCfg.PrivilegeToken))
 		if err != nil {
 			ctl.conn.Error("crypto new writer error: %v", err)
 			ctl.allShutdown.Start()
 			return
 		}
 	} else {
-		xfrpWriter := ctl.conn;
+		xfrpWriter = ctl.conn;
 	}
 	
 	for {
