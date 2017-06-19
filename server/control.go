@@ -196,9 +196,9 @@ func (ctl *Control) writer() {
 
 	defer ctl.allShutdown.Start()
 	defer ctl.writerShutdown.Done()
-	
+
 	var xfrpWriter io.Writer
-	if config.ServerCommonCfg.UseEncryption	 {
+	if config.ServerCommonCfg.UseEncryption {
 		var err error
 		xfrpWriter, err = crypto.NewWriter(ctl.conn, []byte(config.ServerCommonCfg.PrivilegeToken))
 		if err != nil {
@@ -207,9 +207,9 @@ func (ctl *Control) writer() {
 			return
 		}
 	} else {
-		xfrpWriter = ctl.conn;
+		xfrpWriter = ctl.conn
 	}
-	
+
 	for {
 		if m, ok := <-ctl.sendCh; !ok {
 			ctl.conn.Info("control writer is closing")
@@ -234,10 +234,10 @@ func (ctl *Control) reader() {
 	defer ctl.readerShutdown.Done()
 
 	var xfrpReader io.Reader
-	if config.ServerCommonCfg.UseEncryption	 {
+	if config.ServerCommonCfg.UseEncryption {
 		xfrpReader = crypto.NewReader(ctl.conn, []byte(config.ServerCommonCfg.PrivilegeToken))
 	} else {
-		xfrpReader = ctl.conn;
+		xfrpReader = ctl.conn
 	}
 	for {
 		if m, err := msg.ReadMsg(xfrpReader); err != nil {

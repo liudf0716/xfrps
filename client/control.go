@@ -268,12 +268,12 @@ func (ctl *Control) reader() {
 		}
 	}()
 	defer close(ctl.closedCh)
-	
+
 	var xfrpReader io.Reader
-	if config.ClientCommonCfg.UseEncryption	 {
+	if config.ClientCommonCfg.UseEncryption {
 		xfrpReader = crypto.NewReader(ctl.conn, []byte(config.ClientCommonCfg.PrivilegeToken))
 	} else {
-		xfrpReader = ctl.conn;
+		xfrpReader = ctl.conn
 	}
 	for {
 		if m, err := msg.ReadMsg(xfrpReader); err != nil {
@@ -292,7 +292,7 @@ func (ctl *Control) reader() {
 
 func (ctl *Control) writer() {
 	var xfrpWriter io.Writer
-	if config.ClientCommonCfg.UseEncryption	 {
+	if config.ClientCommonCfg.UseEncryption {
 		var err error
 		xfrpWriter, err = crypto.NewWriter(ctl.conn, []byte(config.ClientCommonCfg.PrivilegeToken))
 		if err != nil {
@@ -301,7 +301,7 @@ func (ctl *Control) writer() {
 			return
 		}
 	} else {
-		xfrpWriter = ctl.conn;
+		xfrpWriter = ctl.conn
 	}
 	for {
 		if m, ok := <-ctl.sendCh; !ok {

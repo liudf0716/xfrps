@@ -57,10 +57,10 @@ type ServerCommonConf struct {
 	MaxPoolCount        int64
 	HeartBeatTimeout    int64
 	UserConnTimeout     int64
-	
+
 	// added by liudf
-	UseEncryption	bool
-	UseCompressed	bool
+	UseEncryption bool
+	UseCompressed bool
 }
 
 func GetDefaultServerCommonConf() *ServerCommonConf {
@@ -86,8 +86,8 @@ func GetDefaultServerCommonConf() *ServerCommonConf {
 		MaxPoolCount:     5,
 		HeartBeatTimeout: 90,
 		UserConnTimeout:  10,
-		UseEncryption:		false,
-		UseCompressed:		false,
+		UseEncryption:    false,
+		UseCompressed:    false,
 	}
 }
 
