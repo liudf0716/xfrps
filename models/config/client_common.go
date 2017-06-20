@@ -134,10 +134,10 @@ func LoadClientCommonConf(conf ini.File) (cfg *ClientCommonConf, err error) {
 	}
 
 	tmpStr, ok = conf.Get("common", "tcp_mux")
-	if ok && tmpStr == "false" {
-		cfg.TcpMux = false
-	} else {
+	if ok && tmpStr == "true" {
 		cfg.TcpMux = true
+	} else {
+		cfg.TcpMux = false
 	}
 
 	tmpStr, ok = conf.Get("common", "user")
