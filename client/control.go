@@ -21,13 +21,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fatedier/frp/models/config"
-	"github.com/fatedier/frp/models/msg"
-	"github.com/fatedier/frp/utils/crypto"
-	"github.com/fatedier/frp/utils/log"
-	"github.com/fatedier/frp/utils/net"
-	"github.com/fatedier/frp/utils/util"
-	"github.com/fatedier/frp/utils/version"
+	"github.com/KunTengRom/xfrps/models/config"
+	"github.com/KunTengRom/xfrps/models/msg"
+	"github.com/KunTengRom/xfrps/utils/crypto"
+	"github.com/KunTengRom/xfrps/utils/log"
+	"github.com/KunTengRom/xfrps/utils/net"
+	"github.com/KunTengRom/xfrps/utils/util"
+	"github.com/KunTengRom/xfrps/utils/version"
 	"github.com/xtaci/smux"
 )
 

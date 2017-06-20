@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	frpNet "github.com/fatedier/frp/utils/net"
+	frpNet "github.com/KunTengRom/xfrps/utils/net"
 )
 
 var (

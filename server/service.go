@@ -18,14 +18,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fatedier/frp/assets"
-	"github.com/fatedier/frp/models/config"
-	"github.com/fatedier/frp/models/msg"
-	"github.com/fatedier/frp/utils/log"
-	frpNet "github.com/fatedier/frp/utils/net"
-	"github.com/fatedier/frp/utils/util"
-	"github.com/fatedier/frp/utils/version"
-	"github.com/fatedier/frp/utils/vhost"
+	"github.com/KunTengRom/xfrps/assets"
+	"github.com/KunTengRom/xfrps/models/config"
+	"github.com/KunTengRom/xfrps/models/msg"
+	"github.com/KunTengRom/xfrps/utils/log"
+	frpNet "github.com/KunTengRom/xfrps/utils/net"
+	"github.com/KunTengRom/xfrps/utils/util"
+	"github.com/KunTengRom/xfrps/utils/version"
+	"github.com/KunTengRom/xfrps/utils/vhost"
 
 	"github.com/xtaci/smux"
 )

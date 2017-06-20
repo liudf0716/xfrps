@@ -23,9 +23,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/fatedier/frp/models/proto/tcp"
-	"github.com/fatedier/frp/utils/errors"
-	frpNet "github.com/fatedier/frp/utils/net"
+	"github.com/KunTengRom/xfrps/models/proto/tcp"
+	"github.com/KunTengRom/xfrps/utils/errors"
+	frpNet "github.com/KunTengRom/xfrps/utils/net"
 )
 
 const PluginHttpProxy = "http_proxy"

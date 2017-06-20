@@ -22,7 +22,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/fatedier/frp/utils/errors"
+	"github.com/KunTengRom/xfrps/utils/errors"
 )
 
 type TestStruct struct{}

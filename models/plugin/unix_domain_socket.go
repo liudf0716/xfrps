@@ -19,7 +19,7 @@ import (
 	"io"
 	"net"
 
-	"github.com/fatedier/frp/models/proto/tcp"
+	"github.com/KunTengRom/xfrps/models/proto/tcp"
 )
 
 const PluginUnixDomainSocket = "unix_domain_socket"

@@ -23,8 +23,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatedier/frp/assets"
-	"github.com/fatedier/frp/models/config"
+	"github.com/KunTengRom/xfrps/assets"
+	"github.com/KunTengRom/xfrps/models/config"
 
 	"github.com/julienschmidt/httprouter"
 )

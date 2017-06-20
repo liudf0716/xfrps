@@ -1,8 +1,8 @@
 FROM golang:1.8
 
-COPY . /go/src/github.com/fatedier/frp
+COPY . /go/src/github.com/KunTengRom/xfrps
 
-RUN cd /go/src/github.com/fatedier/frp \
+RUN cd /go/src/github.com/KunTengRom/xfrps \
  && make \
  && mv bin/frpc /frpc \
  && mv bin/frps /frps \

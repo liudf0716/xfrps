@@ -20,14 +20,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fatedier/frp/models/config"
-	"github.com/fatedier/frp/models/consts"
-	"github.com/fatedier/frp/models/msg"
-	"github.com/fatedier/frp/utils/crypto"
-	"github.com/fatedier/frp/utils/errors"
-	"github.com/fatedier/frp/utils/net"
-	"github.com/fatedier/frp/utils/shutdown"
-	"github.com/fatedier/frp/utils/version"
+	"github.com/KunTengRom/xfrps/models/config"
+	"github.com/KunTengRom/xfrps/models/consts"
+	"github.com/KunTengRom/xfrps/models/msg"
+	"github.com/KunTengRom/xfrps/utils/crypto"
+	"github.com/KunTengRom/xfrps/utils/errors"
+	"github.com/KunTengRom/xfrps/utils/net"
+	"github.com/KunTengRom/xfrps/utils/shutdown"
+	"github.com/KunTengRom/xfrps/utils/version"
 )
 
 type Control struct {

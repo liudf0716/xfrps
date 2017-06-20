@@ -1,6 +1,6 @@
 # frp
 
-[![Build Status](https://travis-ci.org/fatedier/frp.svg?branch=master)](https://travis-ci.org/fatedier/frp)
+[![Build Status](https://travis-ci.org/KunTengRom/xfrps.svg?branch=master)](https://travis-ci.org/KunTengRom/xfrps)
 
 [README](README.md) | [中文文档](README_zh.md)
 
@@ -57,7 +57,7 @@ frp is under development and you can try it with latest release version. Master 
 
 ## Example Usage
 
-Firstly, download the latest programs from [Release](https://github.com/fatedier/frp/releases) page according to your os and arch.
+Firstly, download the latest programs from [Release](https://github.com/KunTengRom/xfrps/releases) page according to your os and arch.
 
 Put **frps** and **frps.ini** to your server with public IP.
 
@@ -381,12 +381,12 @@ http_proxy = http://user:pwd@192.168.1.128:8080
 
 Interested in getting involved? We would like to help you!
 
-* Take a look at our [issues list](https://github.com/fatedier/frp/issues) and consider sending a Pull Request to **dev branch**.
+* Take a look at our [issues list](https://github.com/KunTengRom/xfrps/issues) and consider sending a Pull Request to **dev branch**.
 * If you want to add a new feature, please create an issue first to describe the new feature, as well as the implementation approach. Once a proposal is accepted, create an implementation of the new features and submit it as a pull request.
 * Sorry for my poor english and improvement for this document is welcome even some typo fix.
 * If you have some wanderful ideas, send email to fatedier@gmail.com.
 
-**Note: We prefer you to give your advise in [issues](https://github.com/fatedier/frp/issues), so others with a same question can search it quickly and we don't need to answer them repeatly.**
+**Note: We prefer you to give your advise in [issues](https://github.com/KunTengRom/xfrps/issues), so others with a same question can search it quickly and we don't need to answer them repeatly.**
 
 ## Donation
 

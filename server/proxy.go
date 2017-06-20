@@ -22,14 +22,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fatedier/frp/models/config"
-	"github.com/fatedier/frp/models/msg"
-	"github.com/fatedier/frp/models/proto/tcp"
-	"github.com/fatedier/frp/models/proto/udp"
-	"github.com/fatedier/frp/utils/errors"
-	"github.com/fatedier/frp/utils/log"
-	frpNet "github.com/fatedier/frp/utils/net"
-	"github.com/fatedier/frp/utils/vhost"
+	"github.com/KunTengRom/xfrps/models/config"
+	"github.com/KunTengRom/xfrps/models/msg"
+	"github.com/KunTengRom/xfrps/models/proto/tcp"
+	"github.com/KunTengRom/xfrps/models/proto/udp"
+	"github.com/KunTengRom/xfrps/utils/errors"
+	"github.com/KunTengRom/xfrps/utils/log"
+	frpNet "github.com/KunTengRom/xfrps/utils/net"
+	"github.com/KunTengRom/xfrps/utils/vhost"
 )
 
 type Proxy interface {

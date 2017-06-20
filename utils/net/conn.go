@@ -19,7 +19,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/fatedier/frp/utils/log"
+	"github.com/KunTengRom/xfrps/utils/log"
 )
 
 // Conn is the interface of connections used in frp.

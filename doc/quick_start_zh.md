@@ -7,11 +7,11 @@
 
 ### 下载源码
 
-推荐直接使用 `go get github.com/fatedier/frp` 下载源代码安装，执行命令后代码将会拷贝到 `$GOPATH/src/github.com/fatedier/frp` 目录下。
+推荐直接使用 `go get github.com/KunTengRom/xfrps` 下载源代码安装，执行命令后代码将会拷贝到 `$GOPATH/src/github.com/KunTengRom/xfrps` 目录下。
 
-或者可以使用 `git clone https://github.com/fatedier/frp.git $GOPATH/src/github.com/fatedier/frp` 拷贝到相应目录下。
+或者可以使用 `git clone https://github.com/KunTengRom/xfrps.git $GOPATH/src/github.com/KunTengRom/xfrps` 拷贝到相应目录下。
 
-如果您想快速进行测试，也可以根据您服务器的操作系统及架构直接下载编译好的程序及示例配置文件，[https://github.com/fatedier/frp/releases](https://github.com/fatedier/frp/releases)。
+如果您想快速进行测试，也可以根据您服务器的操作系统及架构直接下载编译好的程序及示例配置文件，[https://github.com/KunTengRom/xfrps/releases](https://github.com/KunTengRom/xfrps/releases)。
 
 ### 编译
 

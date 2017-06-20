@@ -1,6 +1,6 @@
 # frp
 
-[![Build Status](https://travis-ci.org/fatedier/frp.svg?branch=master)](https://travis-ci.org/fatedier/frp)
+[![Build Status](https://travis-ci.org/KunTengRom/xfrps.svg?branch=master)](https://travis-ci.org/KunTengRom/xfrps)
 
 [README](README.md) | [中文文档](README_zh.md)
 
@@ -58,7 +58,7 @@ master 分支用于发布稳定版本，dev 分支用于开发，您可以尝试
 
 ## 使用示例
 
-根据对应的操作系统及架构，从 [Release](https://github.com/fatedier/frp/releases) 页面下载最新版本的程序。
+根据对应的操作系统及架构，从 [Release](https://github.com/KunTengRom/xfrps/releases) 页面下载最新版本的程序。
 
 将 **frps** 及 **frps.ini** 放到具有公网 IP 的机器上。
 
@@ -382,7 +382,7 @@ http_proxy = http://user:pwd@192.168.1.128:8080
 
 ## 开发计划
 
-计划在后续版本中加入的功能与优化，排名不分先后，如果有其他功能建议欢迎在 [issues](https://github.com/fatedier/frp/issues) 中反馈。
+计划在后续版本中加入的功能与优化，排名不分先后，如果有其他功能建议欢迎在 [issues](https://github.com/KunTengRom/xfrps/issues) 中反馈。
 
 * frps 记录 http 请求日志。
 * frps 支持直接反向代理，类似 haproxy。
@@ -397,14 +397,14 @@ http_proxy = http://user:pwd@192.168.1.128:8080
 
 frp 是一个免费且开源的项目，我们欢迎任何人为其开发和进步贡献力量。
 
-* 在使用过程中出现任何问题，可以通过 [issues](https://github.com/fatedier/frp/issues) 来反馈。
+* 在使用过程中出现任何问题，可以通过 [issues](https://github.com/KunTengRom/xfrps/issues) 来反馈。
 * Bug 的修复可以直接提交 Pull Request 到 dev 分支。
 * 如果是增加新的功能特性，请先创建一个 issue 并做简单描述以及大致的实现方法，提议被采纳后，就可以创建一个实现新特性的 Pull Request。
 * 欢迎对说明文档做出改善，帮助更多的人使用 frp，特别是英文文档。
 * 贡献代码请提交 PR 至 dev 分支，master 分支仅用于发布稳定可用版本。
 * 如果你有任何其他方面的问题，欢迎反馈至 fatedier@gmail.com 共同交流。
 
-**提醒：和项目相关的问题最好在 [issues](https://github.com/fatedier/frp/issues) 中反馈，这样方便其他有类似问题的人可以快速查找解决方法，并且也避免了我们重复回答一些问题。**
+**提醒：和项目相关的问题最好在 [issues](https://github.com/KunTengRom/xfrps/issues) 中反馈，这样方便其他有类似问题的人可以快速查找解决方法，并且也避免了我们重复回答一些问题。**
 
 ## 捐助
 
