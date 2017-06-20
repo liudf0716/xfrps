@@ -119,7 +119,7 @@ type FtpProxy struct {
 }
 
 func (pxy *FtpProxy) InWorkConn(conn frpNet.Conn) {
-	HandleFtpControlConnection(&pxy.cfg.LocalSvrConf, &pxy.cfg.BaseProxyConf, conn)
+	HandleFtpControlConnection(&pxy.cfg.LocalSvrConf, &pxy.BaseProxy, pxy.cfg.BindAddr, conn)
 }
 
 // HTTP
@@ -283,21 +283,17 @@ func (pxy *UdpProxy) InWorkConn(conn frpNet.Conn) {
 	udp.Forwarder(pxy.localAddr, pxy.readCh, pxy.sendCh)
 }
 
-func ReplaceFtpPasv(msg string) (newMsg string, err error) {
-	if len(msg) < 45 {
-		return 0, errors.New("Msg it too short, Impossible")
-	}
+func NewFtpPasv(port int, addr string) (newMsg string) {
+	p1 := port / 256
+	p2 := port - (p1 * 256)
 	
-	start := strings.Index(line, "(")
-	end := strings.LastIndex(line, ")")
-	if start == -1 || end == -1 {
-		return 0, errors.New("Invalid PASV response format")
-	}
-	
-	
+	quads := strings.Split(addr, ".")
+	target := fmt.Sprintf("(%s,%s,%s,%s,%d,%d)", quads[0], quads[1], quads[2], quads[3], p1, p2)
+	newMsg := "227 Entering Passive Mode "+target
+	return
 }
 
-func GetFtpPasvInfo(msg string) (port int, err error) {
+func GetFtpPasvPort(msg string) (port int, err error) {
 	if len(msg) < 45 {
 		return 0, errors.New("Msg it too short, Impossible")
 	}
@@ -334,7 +330,7 @@ func GetFtpPasvInfo(msg string) (port int, err error) {
 }
 
 // handler for ftp work connection
-func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, baseInfo *config.BaseProxyConf) (inCount int32, outCount int32) {
+func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, remoteAddr string) (inCount int32, outCount int32) {
 	var {
 		n		int32
 		port 	int32
@@ -349,11 +345,12 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, baseInfo *conf
 		msg := string(data[:n])
 		code, _ := strconv.Atoi(msg[:3])
 		if code == 227 {
-			port, err = GetFtpPasvInfo(msg)
+			port, err = GetFtpPasvPort(msg)
 			if err != nil {
 				fc.Write(data)
 			} else {
-				// 
+				newMsg := NewFtpPasv(port, remoteAddr)
+				fc.Write([]byte(newMsg))
 			}
 		} else {
 			fs.Write(data)
@@ -369,14 +366,14 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, baseInfo *conf
 	return
 }
 
-func HandleFtpControlConnection(localInfo *config.LocalSvrConf, baseInfo *config.BaseProxyConf, workConn frpNet.Conn) {
+func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, remoteAddr string, workConn frpNet.Conn) {
 	ftpConn, err := frpNet.ConnectTcpServer(fmt.Sprintf("%s:%d", localInfo.LocalIp, localInfo.LocalPort))
 	if err != nil {
 		workConn.Error("connect to local service [%s:%d] error: %v", localInfo.LocalIp, localInfo.LocalPort, err)
 		return
 	}
 	
-	JoinFtpControl(ftpConn, workConn, baseInfo)
+	JoinFtpControl(ftpConn, bp, workConn, baseInfo)
 }
 
 // Common handler for tcp work connections.
