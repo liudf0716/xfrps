@@ -362,10 +362,13 @@ func (cfg *UdpProxyConf) Check() (err error) {
 type FtpProxyConf struct {
 	BaseProxyConf
 	LocalSvrConf
+	
+	BindAddr	string
 }
 
 func (cfg *FtpProxyConf) LoadFromMsg(pMsg *msg.NewProxy) {
 	cfg.BaseProxyConf.LoadFromMsg(pMsg)
+	cfg.BindAddr = ServerCommonCfg.BindAddr
 }
 
 func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err error) {
@@ -377,6 +380,8 @@ func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err err
 		return
 	}
 
+	cfg.BindAddr = ServerCommonCfg.BindAddr
+	
 	return
 }
 
