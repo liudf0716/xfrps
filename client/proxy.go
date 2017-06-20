@@ -283,6 +283,20 @@ func (pxy *UdpProxy) InWorkConn(conn frpNet.Conn) {
 	udp.Forwarder(pxy.localAddr, pxy.readCh, pxy.sendCh)
 }
 
+func ReplaceFtpPasv(msg string) (newMsg string, err error) {
+	if len(msg) < 45 {
+		return 0, errors.New("Msg it too short, Impossible")
+	}
+	
+	start := strings.Index(line, "(")
+	end := strings.LastIndex(line, ")")
+	if start == -1 || end == -1 {
+		return 0, errors.New("Invalid PASV response format")
+	}
+	
+	
+}
+
 func GetFtpPasvInfo(msg string) (port int, err error) {
 	if len(msg) < 45 {
 		return 0, errors.New("Msg it too short, Impossible")
@@ -322,8 +336,9 @@ func GetFtpPasvInfo(msg string) (port int, err error) {
 // handler for ftp work connection
 func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, baseInfo *config.BaseProxyConf) (inCount int32, outCount int32) {
 	var {
-		n	int32
-		err	error
+		n		int32
+		port 	int32
+		err		error
 	}
 	for {
 		data := make([]byte, 1024)
@@ -334,7 +349,12 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, baseInfo *conf
 		msg := string(data[:n])
 		code, _ := strconv.Atoi(msg[:3])
 		if code == 227 {
-			
+			port, err = GetFtpPasvInfo(msg)
+			if err != nil {
+				fc.Write(data)
+			} else {
+				// 
+			}
 		} else {
 			fs.Write(data)
 		}
