@@ -35,6 +35,7 @@ func init() {
 	proxyConfTypeMap[consts.UdpProxy] = reflect.TypeOf(UdpProxyConf{})
 	proxyConfTypeMap[consts.HttpProxy] = reflect.TypeOf(HttpProxyConf{})
 	proxyConfTypeMap[consts.HttpsProxy] = reflect.TypeOf(HttpsProxyConf{})
+	proxyConfTypeMap[consts.FtpProxy] = reflect.TypeOf(FtpProxyConf{})
 }
 
 // NewConfByType creates a empty ProxyConf object by proxyType.
@@ -355,6 +356,32 @@ func (cfg *UdpProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 func (cfg *UdpProxyConf) Check() (err error) {
 	err = cfg.BindInfoConf.check()
 	return
+}
+
+// ftp
+type FtpProxyConf struct {
+	BaseProxyConf
+	LocalSvrConf
+}
+
+func (cfg *FtpProxyConf) LoadFromMsg(pMsg *msg.NewProxy) {
+	cfg.BaseProxyConf.LoadFromMsg(pMsg)
+}
+
+func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err error) {
+	if err = cfg.BaseProxyConf.LoadFromFile(name, section); err != nil {
+		return
+	}
+
+	if err = cfg.LocalSvrConf.LoadFromFile(name, section); err != nil {
+		return
+	}
+
+	return
+}
+
+func (cfg *FtpProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
+	cfg.BaseProxyConf.UnMarshalToMsg(pMsg)
 }
 
 // HTTP
