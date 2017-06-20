@@ -332,10 +332,11 @@ func GetFtpPasvPort(msg string) (port int, err error) {
 // handler for ftp work connection
 func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, remoteAddr string) (inCount int32, outCount int32) {
 	var {
-		n		int32
-		port 	int32
-		err		error
+	n		int
+	port 	int
+	err		error
 	}
+	
 	for {
 		data := make([]byte, 1024)
 		n, err = fc.Read(data)
