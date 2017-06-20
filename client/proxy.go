@@ -57,6 +57,11 @@ func NewProxy(ctl *Control, pxyConf config.ProxyConf) (pxy Proxy) {
 			BaseProxy: baseProxy,
 			cfg:       cfg,
 		}
+	case *config.FtpProxyConf:
+		pxy = &FtpProxy{
+			BaseProxy:	baseProxy,
+			cfg:		cfg,
+		}
 	case *config.HttpProxyConf:
 		pxy = &HttpProxy{
 			BaseProxy: baseProxy,
@@ -104,6 +109,17 @@ func (pxy *TcpProxy) Close() {
 
 func (pxy *TcpProxy) InWorkConn(conn frpNet.Conn) {
 	HandleTcpWorkConnection(&pxy.cfg.LocalSvrConf, pxy.proxyPlugin, &pxy.cfg.BaseProxyConf, conn)
+}
+
+// ftp
+type FtpProxy struct {
+	BaseProxy
+	
+	cfg			*config.FtpProxyConf
+}
+
+func (pxy *FtpProxy) InWorkConn(conn frpNet.Conn) {
+	HandleFtpControlConnection(&pxy.cfg.LocalSvrConf, &pxy.cfg.BaseProxyConf, conn)
 }
 
 // HTTP
@@ -267,9 +283,85 @@ func (pxy *UdpProxy) InWorkConn(conn frpNet.Conn) {
 	udp.Forwarder(pxy.localAddr, pxy.readCh, pxy.sendCh)
 }
 
+func GetFtpPasvInfo(msg string) (port int, err error) {
+	if len(msg) < 45 {
+		return 0, errors.New("Msg it too short, Impossible")
+	}
+	
+	start := strings.Index(line, "(")
+	end := strings.LastIndex(line, ")")
+	if start == -1 || end == -1 {
+		return 0, errors.New("Invalid PASV response format")
+	}
+	
+	// We have to split the response string
+	pasvData := strings.Split(line[start+1:end], ",")
+
+	if len(pasvData) < 6 {
+		return 0, errors.New("Invalid PASV response format")
+	}
+
+	// Let's compute the port number
+	portPart1, err1 := strconv.Atoi(pasvData[4])
+	if err1 != nil {
+		err = err1
+		return
+	}
+
+	portPart2, err2 := strconv.Atoi(pasvData[5])
+	if err2 != nil {
+		err = err2
+		return
+	}
+
+	// Recompose port
+	port = portPart1*256 + portPart2
+	return
+}
+
+// handler for ftp work connection
+func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, baseInfo *config.BaseProxyConf) (inCount int32, outCount int32) {
+	var {
+		n	int32
+		err	error
+	}
+	for {
+		data := make([]byte, 1024)
+		n, err = fc.Read(data)
+		if err != nil {
+			continue
+		}
+		msg := string(data[:n])
+		code, _ := strconv.Atoi(msg[:3])
+		if code == 227 {
+			
+		} else {
+			fs.Write(data)
+		}
+		
+		n, err = fs.Read(data)
+		if err != nil {
+			continue
+		}
+		fc.Write(data)
+	}
+	
+	return
+}
+
+func HandleFtpControlConnection(localInfo *config.LocalSvrConf, baseInfo *config.BaseProxyConf, workConn frpNet.Conn) {
+	ftpConn, err := frpNet.ConnectTcpServer(fmt.Sprintf("%s:%d", localInfo.LocalIp, localInfo.LocalPort))
+	if err != nil {
+		workConn.Error("connect to local service [%s:%d] error: %v", localInfo.LocalIp, localInfo.LocalPort, err)
+		return
+	}
+	
+	JoinFtpControl(ftpConn, workConn, baseInfo)
+}
+
 // Common handler for tcp work connections.
 func HandleTcpWorkConnection(localInfo *config.LocalSvrConf, proxyPlugin plugin.Plugin,
-	baseInfo *config.BaseProxyConf, workConn frpNet.Conn) {
+							baseInfo *config.BaseProxyConf, workConn frpNet.Conn) {
 
 	var (
 		remote io.ReadWriteCloser
