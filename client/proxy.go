@@ -377,7 +377,7 @@ func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, r
 		return
 	}
 	
-	JoinFtpControl(ftpConn, bp, workConn, remoteAddr)
+	JoinFtpControl(ftpConn, workConn, bp, remoteAddr)
 }
 
 // Common handler for tcp work connections.
