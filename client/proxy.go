@@ -298,27 +298,28 @@ func NewFtpPasv(port int, addr string) (newMsg string) {
 	p2 := port - (p1 * 256)
 	
 	quads := strings.Split(addr, ".")
-	target := fmt.Sprintf("(%s,%s,%s,%s,%d,%d)", quads[0], quads[1], quads[2], quads[3], p1, p2)
-	newMsg := "227 Entering Passive Mode "+target
+	newTarget := fmt.Sprintf("(%s,%s,%s,%s,%d,%d)", quads[0], quads[1], quads[2], quads[3], p1, p2)
+	newMsg := "227 Entering Passive Mode " + newTarget
 	return
 }
 
-func GetFtpPasvPort(msg string) (port int, err error) {
+func GetFtpPasvPort(msg string) (port int) {
+	port = 0
 	if len(msg) < 45 {
-		return 0, errors.New("Msg it too short, Impossible")
+		return 
 	}
 	
 	start := strings.Index(line, "(")
 	end := strings.LastIndex(line, ")")
 	if start == -1 || end == -1 {
-		return 0, errors.New("Invalid PASV response format")
+		return
 	}
 	
 	// We have to split the response string
 	pasvData := strings.Split(line[start+1:end], ",")
 
 	if len(pasvData) < 6 {
-		return 0, errors.New("Invalid PASV response format")
+		return
 	}
 
 	// Let's compute the port number
@@ -350,10 +351,11 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 		msg := string(data[:n])
 		code, _ := strconv.Atoi(msg[:3])
 		if code == 227 {
-			port, err1 := GetFtpPasvPort(msg)
-			if err1 != nil {
+			port:= GetFtpPasvPort(msg)
+			if port == 0 {
 				fc.Write(data)
 			} else {
+				// create data session
 				newMsg := NewFtpPasv(port, remoteAddr)
 				fc.Write([]byte(newMsg))
 			}
