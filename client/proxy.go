@@ -298,8 +298,7 @@ func NewFtpPasv(port int, addr string) (newMsg string) {
 	p2 := port - (p1 * 256)
 	
 	quads := strings.Split(addr, ".")
-	newTarget := fmt.Sprintf("(%s,%s,%s,%s,%d,%d)", quads[0], quads[1], quads[2], quads[3], p1, p2)
-	newMsg := "227 Entering Passive Mode " + newTarget
+	newMsg = fmt.Sprintf("227 Entering Passive Mode (%s,%s,%s,%s,%d,%d).", quads[0], quads[1], quads[2], quads[3], p1, p2)
 	return
 }
 
