@@ -389,6 +389,10 @@ func (cfg *FtpProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 	cfg.BaseProxyConf.UnMarshalToMsg(pMsg)
 }
 
+func (cfg *FtpProxyConf) check() (err error) {
+	return nil
+}
+
 // HTTP
 type HttpProxyConf struct {
 	BaseProxyConf
