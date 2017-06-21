@@ -20,7 +20,9 @@ import (
 	"net"
 	"sync"
 	"time"
-
+	"strconv"
+	"strings"
+	
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
 	"github.com/KunTengRom/xfrps/models/plugin"
@@ -118,9 +120,17 @@ type FtpProxy struct {
 	cfg			*config.FtpProxyConf
 }
 
+func (pxy *FtpProxy) Run() (err error) {
+	return
+}
+
+func (pxy *FtpProxy) Close() {
+}
+
 func (pxy *FtpProxy) InWorkConn(conn frpNet.Conn) {
 	HandleFtpControlConnection(&pxy.cfg.LocalSvrConf, &pxy.BaseProxy, pxy.cfg.BindAddr, conn)
 }
+
 
 // HTTP
 type HttpProxy struct {
