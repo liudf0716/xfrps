@@ -324,13 +324,11 @@ func GetFtpPasvPort(msg string) (port int) {
 	// Let's compute the port number
 	portPart1, err1 := strconv.Atoi(pasvData[4])
 	if err1 != nil {
-		err = err1
 		return
 	}
 
 	portPart2, err2 := strconv.Atoi(pasvData[5])
 	if err2 != nil {
-		err = err2
 		return
 	}
 
@@ -379,7 +377,7 @@ func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, r
 		return
 	}
 	
-	JoinFtpControl(ftpConn, bp, workConn, baseInfo)
+	JoinFtpControl(ftpConn, bp, workConn, remoteAddr)
 }
 
 // Common handler for tcp work connections.
