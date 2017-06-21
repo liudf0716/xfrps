@@ -308,14 +308,14 @@ func GetFtpPasvPort(msg string) (port int) {
 		return 
 	}
 	
-	start := strings.Index(line, "(")
-	end := strings.LastIndex(line, ")")
+	start := strings.Index(msg, "(")
+	end := strings.LastIndex(msg, ")")
 	if start == -1 || end == -1 {
 		return
 	}
 	
 	// We have to split the response string
-	pasvData := strings.Split(line[start+1:end], ",")
+	pasvData := strings.Split(msg[start+1:end], ",")
 
 	if len(pasvData) < 6 {
 		return
