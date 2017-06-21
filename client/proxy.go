@@ -331,23 +331,17 @@ func GetFtpPasvPort(msg string) (port int, err error) {
 
 // handler for ftp work connection
 func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, remoteAddr string) (inCount int32, outCount int32) {
-	var {
-	n		int
-	port 	int
-	err		error
-	}
-	
 	for {
 		data := make([]byte, 1024)
-		n, err = fc.Read(data)
+		n, err := fc.Read(data)
 		if err != nil {
 			continue
 		}
 		msg := string(data[:n])
 		code, _ := strconv.Atoi(msg[:3])
 		if code == 227 {
-			port, err = GetFtpPasvPort(msg)
-			if err != nil {
+			port, err1 := GetFtpPasvPort(msg)
+			if err1 != nil {
 				fc.Write(data)
 			} else {
 				newMsg := NewFtpPasv(port, remoteAddr)
