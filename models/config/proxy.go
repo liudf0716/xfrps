@@ -390,7 +390,7 @@ func (cfg *FtpProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 }
 
 func (cfg *FtpProxyConf) check() (err error) {
-	return nil
+	return
 }
 
 // HTTP
