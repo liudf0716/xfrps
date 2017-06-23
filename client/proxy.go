@@ -337,6 +337,29 @@ func GetFtpPasvPort(msg string) (port int) {
 	return
 }
 
+func CreateFtpDataProxy(bp *BaseProxy, port int, remoteAddr string) {
+	var newProxyConf config.ProxyConf
+	newProxyConf = config.NewConfByType(consts.TcpProxy)
+	if newProxyConf == nil {
+		return
+	}
+	
+	var newProxyMsg msg.NewProxy
+	newProxyMsg.RemotePort = port
+	newProxyMsg.ProxyName =  "ftp_data"
+	newProxyMsg.ProxyType = "tcp"
+	newProxyMsg.UseEncryption = false
+	newProxyMsg.UseCompression = false
+	
+	newProxyConf.LoadFromMsg(&newProxyMsg)
+	err := newProxyConf.Check()
+	if err != nil {
+		return
+	}
+	
+	bp.ctl.sendCh <- &newProxyMsg
+}
+
 // handler for ftp work connection
 func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, remoteAddr string) (inCount int32, outCount int32) {
 	for {
@@ -353,6 +376,7 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 				fc.Write(data)
 			} else {
 				// create data session
+				CreateFtpDataProxy(bp, port, remoteAddr)
 				newMsg := NewFtpPasv(port, remoteAddr)
 				fc.Write([]byte(newMsg))
 			}
