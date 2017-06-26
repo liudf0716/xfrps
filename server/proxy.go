@@ -128,6 +128,11 @@ func NewProxy(ctl *Control, pxyConf config.ProxyConf) (pxy Proxy, err error) {
 			BaseProxy: basePxy,
 			cfg:       cfg,
 		}
+	case *config.FtpProxyConf:
+		pxy = &FtpProxy {
+			BaseProxy: basePxy,
+			cfg:		cfg,
+		}
 	case *config.HttpProxyConf:
 		pxy = &HttpProxy{
 			BaseProxy: basePxy,
@@ -173,6 +178,33 @@ func (pxy *TcpProxy) GetConf() config.ProxyConf {
 }
 
 func (pxy *TcpProxy) Close() {
+	pxy.BaseProxy.Close()
+}
+
+// ftp proxy
+type FtpProxy struct {
+	BaseProxy
+	cfg *config.TcpProxyConf
+}
+
+func (pxy *FtpProxy) Run() error {
+	listener, err := frpNet.ListenTcp(config.ServerCommonCfg.BindAddr, pxy.cfg.RemotePort)
+	if err != nil {
+		return err
+	}
+	listener.AddLogPrefix(pxy.name)
+	pxy.listeners = append(pxy.listeners, listener)
+	pxy.Info("ftp proxy listen port [%d]", pxy.cfg.RemotePort)
+
+	pxy.startListenHandler(pxy, HandleUserTcpConnection)
+	return nil
+}
+
+func (pxy *FtpProxy) GetConf() config.ProxyConf {
+	return pxy.cfg
+}
+
+func (pxy *FtpProxy) Close() {
 	pxy.BaseProxy.Close()
 }
 
