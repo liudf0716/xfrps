@@ -362,7 +362,7 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
 }
 
 // handler for ftp work connection
-func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, baseProxyConfig *config.BaseProxyConfig) (inCount int32, outCount int32) {
+func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, baseProxyConf *config.BaseProxyConf) (inCount int32, outCount int32) {
 	for {
 		data := make([]byte, 1024)
 		n, err := fc.Read(data)
@@ -395,14 +395,14 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 	return
 }
 
-func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, baseProxyConfig *config.BaseProxyConfig, workConn frpNet.Conn) {
+func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, baseProxyConf *config.BaseProxyConf, workConn frpNet.Conn) {
 	ftpConn, err := frpNet.ConnectTcpServer(fmt.Sprintf("%s:%d", localInfo.LocalIp, localInfo.LocalPort))
 	if err != nil {
 		workConn.Error("connect to local service [%s:%d] error: %v", localInfo.LocalIp, localInfo.LocalPort, err)
 		return
 	}
 	
-	JoinFtpControl(ftpConn, workConn, bp, baseProxyConfig)
+	JoinFtpControl(ftpConn, workConn, bp, baseProxyConf)
 }
 
 // Common handler for tcp work connections.
