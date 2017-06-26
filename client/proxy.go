@@ -24,6 +24,7 @@ import (
 	"strings"
 	
 	"github.com/KunTengRom/xfrps/models/config"
+	"github.com/KunTengRom/xfrps/models/consts"
 	"github.com/KunTengRom/xfrps/models/msg"
 	"github.com/KunTengRom/xfrps/models/plugin"
 	"github.com/KunTengRom/xfrps/models/proto/tcp"
@@ -297,7 +298,7 @@ func NewFtpPasv(port int) (newMsg string) {
 	p1 := port / 256
 	p2 := port - (p1 * 256)
 	
-	quads := strings.Split(ClientCommonCfg.ServerAddr, ".")
+	quads := strings.Split(config.ClientCommonCfg.ServerAddr, ".")
 	newMsg = fmt.Sprintf("227 Entering Passive Mode (%s,%s,%s,%s,%d,%d).", quads[0], quads[1], quads[2], quads[3], p1, p2)
 	return
 }
@@ -345,7 +346,7 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
 	}
 	
 	var newProxyMsg msg.NewProxy
-	newProxyMsg.RemotePort = port
+	newProxyMsg.RemotePort = int64(port)
 	newProxyMsg.ProxyName =  fmt.Sprintf("%s%d", name, port)
 	newProxyMsg.ProxyType = "tcp"
 	newProxyMsg.UseEncryption = false
