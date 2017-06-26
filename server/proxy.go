@@ -184,7 +184,7 @@ func (pxy *TcpProxy) Close() {
 // ftp proxy
 type FtpProxy struct {
 	BaseProxy
-	cfg *config.TcpProxyConf
+	cfg *config.FtpProxyConf
 }
 
 func (pxy *FtpProxy) Run() error {
