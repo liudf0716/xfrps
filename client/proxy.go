@@ -293,11 +293,11 @@ func (pxy *UdpProxy) InWorkConn(conn frpNet.Conn) {
 	udp.Forwarder(pxy.localAddr, pxy.readCh, pxy.sendCh)
 }
 
-func NewFtpPasv(port int, addr string) (newMsg string) {
+func NewFtpPasv(port int) (newMsg string) {
 	p1 := port / 256
 	p2 := port - (p1 * 256)
 	
-	quads := strings.Split(addr, ".")
+	quads := strings.Split(ClientCommonCfg.ServerAddr, ".")
 	newMsg = fmt.Sprintf("227 Entering Passive Mode (%s,%s,%s,%s,%d,%d).", quads[0], quads[1], quads[2], quads[3], p1, p2)
 	return
 }
@@ -337,7 +337,7 @@ func GetFtpPasvPort(msg string) (port int) {
 	return
 }
 
-func CreateFtpDataProxy(bp *BaseProxy, port int, remoteAddr string) {
+func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
 	var newProxyConf config.ProxyConf
 	newProxyConf = config.NewConfByType(consts.TcpProxy)
 	if newProxyConf == nil {
@@ -346,7 +346,7 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, remoteAddr string) {
 	
 	var newProxyMsg msg.NewProxy
 	newProxyMsg.RemotePort = port
-	newProxyMsg.ProxyName =  "ftp_data"
+	newProxyMsg.ProxyName =  fmt.Sprintf("%s%d", name, port)
 	newProxyMsg.ProxyType = "tcp"
 	newProxyMsg.UseEncryption = false
 	newProxyMsg.UseCompression = false
@@ -361,7 +361,7 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, remoteAddr string) {
 }
 
 // handler for ftp work connection
-func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, remoteAddr string) (inCount int32, outCount int32) {
+func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, name string) (inCount int32, outCount int32) {
 	for {
 		data := make([]byte, 1024)
 		n, err := fc.Read(data)
@@ -376,8 +376,8 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 				fc.Write(data)
 			} else {
 				// create data session
-				CreateFtpDataProxy(bp, port, remoteAddr)
-				newMsg := NewFtpPasv(port, remoteAddr)
+				CreateFtpDataProxy(bp, port, name)
+				newMsg := NewFtpPasv(port)
 				fc.Write([]byte(newMsg))
 			}
 		} else {
