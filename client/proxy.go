@@ -377,7 +377,7 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 				fc.Write(data)
 			} else {
 				// create data session
-				CreateFtpDataProxy(bp, port, baseProxyConfig.ProxyName)
+				CreateFtpDataProxy(bp, port, baseProxyConf.ProxyName)
 				newMsg := NewFtpPasv(port)
 				fc.Write([]byte(newMsg))
 			}
