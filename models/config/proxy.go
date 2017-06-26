@@ -380,6 +380,10 @@ func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err err
 		return
 	}
 	
+	if err = cfg.LocalSvrConf.LoadFromFile(name, section); err != nil {
+		return
+	}
+	
 	return
 }
 
