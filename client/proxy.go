@@ -364,7 +364,7 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 				fmt.Printf("from.Read failed, n is %d, err is %v\n", n, err)
 				return
 			}
-			fmt.Printf("data is [%d]%s \n", n, string(data[:n]))
+	
 			msg := string(data[:n])	
 			code, _ := strconv.Atoi(msg[:3])
 			if code == 227 {
