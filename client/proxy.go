@@ -373,7 +373,7 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 			data := make([]byte, 1024)
 			n, err := from.Read(data)
 			if n <= 0 || err != nil {
-				ftm.Printf("to.Read failed, n is %d, err is %v\n", n, err)
+				fmt.Printf("to.Read failed, n is %d, err is %v\n", n, err)
 				return
 			}
 			fmt.Println("data is " + string(data[:n]))
@@ -396,7 +396,7 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 			
 			n, err = to.Read(data)
 			if n <= 0 || err != nil {
-				ftm.Printf("to.Read failed, n is %d, err is %v\n", n, err)
+				fmt.Printf("to.Read failed, n is %d, err is %v\n", n, err)
 				return
 			}
 			from.Write(data[:n])
