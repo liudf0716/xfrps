@@ -339,24 +339,12 @@ func GetFtpPasvPort(msg string) (port int) {
 }
 
 func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
-	var newProxyConf config.ProxyConf
-	newProxyConf = config.NewConfByType(consts.TcpProxy)
-	if newProxyConf == nil {
-		return
-	}
-	
 	var newProxyMsg msg.NewProxy
 	newProxyMsg.RemotePort = int64(port)
 	newProxyMsg.ProxyName =  fmt.Sprintf("%s%d", name, port)
 	newProxyMsg.ProxyType = "tcp"
 	newProxyMsg.UseEncryption = false
 	newProxyMsg.UseCompression = false
-	
-	newProxyConf.LoadFromMsg(&newProxyMsg)
-	err := newProxyConf.Check()
-	if err != nil {
-		return
-	}
 	
 	bp.ctl.sendCh <- &newProxyMsg
 }
@@ -390,11 +378,12 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 				} else {
 					to.Write(data[:n])
 				}
-			} else if code == 221 {
+			} else if code == 211 {
 				to.Write(data[:n])
-				n, err = from.Read(data)
-				fmt.Printf("211-Features is [%d]%s \n", n, string(data[:n]))
-				to.Write(data[:n])
+				if n < 87 {
+					n, err = from.Read(data)
+					to.Write(data[:n])
+				}
 			} else {
 				to.Write(data[:n])
 			}
