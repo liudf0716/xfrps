@@ -342,7 +342,7 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
 	var newProxyMsg msg.NewProxy
 	newProxyMsg.RemotePort = int64(port)
 	newProxyMsg.ProxyName =  fmt.Sprintf("%s%d", name, port)
-	newProxyMsg.ProxyType = "tcp"
+	newProxyMsg.ProxyType = consts.TcpProxy
 	newProxyMsg.UseEncryption = false
 	newProxyMsg.UseCompression = false
 	
