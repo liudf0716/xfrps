@@ -362,7 +362,7 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
 }
 
 // handler for ftp work connection
-func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, baseProxyConf *config.BaseProxyConf) (inCount int32, outCount int32) {
+func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, baseProxyConf *config.BaseProxyConf) (inCount int64, outCount int64) {
 	var wait sync.WaitGroup
 	pipe_c2s := func(to io.ReadWriteCloser, from io.ReadWriteCloser, count *int64) {
 		defer to.Close()
