@@ -339,14 +339,21 @@ func GetFtpPasvPort(msg string) (port int) {
 }
 
 func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
+	cfg := NewConfByType(consts.TcpProxy)
+	
+	
+	newName := fmt.Sprintf("%s%d", name, port)
 	var newProxyMsg msg.NewProxy
 	newProxyMsg.RemotePort = int64(port)
-	newProxyMsg.ProxyName =  fmt.Sprintf("%s%d", name, port)
+	newProxyMsg.ProxyName =  newName
 	newProxyMsg.ProxyType = consts.TcpProxy
 	newProxyMsg.UseEncryption = false
 	newProxyMsg.UseCompression = false
 	
 	bp.ctl.sendCh <- &newProxyMsg
+	
+	cfg.LoadFromMsg(&newProxyMsg)
+	bp.ctl.pxyCfgs[newName] = cfg
 }
 
 // handler for ftp work connection
