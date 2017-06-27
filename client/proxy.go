@@ -364,41 +364,41 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
 // handler for ftp work connection
 func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, baseProxyConf *config.BaseProxyConf) (inCount int64, outCount int64) {
 	var wait sync.WaitGroup
-	pipe_c2s := func(to io.ReadWriteCloser, from io.ReadWriteCloser, count *int64) {
+	ftpPipe := func(to io.ReadWriteCloser, from io.ReadWriteCloser, count *int64) {
 		defer to.Close()
 		defer from.Close()
 		defer wait.Done()
-
-		data := make([]byte, 1024)
-		n, err := from.Read(data)
-		if n <= 0 || err != nil {
-			return
-		}
-		msg := string(data[:n])
-		code, _ := strconv.Atoi(msg[:3])
-		if code == 227 {
-			port:= GetFtpPasvPort(msg)
-			if port != 0 {
-				// create data session
-				CreateFtpDataProxy(bp, port, baseProxyConf.ProxyName)
-				newMsg := NewFtpPasv(port)
-				to.Write([]byte(newMsg))
+		
+		for {
+			data := make([]byte, 1024)
+			n, err := from.Read(data)
+			if n <= 0 || err != nil {
+				return
 			}
-		} 
+			fmt.Println("data is " + string(data[:n]))
+			msg := string(data[:n])
+			code, _ := strconv.Atoi(msg[:3])
+			if code == 227 {
+				port:= GetFtpPasvPort(msg)
+				if port != 0 {
+					// create data session
+					CreateFtpDataProxy(bp, port, baseProxyConf.ProxyName)
+					newMsg := NewFtpPasv(port)
+					to.Write([]byte(newMsg))
+					break
+				} else {
+					to.Write(data[:n])
+				}
+			} else {
+				to.Write(data[:n])
+			}
+		}
 		
 		*count, _ = io.Copy(to, from)
 	}
 	
-	pipe_s2c := func(to io.ReadWriteCloser, from io.ReadWriteCloser, count *int64) {
-		defer to.Close()
-		defer from.Close()
-		defer wait.Done()
-
-		*count, _ = io.Copy(to, from)
-	}
 	wait.Add(2)
-	go pipe_c2s(fs, fc, &inCount)
-	go pipe_s2c(fc, fs, &outCount)
+	go ftpPipe(fs, fc, &inCount)
 	wait.Wait()
 	return
 }
