@@ -352,7 +352,11 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
 	
 	bp.ctl.sendCh <- &newProxyMsg
 	
-	cfg.LoadFromMsg(&newProxyMsg)
+	cfg.RemotePort = int64(port)
+	cfg.ProxyName = newProxyMsg.ProxyName
+	cfg.ProxyType = newProxyMsg.ProxyType
+	cfg.UseEncryption = newProxyMsg.UseEncryption
+	cfg.UseCompression = newProxyMsg.UseCompression
 	bp.ctl.pxyCfgs[newName] = cfg
 }
 
