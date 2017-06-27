@@ -363,35 +363,43 @@ func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
 
 // handler for ftp work connection
 func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, baseProxyConf *config.BaseProxyConf) (inCount int32, outCount int32) {
-	for {
+	var wait sync.WaitGroup
+	pipe_c2s := func(to io.ReadWriteCloser, from io.ReadWriteCloser, count *int64) {
+		defer to.Close()
+		defer from.Close()
+		defer wait.Done()
+
 		data := make([]byte, 1024)
-		n, err := fc.Read(data)
-		if err != nil {
-			continue
+		n, err := from.Read(data)
+		if n <= 0 || err != nil {
+			return
 		}
 		msg := string(data[:n])
 		code, _ := strconv.Atoi(msg[:3])
 		if code == 227 {
 			port:= GetFtpPasvPort(msg)
-			if port == 0 {
-				fc.Write(data)
-			} else {
+			if port != 0 {
 				// create data session
 				CreateFtpDataProxy(bp, port, baseProxyConf.ProxyName)
 				newMsg := NewFtpPasv(port)
-				fc.Write([]byte(newMsg))
+				to.Write([]byte(newMsg))
 			}
-		} else {
-			fs.Write(data)
-		}
+		} 
 		
-		n, err = fs.Read(data)
-		if err != nil {
-			continue
-		}
-		fc.Write(data)
+		*count, _ = io.Copy(to, from)
 	}
 	
+	pipe_s2c := func(to io.ReadWriteCloser, from io.ReadWriteCloser, count *int64) {
+		defer to.Close()
+		defer from.Close()
+		defer wait.Done()
+
+		*count, _ = io.Copy(to, from)
+	}
+	wait.Add(2)
+	go pipe_c2s(fs, fc, &inCount)
+	go pipe_s2c(fc, fs, &outCount)
+	wait.Wait()
 	return
 }
 
@@ -402,7 +410,7 @@ func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, b
 		return
 	}
 	
-	JoinFtpControl(ftpConn, workConn, bp, baseProxyConf)
+	go JoinFtpControl(ftpConn, workConn, bp, baseProxyConf)
 }
 
 // Common handler for tcp work connections.
