@@ -390,7 +390,7 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 				} else {
 					to.Write(data[:n])
 				}
-			} else if msg == "211-Features:" {
+			} else if code == 221 {
 				to.Write(data[:n])
 				n, err = from.Read(data)
 				fmt.Printf("211-Features is [%d]%s \n", n, string(data[:n]))
