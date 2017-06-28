@@ -150,7 +150,9 @@ type BindInfoConf struct {
 }
 
 func (cfg *BindInfoConf) LoadFromMsg(pMsg *msg.NewProxy) {
-	cfg.BindAddr = ServerCommonCfg.BindAddr
+	if ServerCommonCfg != nil {
+		cfg.BindAddr = ServerCommonCfg.BindAddr
+	}
 	cfg.RemotePort = pMsg.RemotePort
 }
 
