@@ -113,7 +113,6 @@ type NewWorkConn struct {
 }
 
 type ReqWorkConn struct {
-	ProxyType      string `json:"proxy_type"`
 }
 
 type StartWorkConn struct {
