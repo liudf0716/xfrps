@@ -58,6 +58,18 @@ type ProxyConf interface {
 	Check() error
 }
 
+func GetFtpDataProxyConf(cfg *ProxyConf) (ncfg ProxyConf, err error) {
+	var msg msg.NewProxy
+	cfg.UnMarshalToMsg(&msg)
+	msg.ProxyName = ftm.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
+	msg.ProxyTyp = consts.TcpProxy
+	msg.RemotePort = msg.RemoteDataPort
+	
+	ncfg, err = NewProxyConf(&msg)
+	
+	return
+}
+
 func NewProxyConf(pMsg *msg.NewProxy) (cfg ProxyConf, err error) {
 	if pMsg.ProxyType == "" {
 		pMsg.ProxyType = consts.TcpProxy
@@ -553,6 +565,12 @@ func LoadProxyConfFromFile(prefix string, conf ini.File, startProxy map[string]s
 				return proxyConfs, err
 			}
 			proxyConfs[prefix+name] = cfg
+			
+			basePxyConf := cfg.GetBaseInfo()
+			if basePxyConf.ProxyType == consts.FtpProxy {
+				ncfg, _ := GetFtpDataProxyConf(&cfg)
+				proxyConfs[prefix+ncfg.GetName()] = ncfg
+			}
 		}
 	}
 	return
