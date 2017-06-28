@@ -361,27 +361,35 @@ func (cfg *UdpProxyConf) Check() (err error) {
 // ftp
 type FtpProxyConf struct {
 	BaseProxyConf
-	BindInfoConf
-	
 	LocalSvrConf
+	
+	RemotePort int64  `json:"remote_port"`
 }
 
 func (cfg *FtpProxyConf) LoadFromMsg(pMsg *msg.NewProxy) {
 	cfg.BaseProxyConf.LoadFromMsg(pMsg)
-	cfg.BindInfoConf.LoadFromMsg(pMsg)
+	cfg.RemotePort = pMsg.RemotePort
 }
 
 func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err error) {
 	if err = cfg.BaseProxyConf.LoadFromFile(name, section); err != nil {
 		return
 	}
-
-	if err = cfg.BindInfoConf.LoadFromFile(name, section); err != nil {
-		return
-	}
 	
 	if err = cfg.LocalSvrConf.LoadFromFile(name, section); err != nil {
 		return
+	}
+	
+	var (
+		tmpStr string
+		ok     bool
+	)
+	if tmpStr, ok = section["remote_port"]; ok {
+		if cfg.RemotePort, err = strconv.ParseInt(tmpStr, 10, 64); err != nil {
+			return fmt.Errorf("Parse conf error: proxy [%s] remote_port error", name)
+		}
+	} else {
+		return fmt.Errorf("Parse conf error: proxy [%s] remote_port not found", name)
 	}
 	
 	return
