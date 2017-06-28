@@ -56,6 +56,7 @@ type ProxyConf interface {
 	LoadFromFile(name string, conf ini.Section) error
 	UnMarshalToMsg(pMsg *msg.NewProxy)
 	Check() error
+	FillLocalServer(ip string, port int)
 }
 
 func GetFtpDataProxyConf(cfg *ProxyConf) (ncfg ProxyConf, err error) {
@@ -260,6 +261,11 @@ type LocalSvrConf struct {
 	LocalPort int    `json:"-"`
 }
 
+func (cfg *LocalSvrConf) setLocalServer(ip string, port int)  {
+	cfg.LocalIp 	= ip
+	cfg.LocalPort	= port
+}
+
 func (cfg *LocalSvrConf) LoadFromFile(name string, section ini.Section) (err error) {
 	if cfg.LocalIp = section["local_ip"]; cfg.LocalIp == "" {
 		cfg.LocalIp = "127.0.0.1"
@@ -336,6 +342,10 @@ func (cfg *TcpProxyConf) Check() (err error) {
 	return
 }
 
+func (cfg *TcpProxyConf) FillLocalServer(ip string, port int) {
+	cfg.LocalSvrConf.setLocalServer(ip, port)
+}
+
 // UDP
 type UdpProxyConf struct {
 	BaseProxyConf
@@ -370,6 +380,10 @@ func (cfg *UdpProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 func (cfg *UdpProxyConf) Check() (err error) {
 	err = cfg.BindInfoConf.check()
 	return
+}
+
+func (cfg *UdpProxyConf) FillLocalServer(ip string, port int) {
+	cfg.LocalSvrConf.setLocalServer(ip, port)
 }
 
 // ftp
@@ -434,6 +448,10 @@ func (cfg *FtpProxyConf) Check() (err error) {
 		return fmt.Errorf("type [ftp] not support when remote data port is not set")
 	}
 	return
+}
+
+func (cfg *FtpProxyConf) FillLocalServer(ip string, port int) {
+	cfg.LocalSvrConf.setLocalServer(ip, port)
 }
 
 // HTTP
@@ -505,6 +523,10 @@ func (cfg *HttpProxyConf) Check() (err error) {
 	return
 }
 
+func (cfg *HttpProxyConf) FillLocalServer(ip string, port int) {
+	cfg.LocalSvrConf.setLocalServer(ip, port)
+}
+
 // HTTPS
 type HttpsProxyConf struct {
 	BaseProxyConf
@@ -543,6 +565,10 @@ func (cfg *HttpsProxyConf) Check() (err error) {
 	}
 	err = cfg.DomainConf.check()
 	return
+}
+
+func (cfg *HttpsProxyConf) FillLocalServer(ip string, port int) {
+	cfg.LocalSvrConf.setLocalServer(ip, port)
 }
 
 // if len(startProxy) is 0, start all
