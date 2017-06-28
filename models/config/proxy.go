@@ -397,11 +397,10 @@ func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err err
 
 func (cfg *FtpProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 	cfg.BaseProxyConf.UnMarshalToMsg(pMsg)
-	cfg.BindInfoConf.UnMarshalToMsg(pMsg)
+	pMsg.RemotePort = cfg.RemotePort
 }
 
 func (cfg *FtpProxyConf) Check() (err error) {
-	err = cfg.BindInfoConf.check()
 	return
 }
 
