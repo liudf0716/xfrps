@@ -21,6 +21,7 @@ import (
 	"net"
 	"sync"
 	"time"
+	"strconv"
 
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
@@ -193,8 +194,8 @@ func (pxy *FtpProxy) Run() error {
 		return err
 	}
 	dataListener, err1 := frpNet.ListenTcp(config.ServerCommonCfg.BindAddr, pxy.cfg.RemoteDataPort)
-	if err2 != nil {
-		return err2
+	if err1 != nil {
+		return err1
 	}
 	
 	listener.AddLogPrefix(pxy.name)
