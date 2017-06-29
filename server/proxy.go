@@ -504,8 +504,9 @@ func HandleUserTcpConnection(pxy Proxy, userConn frpNet.Conn) {
 	if cfg.UseCompression {
 		local = tcp.WithCompression(local)
 	}
-	pxy.Debug("join connections, workConn(l[%s] r[%s]) userConn(l[%s] r[%s])", workConn.LocalAddr().String(),
-		workConn.RemoteAddr().String(), userConn.LocalAddr().String(), userConn.RemoteAddr().String())
+	pxy.Debug("pxy [%s] join connections, workConn(l[%s] r[%s]) userConn(l[%s] r[%s])", 
+			pxy.GetName(), workConn.LocalAddr().String(),
+			workConn.RemoteAddr().String(), userConn.LocalAddr().String(), userConn.RemoteAddr().String())
 
 	StatsOpenConnection(pxy.GetName())
 	inCount, outCount := tcp.Join(local, userConn)
