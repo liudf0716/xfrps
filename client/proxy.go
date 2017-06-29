@@ -150,12 +150,13 @@ func SetFtpDataProxyLocalServer(bp *BaseProxy, cfg *config.FtpProxyConf, localIn
 	)
 	cfg.UnMarshalToMsg(&msg)
 	name = fmt.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
-	ftpDataConf, err := bp.ctl.getProxyConfByName(cfg)
+	ftpDataConf, err := bp.ctl.getProxyConfByName(name)
 	if err != nil {
 		fmt.Printf("get ftpDataConf failed by %s err is %v\n", name, err)
 		return
 	}
-	ftpDataConf.SetLocalServer(localInfo.LocalIp, port)
+	ftpDataConf.FillLocalServer(localInfo.LocalIp, port)
+	return
 }
 
 // handler for ftp work connection
