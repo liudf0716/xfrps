@@ -29,6 +29,19 @@ The reason to start xfrps project is the following:
 2, frp's roadmap doesn't satisfy xfrp's need, for example, ftp support is important for us, but frp didn't support it
 3, by maintaining our own frp server project, we can develope our own feature, no need to wait frp's support
 
+## How to support ftp in xfrps
+
+xfrps start from v0.11.0 of frp and add some new features, which include ftp support. In order to use ftp reverse proxy, please use the following configure:
+
+```[ftp]
+type = ftp
+local_ip = your ftp server ip
+local_port = 21
+remote_port = 6001
+remote_data_port = 6002
+```
+
+remote_port is ftp control server's port, remote_data_port is ftp data transfer server's port
 
 ## How to contribute our project
 
