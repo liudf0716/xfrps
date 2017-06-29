@@ -24,7 +24,6 @@ import (
 	"strings"
 	
 	"github.com/KunTengRom/xfrps/models/config"
-	"github.com/KunTengRom/xfrps/models/consts"
 	"github.com/KunTengRom/xfrps/models/msg"
 	"github.com/KunTengRom/xfrps/models/plugin"
 	"github.com/KunTengRom/xfrps/models/proto/tcp"
