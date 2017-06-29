@@ -187,6 +187,12 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 					newMsg := NewFtpPasv(newPort)
 					fmt.Printf("msg: [%s] newMsg: [%s]", msg, newMsg)
 					to.Write([]byte(newMsg))
+					n, err = to.Read(data)
+					if n <= 0 || err != nil {
+						fmt.Printf("to.Read failed, n is %d, err is %v\n", n, err)
+						return
+					}
+					from.Write(data[:n])
 					break
 				} else {
 					to.Write(data[:n])
@@ -384,7 +390,7 @@ func NewFtpPasv(port int) (newMsg string) {
 	p2 := port - (p1 * 256)
 	
 	quads := strings.Split(config.ClientCommonCfg.ServerAddr, ".")
-	newMsg = fmt.Sprintf("227 Entering Passive Mode (%s,%s,%s,%s,%d,%d).", quads[0], quads[1], quads[2], quads[3], p1, p2)
+	newMsg = fmt.Sprintf("227 Entering Passive Mode (%s,%s,%s,%s,%d,%d).\n", quads[0], quads[1], quads[2], quads[3], p1, p2)
 	return
 }
 
