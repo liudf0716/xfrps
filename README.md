@@ -13,22 +13,21 @@
 [4]: https://github.com/KunTengRom/xfrps/blob/master/LICENSE
 [5]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=plastic
 [6]: https://github.com/KunTengRom/xfrps/pulls
-[7]: https://img.shields.io/badge/XFRPS-Supported-blue.svg?style=plastic
-[8]: https://github.com/KunTengRom/xfrps
+[7]: https://img.shields.io/badge/XFRP-Supported-blue.svg?style=plastic
+[8]: https://github.com/KunTengRom/xfrp
 [9]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg?style=plastic
 [10]: https://github.com/KunTengRom/xfrps/issues/new
 [13]: https://img.shields.io/badge/KunTeng-Inside-blue.svg?style=plastic
 [14]: http://rom.kunteng.org
 
-## What is xfrps
+## What is xfrps and why xfrps
 
-xfrp was [xfrps](https://github.com/KunTengRom/xfrps) client implemented by c for OpenWRT system
+xfrps was [xfrp](https://github.com/KunTengRom/xfrp)'s server, it was a branch of [frp](https://github.com/fatedier/frp) which mainly focus on serving amount of routers and IOT devices 
 
-The motivation to start xfrp project is that we are OpenWRTer, and openwrt usually ran in device which has little ROM and RAM space, however golang always need more space and memory; therefore we start xfrp project
-
-## Different with frp
-
-
+The reason to start xfrps project is the following: 
+1, we need a stable frp server to serve our [xfrp](https://github.com/KunTengRom/xfrp), however frp change very fast, high version of frp doesn't promise compatible with low version 
+2, frp's roadmap doesn't satisfy xfrp's need, for example, ftp support is important for us, but frp didn't support it
+3, by maintaining our own frp server project, we can develope our own feature, no need to wait frp's support
 
 
 ## How to contribute our project
