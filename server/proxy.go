@@ -168,7 +168,7 @@ func (pxy *TcpProxy) Run() error {
 	}
 	listener.AddLogPrefix(pxy.name)
 	pxy.listeners = append(pxy.listeners, listener)
-	pxy.Info("tcp proxy listen port [%d]", pxy.cfg.RemotePort)
+	pxy.Info("tcp proxy [%s] listen port [%d]", pxy.name, pxy.cfg.RemotePort)
 
 	pxy.startListenHandler(pxy, HandleUserTcpConnection)
 	return nil
@@ -193,16 +193,10 @@ func (pxy *FtpProxy) Run() error {
 	if err != nil {
 		return err
 	}
-	dataListener, err1 := frpNet.ListenTcp(config.ServerCommonCfg.BindAddr, pxy.cfg.RemoteDataPort)
-	if err1 != nil {
-		return err1
-	}
 	
 	listener.AddLogPrefix(pxy.name)
-	dataListener.AddLogPrefix(pxy.name+strconv.FormatInt(pxy.cfg.RemoteDataPort, 10))
 	pxy.listeners = append(pxy.listeners, listener)
-	pxy.listeners = append(pxy.listeners, dataListener)
-	pxy.Info("ftp proxy control listen port [%d] data listen port [%d]", pxy.cfg.RemotePort, pxy.cfg.RemoteDataPort)
+	pxy.Info("ftp proxy [%s] control listen port [%d] ", pxy.name, pxy.cfg.RemotePort)
 
 	pxy.startListenHandler(pxy, HandleUserTcpConnection)
 	return nil
