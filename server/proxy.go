@@ -21,7 +21,6 @@ import (
 	"net"
 	"sync"
 	"time"
-	"strconv"
 
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
