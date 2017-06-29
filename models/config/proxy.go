@@ -59,11 +59,11 @@ type ProxyConf interface {
 	FillLocalServer(ip string, port int)
 }
 
-func GetFtpDataProxyConf(cfg *ProxyConf) (ncfg ProxyConf, err error) {
+func GetFtpDataProxyConf(cfg *FtpProxyConf) (ncfg ProxyConf, err error) {
 	var msg msg.NewProxy
 	cfg.UnMarshalToMsg(&msg)
-	msg.ProxyName = ftm.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
-	msg.ProxyTyp = consts.TcpProxy
+	msg.ProxyName = fmt.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
+	msg.ProxyType = consts.TcpProxy
 	msg.RemotePort = msg.RemoteDataPort
 	
 	ncfg, err = NewProxyConf(&msg)
