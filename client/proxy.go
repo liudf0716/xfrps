@@ -161,7 +161,8 @@ func SetFtpDataProxyLocalServer(bp *BaseProxy, cfg *config.FtpProxyConf, localIn
 }
 
 // handler for ftp work connection
-func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, cfg *config.FtpProxyConf, localInfo *config.LocalSvrConf) (inCount int64, outCount int64) {
+func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, 
+					cfg *config.FtpProxyConf, localInfo *config.LocalSvrConf) (inCount int64, outCount int64) {
 	var wait sync.WaitGroup
 	ftpPipe := func(to io.ReadWriteCloser, from io.ReadWriteCloser, count *int64) {
 		defer to.Close()
@@ -185,7 +186,6 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 					newPort := int(cfg.RemoteDataPort)
 					SetFtpDataProxyLocalServer(bp, cfg, localInfo, port)
 					newMsg := NewFtpPasv(newPort)
-					fmt.Printf("msg: [%s] newMsg: [%s]", msg, newMsg)
 					to.Write([]byte(newMsg))
 					n, err = to.Read(data)
 					if n <= 0 || err != nil {
@@ -215,7 +215,8 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 			from.Write(data[:n])
 		}
 		
-		*count, _ = io.Copy(to, from)
+		go io.Copy(to, from)
+		io.Copy(from, to)
 	}
 	
 	wait.Add(2)
@@ -428,25 +429,6 @@ func GetFtpPasvPort(msg string) (port int) {
 	port = portPart1*256 + portPart2
 	return
 }
-
-func CreateFtpDataProxy(bp *BaseProxy, port int, name string) {
-	cfg := config.NewConfByType(consts.FtpProxy)
-	
-	
-	newName := fmt.Sprintf("%s%d", name, port)
-	var newProxyMsg msg.NewProxy
-	newProxyMsg.RemotePort = int64(port)
-	newProxyMsg.ProxyName =  newName
-	newProxyMsg.ProxyType = consts.FtpProxy
-	newProxyMsg.UseEncryption = false
-	newProxyMsg.UseCompression = false
-	
-	bp.ctl.sendCh <- &newProxyMsg
-	
-	cfg.LoadFromMsg(&newProxyMsg)
-	bp.ctl.pxyCfgs[newName] = cfg
-}
-
 
 // Common handler for tcp work connections.
 func HandleTcpWorkConnection(localInfo *config.LocalSvrConf, proxyPlugin plugin.Plugin,
