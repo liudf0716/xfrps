@@ -143,8 +143,18 @@ func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, c
 }
 
 // todo
-func SetFtpDataProxyLocalServer(bp *BaseProxy, cfg *config.FtpProxyConf, localInfo *config.LocalSvrConf, port int) {
-	ftpDataConf := bp.ctl.getProxyConf(cfg)
+func SetFtpDataProxyLocalServer(bp *BaseProxy, cfg *config.FtpProxyConf, localInfo *config.LocalSvrConf, port int) (err error) {
+	var (
+		name 	string
+		msg		msg.NewProxy
+	)
+	cfg.UnMarshalToMsg(&msg)
+	name = fmt.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
+	ftpDataConf, err := bp.ctl.getProxyConfByName(cfg)
+	if err != nil {
+		fmt.Printf("get ftpDataConf failed by %s err is %v\n", name, err)
+		return
+	}
 	ftpDataConf.SetLocalServer(localInfo.LocalIp, port)
 }
 
