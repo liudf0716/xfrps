@@ -455,14 +455,15 @@ func (ctl *Control) controler() {
 }
 
 // get ProxyConf by user defined name
-func (ctl *Control) getProxyConfByName(name string) (cfg *config.ProxyConf, err error) {
+func (ctl *Control) getProxyConfByName(name string) (cfg config.ProxyConf, ok bool) {
 	if config.ClientCommonCfg.User != "" {
 		name = config.ClientCommonCfg.User + "." + name
 	}
-	cfg, err = ctl.pxyCfgs[name]
-	if err != nil {
+	cfg, ok = ctl.pxyCfgs[name]
+	if !ok {
 		// it should never go to this branch now
 		ctl.Warn("[%s] no proxy conf found", name)
 	}
-	return
+	ok = true
+	return 
 }
