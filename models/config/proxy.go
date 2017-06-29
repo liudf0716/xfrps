@@ -594,8 +594,18 @@ func LoadProxyConfFromFile(prefix string, conf ini.File, startProxy map[string]s
 			
 			basePxyConf := cfg.GetBaseInfo()
 			if basePxyConf.ProxyType == consts.FtpProxy {
-				ncfg, _ := GetFtpDataProxyConf(&cfg)
-				proxyConfs[prefix+ncfg.GetName()] = ncfg
+				var msg msg.NewProxy
+				cfg.UnMarshalToMsg(&msg)
+				msg.ProxyName = fmt.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
+				msg.ProxyType = consts.TcpProxy
+				msg.RemotePort = msg.RemoteDataPort
+
+				ncfg, err1 := NewProxyConf(&msg)
+				if err1 != nil {
+					err = err1
+					return
+				}
+				proxyConfs[prefix+msg.ProxyName] = ncfg
 			}
 		}
 	}
