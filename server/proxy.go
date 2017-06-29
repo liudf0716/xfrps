@@ -199,7 +199,7 @@ func (pxy *FtpProxy) Run() error {
 	}
 	
 	listener.AddLogPrefix(pxy.name)
-	dataListener.AddLogPrefix(pxy.name+strconv.Itoa(pxy.cfg.RemoteDataPort))
+	dataListener.AddLogPrefix(pxy.name+strconv.FormatInt(pxy.cfg.RemoteDataPort, 10))
 	pxy.listeners = append(pxy.listeners, listener)
 	pxy.listeners = append(pxy.listeners, dataListener)
 	pxy.Info("ftp proxy control listen port [%d] data listen port [%d]", pxy.cfg.RemotePort, pxy.cfg.RemoteDataPort)
