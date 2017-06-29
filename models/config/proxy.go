@@ -189,6 +189,10 @@ func (cfg *BindInfoConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 }
 
 func (cfg *BindInfoConf) check() (err error) {
+	if ServerCommonCfg == nil {
+		return nil
+	}
+	
 	if len(ServerCommonCfg.PrivilegeAllowPorts) != 0 {
 		if ok := util.ContainsPort(ServerCommonCfg.PrivilegeAllowPorts, cfg.RemotePort); !ok {
 			return fmt.Errorf("remote port [%d] isn't allowed", cfg.RemotePort)
