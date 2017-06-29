@@ -9,7 +9,7 @@
 
 [1]: https://img.shields.io/travis/KunTengRom/xfrps.svg?style=plastic
 [2]: https://travis-ci.org/KunTengRom/xfrps
-[3]: https://img.shields.io/badge/license-GPLV3-brightgreen.svg?style=plastic
+[3]: https://img.shields.io/crates/l/rustc-serialize.svg?style=plastic
 [4]: https://github.com/KunTengRom/xfrps/blob/master/LICENSE
 [5]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=plastic
 [6]: https://github.com/KunTengRom/xfrps/pulls
