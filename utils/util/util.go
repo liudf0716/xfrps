@@ -18,10 +18,10 @@ import (
 	"crypto/md5"
 	"crypto/rand"
 	"encoding/hex"
+	"math/rand"
 	"fmt"
 	"strconv"
 	"strings"
-	"math"
 	"time"
 	"net"
 )
