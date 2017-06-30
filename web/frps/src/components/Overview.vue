@@ -97,6 +97,9 @@
                     if (json.proxy_type_count.udp != null) {
                         this.proxy_counts += json.proxy_type_count.udp
                     }
+                    if (json.proxy_type_count.ftp != null) {
+                        this.proxy_counts += json.proxy_type_count.ftp
+                    }
                     if (json.proxy_type_count.http != null) {
                         this.proxy_counts += json.proxy_type_count.http
                     }
