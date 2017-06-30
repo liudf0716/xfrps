@@ -151,6 +151,7 @@ func (svr *Service) Run() {
 						conn.Close()
 					}
 				case *msg.NewWorkConn:
+					// frpc connected frps for its proxy, and store this connection in control's workConnCh
 					svr.RegisterWorkConn(conn, m)
 				default:
 					log.Warn("Error message type for the new connection [%s]", conn.RemoteAddr().String())
