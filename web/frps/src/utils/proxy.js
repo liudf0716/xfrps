@@ -103,4 +103,4 @@ class HttpsProxy extends BaseProxy {
     }
 }
 
-export {BaseProxy, TcpProxy, UdpProxy, HttpProxy, HttpsProxy}
+export {BaseProxy, TcpProxy, UdpProxy, FtpProxy, HttpProxy, HttpsProxy}
