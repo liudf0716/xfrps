@@ -198,6 +198,10 @@ func (cfg *BindInfoConf) check() (err error) {
 			return fmt.Errorf("remote port [%d] isn't allowed", cfg.RemotePort)
 		}
 	}
+	
+	if !util.IsTCPPortAvailable(int(cfg.RemotePort)) {
+		return fmt.Errorf("remote_port is not available")
+	}
 	return nil
 }
 
@@ -450,6 +454,14 @@ func (cfg *FtpProxyConf) Check() (err error) {
 	
 	if cfg.RemoteDataPort == 0 {
 		return fmt.Errorf("type [ftp] not support when remote data port is not set")
+	}
+	
+	if !util.IsTCPPortAvailable(int(cfg.RemotePort)) {
+		return fmt.Errorf("type [ftp] remote_port is not available")
+	}
+	
+	if !util.IsTCPPortAvailable(int(cfg.RemoteDataPort)) {
+		return fmt.Errorf("type [ftp] remote_data_port is not available")
 	}
 	return
 }
