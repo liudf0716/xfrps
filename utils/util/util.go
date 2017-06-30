@@ -122,7 +122,7 @@ const (
 )
 
 var (
-	tcpPortRand = math.rand.New(rand.NewSource(time.Now().UnixNano()))
+	tcpPortRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 )
 
 // IsTCPPortAvailable returns a flag indicating whether or not a TCP port is
