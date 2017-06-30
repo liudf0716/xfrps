@@ -52,9 +52,11 @@ class FtpProxy extends BaseProxy {
         if (proxyStats.conf != null) {
             this.addr = proxyStats.conf.bind_addr + ":" + proxyStats.conf.remote_port
             this.port = proxyStats.conf.remote_port
+            this.dport = proxyStats.conf.remote_data_port
         } else {
             this.addr = ""
             this.port = ""
+            this.dport = ""
         }
     }
 }
