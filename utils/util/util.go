@@ -21,6 +21,9 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"math/rand"
+	"time"
+	"net"
 )
 
 // RandId return a rand string used in frp.
