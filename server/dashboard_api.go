@@ -133,6 +133,24 @@ func apiProxyUdp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.Write(buf)
 }
 
+// api/proxy/ftp
+func apiProxyFtp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	var (
+		buf []byte
+		res GetProxyInfoResp
+	)
+	defer func() {
+		log.Info("Http response [/api/proxy/ftp]: code [%d]", res.Code)
+	}()
+	log.Info("Http request: [/api/proxy/ftp]")
+
+	res.Proxies = getProxyStatsByType(consts.FtpProxy)
+
+	buf, _ = json.Marshal(&res)
+	w.Write(buf)
+}
+
+
 // api/proxy/http
 func apiProxyHttp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var (
