@@ -25,8 +25,11 @@
 xfrps was [xfrp](https://github.com/KunTengRom/xfrp)'s server, it was a branch of [frp](https://github.com/fatedier/frp) which mainly focus on serving amount of routers and IOT devices 
 
 The reason to start xfrps project is the following: 
+
 1, we need a stable frp server to serve our [xfrp](https://github.com/KunTengRom/xfrp), however frp change very fast, high version of frp doesn't promise compatible with low version 
+
 2, frp's roadmap doesn't satisfy xfrp's need, for example, ftp support is important for us, but frp didn't support it
+
 3, by maintaining our own frp server project, we can develope our own feature, no need to wait frp's support
 
 ## How to support ftp in xfrps
