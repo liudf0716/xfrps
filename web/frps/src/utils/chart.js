@@ -86,6 +86,9 @@ function DrawProxyChart(elementId, serverInfo) {
                 value: serverInfo.proxy_type_count.udp,
                 name: 'UDP'
             }, {
+                value: serverInfo.proxy_type_count.ftp,
+                name: 'FTP'
+            }, {
                 value: serverInfo.proxy_type_count.http,
                 name: 'HTTP'
             }, {
