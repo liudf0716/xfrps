@@ -14,6 +14,7 @@
                             <template slot="title">Proxies</template>
                             <el-menu-item index="/proxies/tcp">TCP</el-menu-item>
                             <el-menu-item index="/proxies/udp">UDP</el-menu-item>
+			    <el-menu-item index="/proxies/ftp">FTP</el-menu-item>
                             <el-menu-item index="/proxies/http">HTTP</el-menu-item>
                             <el-menu-item index="/proxies/https">HTTPS</el-menu-item>
                         </el-submenu>
