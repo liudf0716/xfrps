@@ -18,12 +18,13 @@ import (
 	"crypto/md5"
 	"crypto/rand"
 	"encoding/hex"
-	"math/rand"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 	"net"
+	
+	mathRand "math/rand"
 )
 
 // RandId return a rand string used in frp.
@@ -122,7 +123,7 @@ const (
 )
 
 var (
-	tcpPortRand = rand.New(rand.NewSource(time.Now().UnixNano()))
+	tcpPortRand = mathRand.New(rand.NewSource(time.Now().UnixNano()))
 )
 
 // IsTCPPortAvailable returns a flag indicating whether or not a TCP port is
