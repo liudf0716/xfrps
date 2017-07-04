@@ -7,5 +7,6 @@ go:
 install:
     - make
 
+
 script:
     - make alltest
