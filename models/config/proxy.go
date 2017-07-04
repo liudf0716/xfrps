@@ -400,7 +400,7 @@ type FtpProxyConf struct {
 	LocalSvrConf
 	
 	RemotePort 		int64  `json:"remote_port"`
-	RemoteDataPort	int64	`json:"remote_port"`
+	RemoteDataPort	int64	`json:"remote_data_port"`
 }
 
 func (cfg *FtpProxyConf) LoadFromMsg(pMsg *msg.NewProxy) {
