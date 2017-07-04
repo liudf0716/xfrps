@@ -182,9 +182,8 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 				port:= GetFtpPasvPort(msg)
 				if port != 0 {
 					// create data session
-					newPort := int(cfg.RemoteDataPort)
 					SetFtpDataProxyLocalServer(bp, cfg, localInfo, port)
-					newMsg := NewFtpPasv(newPort)
+					newMsg := NewFtpPasv(int(cfg.RemoteDataPort))
 					to.Write([]byte(newMsg))
 					n, err = to.Read(data)
 					if n <= 0 || err != nil {
