@@ -384,11 +384,43 @@ func (pxy *UdpProxy) InWorkConn(conn frpNet.Conn) {
 	udp.Forwarder(pxy.localAddr, pxy.readCh, pxy.sendCh)
 }
 
+func IsIpv4(host string) bool {
+	parts := strings.Split(host, ".")
+
+	if len(parts) < 4 {
+		return false
+	}
+	
+	for _,x := range parts {
+		if i, err := strconv.Atoi(x); err == nil {
+			if i < 0 || i > 255 {
+			return false
+		}
+		} else {
+			return false
+		}
+
+	}
+	return true
+}
+
+
 func NewFtpPasv(port int) (newMsg string) {
 	p1 := port / 256
 	p2 := port - (p1 * 256)
-
-	quads := strings.Split(config.ClientCommonCfg.ServerAddr, ".")
+	
+	var ipaddress string
+	if (IsIpv4(config.ClientCommonCfg.ServerAddr)) {
+		ipaddress = config.ClientCommonCfg.ServerAddr	
+	} else {
+		ip4address, err := net.ResolveIPAddr("ip4", domain_name)
+		if err != nil {
+		   fmt.Println("Fail to resolve IP4", err.Error())
+		   return
+		}
+		ipaddress = ip4address.String()
+	}
+	quads := strings.Split(ipaddress, ".")
 	newMsg = fmt.Sprintf("227 Entering Passive Mode (%s,%s,%s,%s,%d,%d).\n", quads[0], quads[1], quads[2], quads[3], p1, p2)
 	return
 }
