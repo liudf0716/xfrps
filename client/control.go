@@ -456,9 +456,6 @@ func (ctl *Control) controler() {
 
 // get ProxyConf by user defined name
 func (ctl *Control) getProxyConfByName(name string) (cfg config.ProxyConf, ok bool) {
-	if config.ClientCommonCfg.User != "" {
-		name = config.ClientCommonCfg.User + "." + name
-	}
 	cfg, ok = ctl.pxyCfgs[name]
 	if !ok {
 		// it should never go to this branch now
