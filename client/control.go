@@ -177,8 +177,8 @@ func (ctl *Control) NewWorkConn() {
 
 	// dispatch this work connection to related proxy
 	if pxy, ok := ctl.proxies[startMsg.ProxyName]; ok {
-		workConn.Debug("start a new work connection: %s, localAddr: %s remoteAddr: %s", 
-					   startMsg.ProxyName, workConn.LocalAddr().String(), workConn.RemoteAddr().String())
+		workConn.Debug("start a new work connection: %s, localAddr: %s remoteAddr: %s",
+			startMsg.ProxyName, workConn.LocalAddr().String(), workConn.RemoteAddr().String())
 		go pxy.InWorkConn(workConn)
 	} else {
 		workConn.Close()
@@ -465,5 +465,5 @@ func (ctl *Control) getProxyConfByName(name string) (cfg config.ProxyConf, ok bo
 		ctl.Warn("[%s] no proxy conf found", name)
 	}
 	ok = true
-	return 
+	return
 }

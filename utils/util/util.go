@@ -19,11 +19,11 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"net"
 	"strconv"
 	"strings"
 	"time"
-	"net"
-	
+
 	mathRand "math/rand"
 )
 

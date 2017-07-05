@@ -129,9 +129,9 @@ func NewProxy(ctl *Control, pxyConf config.ProxyConf) (pxy Proxy, err error) {
 			cfg:       cfg,
 		}
 	case *config.FtpProxyConf:
-		pxy = &FtpProxy {
+		pxy = &FtpProxy{
 			BaseProxy: basePxy,
-			cfg:		cfg,
+			cfg:       cfg,
 		}
 	case *config.HttpProxyConf:
 		pxy = &HttpProxy{
@@ -192,7 +192,7 @@ func (pxy *FtpProxy) Run() error {
 	if err != nil {
 		return err
 	}
-	
+
 	listener.AddLogPrefix(pxy.name)
 	pxy.listeners = append(pxy.listeners, listener)
 	pxy.Info("ftp proxy [%s] control listen port [%d] ", pxy.name, pxy.cfg.RemotePort)
@@ -503,9 +503,9 @@ func HandleUserTcpConnection(pxy Proxy, userConn frpNet.Conn) {
 	if cfg.UseCompression {
 		local = tcp.WithCompression(local)
 	}
-	pxy.Debug("pxy [%s] join connections, workConn(l[%s] r[%s]) userConn(l[%s] r[%s])", 
-			pxy.GetName(), workConn.LocalAddr().String(),
-			workConn.RemoteAddr().String(), userConn.LocalAddr().String(), userConn.RemoteAddr().String())
+	pxy.Debug("pxy [%s] join connections, workConn(l[%s] r[%s]) userConn(l[%s] r[%s])",
+		pxy.GetName(), workConn.LocalAddr().String(),
+		workConn.RemoteAddr().String(), userConn.LocalAddr().String(), userConn.RemoteAddr().String())
 
 	StatsOpenConnection(pxy.GetName())
 	inCount, outCount := tcp.Join(local, userConn)

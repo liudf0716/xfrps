@@ -90,9 +90,9 @@ type NewProxy struct {
 
 	// tcp and udp only
 	RemotePort int64 `json:"remote_port"`
-	
+
 	// tcp only
-	RemoteDataPort	int64	`json:"remote_data_port"`
+	RemoteDataPort int64 `json:"remote_data_port"`
 
 	// http and https only
 	CustomDomains     []string `json:"custom_domains"`

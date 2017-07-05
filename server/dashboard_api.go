@@ -150,7 +150,6 @@ func apiProxyFtp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.Write(buf)
 }
 
-
 // api/proxy/http
 func apiProxyHttp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var (

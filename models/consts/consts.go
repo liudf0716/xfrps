@@ -23,9 +23,9 @@ var (
 	Offline string = "offline"
 
 	// proxy type
-	TcpProxy   	string = "tcp"
-	UdpProxy   	string = "udp"
-	HttpProxy  	string = "http"
-	HttpsProxy 	string = "https"
-	FtpProxy	string = "ftp"
+	TcpProxy   string = "tcp"
+	UdpProxy   string = "udp"
+	HttpProxy  string = "http"
+	HttpsProxy string = "https"
+	FtpProxy   string = "ftp"
 )

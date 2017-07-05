@@ -18,11 +18,11 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"sync"
-	"time"
 	"strconv"
 	"strings"
-	
+	"sync"
+	"time"
+
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
 	"github.com/KunTengRom/xfrps/models/plugin"
@@ -61,8 +61,8 @@ func NewProxy(ctl *Control, pxyConf config.ProxyConf) (pxy Proxy) {
 		}
 	case *config.FtpProxyConf:
 		pxy = &FtpProxy{
-			BaseProxy:	baseProxy,
-			cfg:		cfg,
+			BaseProxy: baseProxy,
+			cfg:       cfg,
 		}
 	case *config.HttpProxyConf:
 		pxy = &HttpProxy{
@@ -116,8 +116,8 @@ func (pxy *TcpProxy) InWorkConn(conn frpNet.Conn) {
 // ftp
 type FtpProxy struct {
 	BaseProxy
-	
-	cfg			*config.FtpProxyConf
+
+	cfg *config.FtpProxyConf
 }
 
 func (pxy *FtpProxy) Run() (err error) {
@@ -128,24 +128,24 @@ func (pxy *FtpProxy) Close() {
 }
 
 func (pxy *FtpProxy) InWorkConn(conn frpNet.Conn) {
-	HandleFtpControlConnection(&pxy.cfg.LocalSvrConf, &pxy.BaseProxy,  pxy.cfg, conn)
+	HandleFtpControlConnection(&pxy.cfg.LocalSvrConf, &pxy.BaseProxy, pxy.cfg, conn)
 }
 
-func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, cfg	*config.FtpProxyConf, workConn frpNet.Conn) {
+func HandleFtpControlConnection(localInfo *config.LocalSvrConf, bp *BaseProxy, cfg *config.FtpProxyConf, workConn frpNet.Conn) {
 	ftpConn, err := frpNet.ConnectTcpServer(fmt.Sprintf("%s:%d", localInfo.LocalIp, localInfo.LocalPort))
 	if err != nil {
 		workConn.Error("connect to local service [%s:%d] error: %v", localInfo.LocalIp, localInfo.LocalPort, err)
 		return
 	}
-	
+
 	go JoinFtpControl(ftpConn, workConn, bp, cfg, localInfo)
 }
 
 // todo
 func SetFtpDataProxyLocalServer(bp *BaseProxy, cfg *config.FtpProxyConf, localInfo *config.LocalSvrConf, port int) (err error) {
 	var (
-		name 	string
-		msg		msg.NewProxy
+		name string
+		msg  msg.NewProxy
 	)
 	cfg.UnMarshalToMsg(&msg)
 	name = fmt.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
@@ -160,14 +160,14 @@ func SetFtpDataProxyLocalServer(bp *BaseProxy, cfg *config.FtpProxyConf, localIn
 }
 
 // handler for ftp work connection
-func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy, 
-					cfg *config.FtpProxyConf, localInfo *config.LocalSvrConf) (inCount int64, outCount int64) {
+func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
+	cfg *config.FtpProxyConf, localInfo *config.LocalSvrConf) (inCount int64, outCount int64) {
 	var wait sync.WaitGroup
 	ftpPipe := func(to io.ReadWriteCloser, from io.ReadWriteCloser, count *int64) {
 		defer to.Close()
 		defer from.Close()
 		defer wait.Done()
-		
+
 		for {
 			data := make([]byte, 1024)
 			n, err := from.Read(data)
@@ -175,11 +175,11 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 				fmt.Printf("from.Read failed, n is %d, err is %v\n", n, err)
 				return
 			}
-	
-			msg := string(data[:n])	
+
+			msg := string(data[:n])
 			code, _ := strconv.Atoi(msg[:3])
 			if code == 227 {
-				port:= GetFtpPasvPort(msg)
+				port := GetFtpPasvPort(msg)
 				if port != 0 {
 					// create data session
 					SetFtpDataProxyLocalServer(bp, cfg, localInfo, port)
@@ -204,7 +204,7 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 			} else {
 				to.Write(data[:n])
 			}
-			
+
 			n, err = to.Read(data)
 			if n <= 0 || err != nil {
 				fmt.Printf("to.Read failed, n is %d, err is %v\n", n, err)
@@ -212,11 +212,11 @@ func JoinFtpControl(fc io.ReadWriteCloser, fs io.ReadWriteCloser, bp *BaseProxy,
 			}
 			from.Write(data[:n])
 		}
-		
+
 		go io.Copy(to, from)
 		io.Copy(from, to)
 	}
-	
+
 	wait.Add(2)
 	go ftpPipe(fs, fc, &inCount)
 	wait.Wait()
@@ -387,7 +387,7 @@ func (pxy *UdpProxy) InWorkConn(conn frpNet.Conn) {
 func NewFtpPasv(port int) (newMsg string) {
 	p1 := port / 256
 	p2 := port - (p1 * 256)
-	
+
 	quads := strings.Split(config.ClientCommonCfg.ServerAddr, ".")
 	newMsg = fmt.Sprintf("227 Entering Passive Mode (%s,%s,%s,%s,%d,%d).\n", quads[0], quads[1], quads[2], quads[3], p1, p2)
 	return
@@ -396,15 +396,15 @@ func NewFtpPasv(port int) (newMsg string) {
 func GetFtpPasvPort(msg string) (port int) {
 	port = 0
 	if len(msg) < 45 {
-		return 
+		return
 	}
-	
+
 	start := strings.Index(msg, "(")
 	end := strings.LastIndex(msg, ")")
 	if start == -1 || end == -1 {
 		return
 	}
-	
+
 	// We have to split the response string
 	pasvData := strings.Split(msg[start+1:end], ",")
 
@@ -430,7 +430,7 @@ func GetFtpPasvPort(msg string) (port int) {
 
 // Common handler for tcp work connections.
 func HandleTcpWorkConnection(localInfo *config.LocalSvrConf, proxyPlugin plugin.Plugin,
-							baseInfo *config.BaseProxyConf, workConn frpNet.Conn) {
+	baseInfo *config.BaseProxyConf, workConn frpNet.Conn) {
 
 	var (
 		remote io.ReadWriteCloser
