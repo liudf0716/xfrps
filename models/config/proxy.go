@@ -620,7 +620,7 @@ func LoadProxyConfFromFile(prefix string, conf ini.File, startProxy map[string]s
 				if err1 != nil {
 					return proxyConfs, err1
 				}
-				proxyConfs[prefix+msg.ProxyName] = ncfg
+				proxyConfs[msg.ProxyName] = ncfg
 			}
 		}
 	}
