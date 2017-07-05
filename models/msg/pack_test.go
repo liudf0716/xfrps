@@ -47,7 +47,7 @@ func TestPack(t *testing.T) {
 	assert.NoError(err)
 	b := bytes.NewBuffer(nil)
 	b.WriteByte(TypePing)
-	binary.Write(b, binary.BigEndian, int64(2))
+	binary.Write(b, binary.BigEndian, int32(2))
 	b.WriteString("{}")
 	assert.True(bytes.Equal(b.Bytes(), buffer))
 }
