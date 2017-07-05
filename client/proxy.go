@@ -413,7 +413,7 @@ func NewFtpPasv(port int) (newMsg string) {
 	if (IsIpv4(config.ClientCommonCfg.ServerAddr)) {
 		ipaddress = config.ClientCommonCfg.ServerAddr	
 	} else {
-		ip4address, err := net.ResolveIPAddr("ip4", domain_name)
+		ip4address, err := net.ResolveIPAddr("ip4", config.ClientCommonCfg.ServerAddr)
 		if err != nil {
 		   fmt.Println("Fail to resolve IP4", err.Error())
 		   return
