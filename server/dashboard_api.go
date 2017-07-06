@@ -240,3 +240,41 @@ func apiProxyTraffic(w http.ResponseWriter, r *http.Request, params httprouter.P
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
+
+// api/getfreeport
+type GetFreePortResp struct {
+	GeneralResponse
+	
+	Proto		string	`json:"proto"`
+	FreePort	int64	`json:"free_port"`
+}
+
+func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	var (
+		buf []byte
+		res GetFreePortResp
+	)
+
+	proto := params.ByName("proto")
+	defer func() {
+		log.Info("Http response [api/getfreeport]: code [%d]", res.Code)
+	}()
+	log.Info("Http request: [api/getfreeport]")
+
+	res.Proto = proto
+	if proto == "tcp" {
+		freePort := RandomTCPPort()
+		if freePort > 0 {
+			res.FreePort = freePort
+		} else {
+			res.Code = 1
+			res.Msg = "no free tcp port"
+		}
+	} else {
+		res.Code = 1
+		res.Msg = "not support udp"
+	}
+
+	buf, _ = json.Marshal(&res)
+	w.Write(buf)
+}
