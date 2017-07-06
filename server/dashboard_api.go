@@ -283,7 +283,7 @@ func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 
 // /api/port/tcp/isfree/:port
 
-func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func apiIsTcpPortFree(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	var (
 		buf []byte
 		res GeneralResponse
