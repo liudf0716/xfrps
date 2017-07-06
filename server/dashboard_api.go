@@ -243,7 +243,7 @@ func apiProxyTraffic(w http.ResponseWriter, r *http.Request, params httprouter.P
 	w.Write(buf)
 }
 
-// /api/port/get/:proto
+// /api/port/getfree/:proto
 type GetFreePortResp struct {
 	GeneralResponse
 	
@@ -259,9 +259,9 @@ func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 
 	proto := params.ByName("proto")
 	defer func() {
-		log.Info("Http response [/api/port/get/:proto]: code [%d]", res.Code)
+		log.Info("Http response [/api/port/getfree/:proto]: code [%d]", res.Code)
 	}()
-	log.Info("Http request: [/api/port/get/:proto]")
+	log.Info("Http request: [/api/port/getfree/:proto]")
 
 	res.Proto = proto
 	if proto == "tcp" {
