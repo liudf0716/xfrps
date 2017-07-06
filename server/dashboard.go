@@ -46,7 +46,7 @@ func RunDashboardServer(addr string, port int64) (err error) {
 	router.GET("/api/proxy/http", httprouterBasicAuth(apiProxyHttp))
 	router.GET("/api/proxy/https", httprouterBasicAuth(apiProxyHttps))
 	router.GET("/api/proxy/traffic/:name", httprouterBasicAuth(apiProxyTraffic))
-	router.GET("/api/getfreeport/:proto", apiGetFreePort)
+	router.GET("/api/getfreeport/:proto", httprouterNoAuth(apiGetFreePort))
 
 	// view
 	router.Handler("GET", "/favicon.ico", http.FileServer(assets.FileSystem))
@@ -128,6 +128,12 @@ func httprouterBasicAuth(h httprouter.Handle) httprouter.Handle {
 			w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		}
+	}
+}
+
+func httprouterNoAuth(h httprouter.Handle) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		h(w, r, ps)
 	}
 }
 
