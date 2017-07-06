@@ -264,7 +264,7 @@ func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 
 	res.Proto = proto
 	if proto == "tcp" {
-		freePort := RandomTCPPort()
+		freePort := util.RandomTCPPort()
 		if freePort > 0 {
 			res.FreePort = freePort
 		} else {
