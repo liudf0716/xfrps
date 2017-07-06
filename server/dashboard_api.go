@@ -295,7 +295,7 @@ func apiIsTcpPortFree(w http.ResponseWriter, r *http.Request, params httprouter.
 	}()
 	log.Info("Http request: [/api/port/tcp/isfree/:port]")
 	
-	port, err := strconv.ParseInt(strPort)
+	port, err := strconv.Atoi(strPort)
 	if err == nil {
 		res.Code = 1
 		res.Msg = "port is illegal"
