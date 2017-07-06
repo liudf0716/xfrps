@@ -247,7 +247,7 @@ type GetFreePortResp struct {
 	GeneralResponse
 	
 	Proto		string	`json:"proto"`
-	FreePort	int64	`json:"free_port"`
+	FreePort	int		`json:"free_port"`
 }
 
 func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
