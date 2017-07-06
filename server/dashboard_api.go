@@ -21,6 +21,7 @@ import (
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/consts"
 	"github.com/KunTengRom/xfrps/utils/log"
+	"github.com/KunTengRom/xfrps/utils/util"
 	"github.com/KunTengRom/xfrps/utils/version"
 
 	"github.com/julienschmidt/httprouter"
