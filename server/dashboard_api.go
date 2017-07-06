@@ -15,6 +15,7 @@
 package server
 
 import (
+	"strconv"
 	"encoding/json"
 	"net/http"
 
@@ -242,7 +243,7 @@ func apiProxyTraffic(w http.ResponseWriter, r *http.Request, params httprouter.P
 	w.Write(buf)
 }
 
-// api/getfreeport
+// /api/port/get/:proto
 type GetFreePortResp struct {
 	GeneralResponse
 	
@@ -258,9 +259,9 @@ func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 
 	proto := params.ByName("proto")
 	defer func() {
-		log.Info("Http response [api/getfreeport]: code [%d]", res.Code)
+		log.Info("Http response [/api/port/get/:proto]: code [%d]", res.Code)
 	}()
-	log.Info("Http request: [api/getfreeport]")
+	log.Info("Http request: [/api/port/get/:proto]")
 
 	res.Proto = proto
 	if proto == "tcp" {
@@ -274,6 +275,36 @@ func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 	} else {
 		res.Code = 1
 		res.Msg = "not support proto " + proto
+	}
+
+	buf, _ = json.Marshal(&res)
+	w.Write(buf)
+}
+
+// /api/port/tcp/isfree/:port
+
+func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	var (
+		buf []byte
+		res GeneralResponse
+	)
+
+	strPort := params.ByName("port")
+	defer func() {
+		log.Info("Http response [/api/port/tcp/isfree/:port]: code [%d]", res.Code)
+	}()
+	log.Info("Http request: [/api/port/tcp/isfree/:port]")
+	
+	port, err := strconv.ParseInt(strPort)
+	if err == nil {
+		res.Code = 1
+		res.Msg = "port is illegal"
+	}else if util.IsTCPPortAvailable(port) {
+		res.Code = 0
+		res.Msg = "tcp port available"
+	} else {
+		res.Code = 1
+		res.Msg = "tcp port unavailable"
 	}
 
 	buf, _ = json.Marshal(&res)
