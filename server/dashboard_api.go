@@ -273,7 +273,7 @@ func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 		}
 	} else {
 		res.Code = 1
-		res.Msg = "not support udp"
+		res.Msg = "not support proto " + proto
 	}
 
 	buf, _ = json.Marshal(&res)
