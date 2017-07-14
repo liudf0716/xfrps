@@ -157,6 +157,7 @@ func (cfg *BaseProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 }
 
 // Bind info
+// local service port map to remote remote port
 type BindInfoConf struct {
 	BindAddr   string `json:"bind_addr"`
 	RemotePort int64  `json:"remote_port"`
@@ -166,6 +167,7 @@ func (cfg *BindInfoConf) LoadFromMsg(pMsg *msg.NewProxy) {
 	if ServerCommonCfg != nil {
 		cfg.BindAddr = ServerCommonCfg.BindAddr
 	}
+	
 	cfg.RemotePort = pMsg.RemotePort
 }
 
@@ -179,7 +181,7 @@ func (cfg *BindInfoConf) LoadFromFile(name string, section ini.Section) (err err
 			return fmt.Errorf("Parse conf error: proxy [%s] remote_port error", name)
 		}
 	} else {
-		return fmt.Errorf("Parse conf error: proxy [%s] remote_port not found", name)
+		cfg.RemotePort = 0
 	}
 	return nil
 }
@@ -190,9 +192,13 @@ func (cfg *BindInfoConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 
 func (cfg *BindInfoConf) check() (err error) {
 	if ServerCommonCfg == nil {
+		return fmt.Errorf("ServerCommonCfg is nil")
+	}
+	
+	if cfg.RemotePort == 0 {
 		return nil
 	}
-
+	
 	if len(ServerCommonCfg.PrivilegeAllowPorts) != 0 {
 		if ok := util.ContainsPort(ServerCommonCfg.PrivilegeAllowPorts, cfg.RemotePort); !ok {
 			return fmt.Errorf("remote port [%d] isn't allowed", cfg.RemotePort)
@@ -200,7 +206,7 @@ func (cfg *BindInfoConf) check() (err error) {
 	}
 
 	if !util.IsTCPPortAvailable(int(cfg.RemotePort)) {
-		return fmt.Errorf("remote_port is not available")
+		return fmt.Errorf("remote port [%d] isn't available", cfg.RemotePort)
 	}
 	return nil
 }
