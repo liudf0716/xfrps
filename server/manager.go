@@ -19,6 +19,37 @@ import (
 	"sync"
 )
 
+type PortManager struct {
+	freePort	map[string]int64
+	
+	mu sync.RWMutex
+}
+
+func NewPortManager() *PortManager {
+	return &PortManager{
+		freePort: make(map[string]int64),
+	}
+}
+
+func (pm *PortManager) Add(runId string, int64 port) (oldPort int64) {
+	pm.mu.Lock()
+	defer pm.mu.Unlock()
+
+	oldPort, ok := pm.freePort[runId]
+	if ok {
+		return
+	}
+	pm.freePort[runId] = port
+	return
+}
+
+func (pm *PortManager) GetById(runId string) (port int64, ok bool) {
+	pm.mu.Lock()
+	defer pm.mu.Unlock()
+	port, ok = pm.freePort[runId]
+	return
+}
+
 type ControlManager struct {
 	// controls indexed by run id
 	ctlsByRunId map[string]*Control
