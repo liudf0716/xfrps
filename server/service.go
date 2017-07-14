@@ -52,12 +52,16 @@ type Service struct {
 
 	// Manage all proxies.
 	pxyManager *ProxyManager
+	
+	// Manage all free port for each client
+	portManager	*PortManager
 }
 
 func NewService() (svr *Service, err error) {
 	svr = &Service{
 		ctlManager: NewControlManager(),
 		pxyManager: NewProxyManager(),
+		portManager: NewPortManager(),
 	}
 
 	// Init assets.
