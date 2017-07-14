@@ -161,6 +161,11 @@ type TcpProxy struct {
 }
 
 func (pxy *TcpProxy) Run() error {
+	if pxy.cfg.RemotePort == 0 {
+		// get port for client
+		pxy.cfg.RemotePort = pxy.ctl.GetFreePort()
+	}
+	
 	listener, err := frpNet.ListenTcp(config.ServerCommonCfg.BindAddr, pxy.cfg.RemotePort)
 	if err != nil {
 		return err
