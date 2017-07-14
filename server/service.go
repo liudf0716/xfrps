@@ -185,8 +185,8 @@ func (svr *Service) Run() {
 }
 
 func (svr *Service) RegisterControl(ctlConn frpNet.Conn, loginMsg *msg.Login) (err error) {
-	ctlConn.Info("client login info: ip [%s] version [%s] hostname [%s] os [%s] arch [%s]",
-		ctlConn.RemoteAddr().String(), loginMsg.Version, loginMsg.Hostname, loginMsg.Os, loginMsg.Arch)
+	ctlConn.Info("client login info: ip [%s] version [%s] hostname [%s] os [%s] arch [%s] runId [%s]",
+		ctlConn.RemoteAddr().String(), loginMsg.Version, loginMsg.Hostname, loginMsg.Os, loginMsg.Arch, loginMsg.RunId)
 
 	// Check client version.
 	if ok, msg := version.Compat(loginMsg.Version); !ok {
