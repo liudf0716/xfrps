@@ -26,6 +26,7 @@ import (
 	"github.com/KunTengRom/xfrps/utils/crypto"
 	"github.com/KunTengRom/xfrps/utils/errors"
 	"github.com/KunTengRom/xfrps/utils/net"
+	"github.com/KunTengRom/xfrps/utils/util"
 	"github.com/KunTengRom/xfrps/utils/shutdown"
 	"github.com/KunTengRom/xfrps/utils/version"
 )
@@ -58,9 +59,9 @@ type Control struct {
 	// last time got the Ping message
 	lastPing time.Time
 
-	// A new run id will be generated when a new client login.
-	// If run id got from login message has same run id, it means it's the same client, so we can
-	// replace old controller instantly.
+	//different from frp, client must provide its runId when first login
+	// every client has unique runId, if encounter the same runId,
+	// xfrps will reject the new client
 	runId string
 
 	// control status
@@ -91,6 +92,17 @@ func NewControl(svr *Service, ctlConn net.Conn, loginMsg *msg.Login) *Control {
 		writerShutdown:  shutdown.New(),
 		managerShutdown: shutdown.New(),
 		allShutdown:     shutdown.New(),
+	}
+}
+
+// Get free port for client, every client has only one free port
+func (ctl *Control) GetFreePort() int64 {
+	port, ok := ctl.svr.portManager.GetById(ctl.runId)
+	if ok {
+		return port
+	} else {
+		port = int64(util.RandomTCPPort())
+		ctl.svr.portManager.Add(ctl.runId, port)
 	}
 }
 
