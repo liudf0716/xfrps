@@ -20,6 +20,9 @@ import (
 	"runtime"
 	"sync"
 	"time"
+	"net"
+	"crypto/sha1"
+    "encoding/hex"
 
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
@@ -77,13 +80,32 @@ type Control struct {
 	log.Logger
 }
 
+func GetRunIdByInterfaceName() (runId string) {
+	netInterface, err := net.InterfaceByName("eth0")
+
+	if err != nil {
+		runId = ""
+		return
+	}
+	
+	macAddress := netInterface.HardwareAddr
+    h := sha1.New()
+    h.Write([]byte(macAddress))
+    runId = hex.EncodeToString(h.Sum(nil))
+	return
+}
+
 func NewControl(svr *Service, pxyCfgs map[string]config.ProxyConf) *Control {
+	
+	runId, err := GetRunIdByInterfaceName()
+	
 	loginMsg := &msg.Login{
 		Arch:      runtime.GOARCH,
 		Os:        runtime.GOOS,
 		PoolCount: config.ClientCommonCfg.PoolCount,
 		User:      config.ClientCommonCfg.User,
 		Version:   version.Full(),
+		RunId:	   runId,
 	}
 	return &Control{
 		svr:      svr,
