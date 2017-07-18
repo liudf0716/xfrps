@@ -20,9 +20,9 @@ import (
 	"runtime"
 	"sync"
 	"time"
-	"net"
 	"crypto/sha1"
     "encoding/hex"
+	golangnet "net"
 
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
@@ -81,7 +81,7 @@ type Control struct {
 }
 
 func GetRunIdByInterfaceName() (runId string) {
-	netInterface, err := net.InterfaceByName("eth0")
+	netInterface, err := golangnet.InterfaceByName("eth0")
 
 	if err != nil {
 		runId = ""
