@@ -103,6 +103,8 @@ func (ctl *Control) GetFreePort() (port int64) {
 		port = int64(util.RandomTCPPort())
 		ctl.svr.portManager.Add(ctl.runId, port)
 	}
+	
+	return
 }
 
 // Start send a login success message to client and start working.
