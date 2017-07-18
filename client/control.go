@@ -80,7 +80,7 @@ type Control struct {
 	log.Logger
 }
 
-func GetRunIdByInterfaceName() (runId string, err error) {
+func GetRunIdByInterfaceName() (runId string) {
 	netInterface, err := golangnet.InterfaceByName("eth0")
 
 	if err != nil {
@@ -97,7 +97,7 @@ func GetRunIdByInterfaceName() (runId string, err error) {
 
 func NewControl(svr *Service, pxyCfgs map[string]config.ProxyConf) *Control {
 	
-	runId, err := GetRunIdByInterfaceName()
+	runId := GetRunIdByInterfaceName()
 	
 	loginMsg := &msg.Login{
 		Arch:      runtime.GOARCH,
