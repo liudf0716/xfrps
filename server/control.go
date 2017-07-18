@@ -97,10 +97,9 @@ func NewControl(svr *Service, ctlConn net.Conn, loginMsg *msg.Login) *Control {
 
 // Get free port for client, every client has only one free port
 func (ctl *Control) GetFreePort() (port int64) {
-	port, ok := ctl.svr.portManager.GetById(ctl.runId)
-	if ok {
-		return 
-	} else {
+	var ok bool
+	port, ok = ctl.svr.portManager.GetById(ctl.runId)
+	if !ok {
 		port = int64(util.RandomTCPPort())
 		ctl.svr.portManager.Add(ctl.runId, port)
 	}
