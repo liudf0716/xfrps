@@ -80,7 +80,7 @@ type Control struct {
 	log.Logger
 }
 
-func GetRunIdByInterfaceName() (runId string) {
+func GetRunIdByInterfaceName() (runId string, err error) {
 	netInterface, err := golangnet.InterfaceByName("eth0")
 
 	if err != nil {
