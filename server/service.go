@@ -215,15 +215,7 @@ func (svr *Service) RegisterControl(ctlConn frpNet.Conn, loginMsg *msg.Login) (e
 		return
 	}
 	
-	// if client already register, return 
-	ctl, ok := svr.ctlManager.GetById(loginMsg.RunId)
-	if ok {
-		err = fmt.Errorf("client already login")
-		return
-	} else {
-		ctl = NewControl(svr, ctlConn, loginMsg)
-	}
-	
+	ctl := NewControl(svr, ctlConn, loginMsg)
 	if oldCtl := svr.ctlManager.Add(loginMsg.RunId, ctl); oldCtl != nil {
 		oldCtl.allShutdown.WaitDown()
 	}
