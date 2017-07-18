@@ -116,6 +116,7 @@ func NewControl(svr *Service, pxyCfgs map[string]config.ProxyConf) *Control {
 		readCh:   make(chan msg.Message, 10),
 		closedCh: make(chan int),
 		Logger:   log.NewPrefixLogger(""),
+		runId:	  runId,
 	}
 }
 
