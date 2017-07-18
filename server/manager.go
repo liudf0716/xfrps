@@ -31,7 +31,7 @@ func NewPortManager() *PortManager {
 	}
 }
 
-func (pm *PortManager) Add(runId string, int64 port) (oldPort int64) {
+func (pm *PortManager) Add(runId string, port int64) (oldPort int64) {
 	pm.mu.Lock()
 	defer pm.mu.Unlock()
 
