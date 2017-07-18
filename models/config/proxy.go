@@ -433,7 +433,7 @@ func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err err
 			return fmt.Errorf("Parse conf error: proxy [%s] remote_port error", name)
 		}
 	} else {
-		return fmt.Errorf("Parse conf error: proxy [%s] remote_port not found", name)
+		cfg.RemotePort = 0
 	}
 
 	if tmpStr, ok = section["remote_data_port"]; ok {
@@ -441,7 +441,7 @@ func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err err
 			return fmt.Errorf("Parse conf error: proxy [%s] remote_data_port error", name)
 		}
 	} else {
-		return fmt.Errorf("Parse conf error: proxy [%s] remote_data_port not found", name)
+		cfg.RemoteDataPort = 0
 	}
 
 	return
@@ -454,21 +454,6 @@ func (cfg *FtpProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 }
 
 func (cfg *FtpProxyConf) Check() (err error) {
-	if cfg.RemotePort == 0 {
-		return fmt.Errorf("type [ftp] not support when remote port is not set")
-	}
-
-	if cfg.RemoteDataPort == 0 {
-		return fmt.Errorf("type [ftp] not support when remote data port is not set")
-	}
-
-	if !util.IsTCPPortAvailable(int(cfg.RemotePort)) {
-		return fmt.Errorf("type [ftp] remote_port is not available")
-	}
-
-	if !util.IsTCPPortAvailable(int(cfg.RemoteDataPort)) {
-		return fmt.Errorf("type [ftp] remote_data_port is not available")
-	}
 	return
 }
 
