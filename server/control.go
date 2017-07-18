@@ -96,7 +96,7 @@ func NewControl(svr *Service, ctlConn net.Conn, loginMsg *msg.Login) *Control {
 }
 
 // Get free port for client, every client has only one free port
-func (ctl *Control) GetFreePort() int64 {
+func (ctl *Control) GetFreePort() (port int64) {
 	port, ok := ctl.svr.portManager.GetById(ctl.runId)
 	if ok {
 		return port
