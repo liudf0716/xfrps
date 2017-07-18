@@ -99,7 +99,7 @@ func NewControl(svr *Service, ctlConn net.Conn, loginMsg *msg.Login) *Control {
 func (ctl *Control) GetFreePort() (port int64) {
 	port, ok := ctl.svr.portManager.GetById(ctl.runId)
 	if ok {
-		return port
+		return 
 	} else {
 		port = int64(util.RandomTCPPort())
 		ctl.svr.portManager.Add(ctl.runId, port)
