@@ -191,23 +191,17 @@ func (cfg *BindInfoConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 }
 
 func (cfg *BindInfoConf) check() (err error) {
-	if ServerCommonCfg == nil {
-		return fmt.Errorf("ServerCommonCfg is nil")
-	}
 	
-	if cfg.RemotePort == 0 {
-		return nil
-	}
-	
-	if len(ServerCommonCfg.PrivilegeAllowPorts) != 0 {
+	if ServerCommonCfg && len(ServerCommonCfg.PrivilegeAllowPorts) != 0 {
 		if ok := util.ContainsPort(ServerCommonCfg.PrivilegeAllowPorts, cfg.RemotePort); !ok {
 			return fmt.Errorf("remote port [%d] isn't allowed", cfg.RemotePort)
 		}
 	}
 
-	if !util.IsTCPPortAvailable(int(cfg.RemotePort)) {
+	if cfg.RemotePort != 0 && !util.IsTCPPortAvailable(int(cfg.RemotePort)) {
 		return fmt.Errorf("remote port [%d] isn't available", cfg.RemotePort)
 	}
+	
 	return nil
 }
 
