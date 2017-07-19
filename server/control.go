@@ -107,6 +107,18 @@ func (ctl *Control) GetFreePort() (port int64) {
 	return
 }
 
+// Get ftp port for ftp client
+func (ctl *Control) GetFtpPort() (port int64) {
+	var ok bool
+	port, ok = ctl.svr.portManager.GetFtpById(ctl.runId)
+	if !ok {
+		port = int64(util.RandomTCPPort())
+		ctl.svr.portManager.AddFtp(ctl.runId, port)
+	}
+	
+	return
+}
+
 // Start send a login success message to client and start working.
 func (ctl *Control) Start() {
 	loginRespMsg := &msg.LoginResp{
