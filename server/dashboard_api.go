@@ -310,3 +310,62 @@ func apiIsTcpPortFree(w http.ResponseWriter, r *http.Request, params httprouter.
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
+
+type GetPortResp struct {
+	GeneralResponse
+	
+	Port	int64		`json:"port"`
+}
+
+// /api/port/tcp/getport/:runid
+
+func apiGetPort(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	var (
+		buf []byte
+		res GetPortResp
+	)
+	
+	
+	runid := params.ByName("runid")
+	defer func() {
+		log.Info("Http response [/api/port/tcp/getport/:runid]: code [%d]", res.Code)
+	}()
+	log.Info("Http request: [/api/port/tcp/getport/:runid]")
+	
+	port, ok := ServerService.portManager.GetById(runid)
+	if ok {
+		res.Port = port
+	} else {
+		res.Code = 1
+		res.Msg = "can not get port by its runid"
+	}
+	
+	buf, _ = json.Marshal(&res)
+	w.Write(buf)
+}
+
+// /api/port/tcp/getftpport/:runid
+func apiGetFtpPort(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	var (
+		buf []byte
+		res GetPortResp
+	)
+	
+	
+	runid := params.ByName("runid")
+	defer func() {
+		log.Info("Http response [/api/port/tcp/getftpport/:runid]: code [%d]", res.Code)
+	}()
+	log.Info("Http request: [/api/port/tcp/getftpport/:runid]")
+	
+	port, ok := ServerService.portManager.GetFtpById(runid)
+	if ok {
+		res.Port = port
+	} else {
+		res.Code = 1
+		res.Msg = "can not get ftp control port by its runid"
+	}
+	
+	buf, _ = json.Marshal(&res)
+	w.Write(buf)
+}
