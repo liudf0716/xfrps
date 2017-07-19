@@ -21,6 +21,7 @@ import (
 
 type PortManager struct {
 	freePort	map[string]int64
+	ftpPort		map[string]int64
 	
 	mu sync.RWMutex
 }
@@ -28,6 +29,7 @@ type PortManager struct {
 func NewPortManager() *PortManager {
 	return &PortManager{
 		freePort: make(map[string]int64),
+		ftpPort: make(map[string]int64),
 	}
 }
 
@@ -43,12 +45,32 @@ func (pm *PortManager) Add(runId string, port int64) (oldPort int64) {
 	return
 }
 
+func (pm *PortManager) AddFtp(runId string, port int64) (oldPort int64) {
+	pm.mu.Lock()
+	defer pm.mu.Unlock()
+
+	oldPort, ok := pm.ftpPort[runId]
+	if ok {
+		return
+	}
+	pm.ftpPort[runId] = port
+	return
+}
+
 func (pm *PortManager) GetById(runId string) (port int64, ok bool) {
 	pm.mu.Lock()
 	defer pm.mu.Unlock()
 	port, ok = pm.freePort[runId]
 	return
 }
+
+func (pm *PortManager) GetFtpById(runId string) (port int64, ok bool) {
+	pm.mu.Lock()
+	defer pm.mu.Unlock()
+	port, ok = pm.ftpPort[runId]
+	return
+}
+
 
 type ControlManager struct {
 	// controls indexed by run id
