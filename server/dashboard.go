@@ -48,6 +48,8 @@ func RunDashboardServer(addr string, port int64) (err error) {
 	router.GET("/api/proxy/traffic/:name", httprouterBasicAuth(apiProxyTraffic))
 	router.GET("/api/port/getfree/:proto", httprouterNoAuth(apiGetFreePort))
 	router.GET("/api/port/tcp/isfree/:port", httprouterNoAuth(apiIsTcpPortFree))
+	router.GET("/api/port/tcp/getport/:runid", httprouterNoAuth(apiGetPort)) // according runid, getting tcp port
+	router.GET("/api/port/tcp/getftpport/:runid", httprouterNoAuth(apiGetFtpPort)) // according runid, getting its ftp control port
 
 	// view
 	router.Handler("GET", "/favicon.ico", http.FileServer(assets.FileSystem))
