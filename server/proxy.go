@@ -193,6 +193,9 @@ type FtpProxy struct {
 }
 
 func (pxy *FtpProxy) Run() error {
+	if pxy.cfg.RemotePort == 0 {
+		pxy.cfg.RemotePort = pxy.ctl.GetFtpPort()
+	}
 	listener, err := frpNet.ListenTcp(config.ServerCommonCfg.BindAddr, pxy.cfg.RemotePort)
 	if err != nil {
 		return err
