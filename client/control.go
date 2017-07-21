@@ -88,7 +88,7 @@ func GetRunIdByInterfaceName() (runId string) {
     }
 	
     for _, inter := range interfaces {
-		if inter.name != "lo" {
+		if inter.Name != "lo" {
 			macAddress := inter.HardwareAddr
 			h := sha1.New()
 			h.Write([]byte(macAddress))
