@@ -15,9 +15,9 @@
 package server
 
 import (
-	"strconv"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/consts"
@@ -246,9 +246,9 @@ func apiProxyTraffic(w http.ResponseWriter, r *http.Request, params httprouter.P
 // /api/port/getfree/:proto
 type GetFreePortResp struct {
 	GeneralResponse
-	
-	Proto		string	`json:"proto"`
-	FreePort	int		`json:"free_port"`
+
+	Proto    string `json:"proto"`
+	FreePort int    `json:"free_port"`
 }
 
 func apiGetFreePort(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -294,12 +294,12 @@ func apiIsTcpPortFree(w http.ResponseWriter, r *http.Request, params httprouter.
 		log.Info("Http response [/api/port/tcp/isfree/:port]: code [%d]", res.Code)
 	}()
 	log.Info("Http request: [/api/port/tcp/isfree/:port]")
-	
+
 	port, err := strconv.Atoi(strPort)
 	if err == nil {
 		res.Code = 1
 		res.Msg = "port is illegal"
-	}else if util.IsTCPPortAvailable(port) {
+	} else if util.IsTCPPortAvailable(port) {
 		res.Code = 0
 		res.Msg = "tcp port available"
 	} else {
@@ -313,8 +313,8 @@ func apiIsTcpPortFree(w http.ResponseWriter, r *http.Request, params httprouter.
 
 type GetPortResp struct {
 	GeneralResponse
-	
-	Port	int64		`json:"port"`
+
+	Port int64 `json:"port"`
 }
 
 // /api/port/tcp/getport/:runid
@@ -324,14 +324,13 @@ func apiGetPort(w http.ResponseWriter, r *http.Request, params httprouter.Params
 		buf []byte
 		res GetPortResp
 	)
-	
-	
+
 	runid := params.ByName("runid")
 	defer func() {
 		log.Info("Http response [/api/port/tcp/getport/:runid]: code [%d]", res.Code)
 	}()
 	log.Info("Http request: [/api/port/tcp/getport/:runid]")
-	
+
 	port, ok := ServerService.portManager.GetById(runid)
 	if ok {
 		res.Port = port
@@ -339,7 +338,7 @@ func apiGetPort(w http.ResponseWriter, r *http.Request, params httprouter.Params
 		res.Code = 1
 		res.Msg = "can not get port by its runid"
 	}
-	
+
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
@@ -350,14 +349,13 @@ func apiGetFtpPort(w http.ResponseWriter, r *http.Request, params httprouter.Par
 		buf []byte
 		res GetPortResp
 	)
-	
-	
+
 	runid := params.ByName("runid")
 	defer func() {
 		log.Info("Http response [/api/port/tcp/getftpport/:runid]: code [%d]", res.Code)
 	}()
 	log.Info("Http request: [/api/port/tcp/getftpport/:runid]")
-	
+
 	port, ok := ServerService.portManager.GetFtpById(runid)
 	if ok {
 		res.Port = port
@@ -365,7 +363,7 @@ func apiGetFtpPort(w http.ResponseWriter, r *http.Request, params httprouter.Par
 		res.Code = 1
 		res.Msg = "can not get ftp control port by its runid"
 	}
-	
+
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }

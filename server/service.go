@@ -52,15 +52,15 @@ type Service struct {
 
 	// Manage all proxies.
 	pxyManager *ProxyManager
-	
+
 	// Manage all free port for each client
-	portManager	*PortManager
+	portManager *PortManager
 }
 
 func NewService() (svr *Service, err error) {
 	svr = &Service{
-		ctlManager: NewControlManager(),
-		pxyManager: NewProxyManager(),
+		ctlManager:  NewControlManager(),
+		pxyManager:  NewProxyManager(),
 		portManager: NewPortManager(),
 	}
 
@@ -214,7 +214,7 @@ func (svr *Service) RegisterControl(ctlConn frpNet.Conn, loginMsg *msg.Login) (e
 		err = fmt.Errorf("need RunId")
 		return
 	}
-	
+
 	ctl := NewControl(svr, ctlConn, loginMsg)
 	if oldCtl := svr.ctlManager.Add(loginMsg.RunId, ctl); oldCtl != nil {
 		oldCtl.allShutdown.WaitDown()

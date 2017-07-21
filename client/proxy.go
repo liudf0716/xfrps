@@ -390,12 +390,12 @@ func IsIpv4(host string) bool {
 	if len(parts) < 4 {
 		return false
 	}
-	
-	for _,x := range parts {
+
+	for _, x := range parts {
 		if i, err := strconv.Atoi(x); err == nil {
 			if i < 0 || i > 255 {
-			return false
-		}
+				return false
+			}
 		} else {
 			return false
 		}
@@ -404,19 +404,18 @@ func IsIpv4(host string) bool {
 	return true
 }
 
-
 func NewFtpPasv(port int) (newMsg string) {
 	p1 := port / 256
 	p2 := port - (p1 * 256)
-	
+
 	var ipaddress string
-	if (IsIpv4(config.ClientCommonCfg.ServerAddr)) {
-		ipaddress = config.ClientCommonCfg.ServerAddr	
+	if IsIpv4(config.ClientCommonCfg.ServerAddr) {
+		ipaddress = config.ClientCommonCfg.ServerAddr
 	} else {
 		ip4address, err := net.ResolveIPAddr("ip4", config.ClientCommonCfg.ServerAddr)
 		if err != nil {
-		   fmt.Println("Fail to resolve IP4", err.Error())
-		   return
+			fmt.Println("Fail to resolve IP4", err.Error())
+			return
 		}
 		ipaddress = ip4address.String()
 	}

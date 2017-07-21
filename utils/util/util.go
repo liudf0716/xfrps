@@ -144,7 +144,7 @@ func IsPortValid(port int) bool {
 	if port < minTCPPort || port > maxTCPPort {
 		return false
 	}
-	
+
 	return true
 }
 

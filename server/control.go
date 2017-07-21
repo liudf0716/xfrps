@@ -26,8 +26,8 @@ import (
 	"github.com/KunTengRom/xfrps/utils/crypto"
 	"github.com/KunTengRom/xfrps/utils/errors"
 	"github.com/KunTengRom/xfrps/utils/net"
-	"github.com/KunTengRom/xfrps/utils/util"
 	"github.com/KunTengRom/xfrps/utils/shutdown"
+	"github.com/KunTengRom/xfrps/utils/util"
 	"github.com/KunTengRom/xfrps/utils/version"
 )
 
@@ -103,7 +103,7 @@ func (ctl *Control) GetFreePort() (port int64) {
 		port = int64(util.RandomTCPPort())
 		ctl.svr.portManager.Add(ctl.runId, port)
 	}
-	
+
 	return
 }
 
@@ -115,7 +115,7 @@ func (ctl *Control) GetFtpPort() (port int64) {
 		port = int64(util.RandomTCPPort())
 		ctl.svr.portManager.AddFtp(ctl.runId, port)
 	}
-	
+
 	return
 }
 

@@ -15,14 +15,14 @@
 package client
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"fmt"
 	"io"
+	golangnet "net"
 	"runtime"
 	"sync"
 	"time"
-	"crypto/sha1"
-    "encoding/hex"
-	golangnet "net"
 
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
@@ -87,25 +87,25 @@ func GetRunIdByInterfaceName() (runId string) {
 		runId = ""
 		return
 	}
-	
+
 	macAddress := netInterface.HardwareAddr
-    h := sha1.New()
-    h.Write([]byte(macAddress))
-    runId = hex.EncodeToString(h.Sum(nil))
+	h := sha1.New()
+	h.Write([]byte(macAddress))
+	runId = hex.EncodeToString(h.Sum(nil))
 	return
 }
 
 func NewControl(svr *Service, pxyCfgs map[string]config.ProxyConf) *Control {
-	
+
 	runId := GetRunIdByInterfaceName()
-	
+
 	loginMsg := &msg.Login{
 		Arch:      runtime.GOARCH,
 		Os:        runtime.GOOS,
 		PoolCount: config.ClientCommonCfg.PoolCount,
 		User:      config.ClientCommonCfg.User,
 		Version:   version.Full(),
-		RunId:	   runId,
+		RunId:     runId,
 	}
 	return &Control{
 		svr:      svr,
@@ -116,7 +116,7 @@ func NewControl(svr *Service, pxyCfgs map[string]config.ProxyConf) *Control {
 		readCh:   make(chan msg.Message, 10),
 		closedCh: make(chan int),
 		Logger:   log.NewPrefixLogger(""),
-		runId:	  runId,
+		runId:    runId,
 	}
 }
 

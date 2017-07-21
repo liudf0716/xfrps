@@ -20,16 +20,16 @@ import (
 )
 
 type PortManager struct {
-	freePort	map[string]int64
-	ftpPort		map[string]int64
-	
+	freePort map[string]int64
+	ftpPort  map[string]int64
+
 	mu sync.RWMutex
 }
 
 func NewPortManager() *PortManager {
 	return &PortManager{
 		freePort: make(map[string]int64),
-		ftpPort: make(map[string]int64),
+		ftpPort:  make(map[string]int64),
 	}
 }
 
@@ -70,7 +70,6 @@ func (pm *PortManager) GetFtpById(runId string) (port int64, ok bool) {
 	port, ok = pm.ftpPort[runId]
 	return
 }
-
 
 type ControlManager struct {
 	// controls indexed by run id
