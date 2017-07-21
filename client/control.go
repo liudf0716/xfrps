@@ -82,12 +82,12 @@ type Control struct {
 
 func GetRunIdByInterfaceName() (runId string) {
 	interfaces, err := golangnet.Interfaces()
-    if err != nil {
-        runId = ""
+	if err != nil {
+		runId = ""
 		return
-    }
-	
-    for _, inter := range interfaces {
+	}
+
+	for _, inter := range interfaces {
 		if inter.Name != "lo" {
 			macAddress := inter.HardwareAddr
 			h := sha1.New()
@@ -95,9 +95,9 @@ func GetRunIdByInterfaceName() (runId string) {
 			runId = hex.EncodeToString(h.Sum(nil))
 			return
 		}
-        
-    }
-	
+
+	}
+
 	runId = ""
 	return
 }
