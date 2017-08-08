@@ -136,6 +136,7 @@ func httprouterBasicAuth(h httprouter.Handle) httprouter.Handle {
 
 func httprouterNoAuth(h httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		h(w, r, ps)
 	}
 }
