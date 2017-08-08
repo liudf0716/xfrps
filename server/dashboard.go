@@ -40,11 +40,11 @@ func RunDashboardServer(addr string, port int64) (err error) {
 
 	// api, see dashboard_api.go
 	router.GET("/api/serverinfo", httprouterBasicAuth(apiServerInfo))
-	router.GET("/api/proxy/tcp", httprouterBasicAuth(apiProxyTcp))
-	router.GET("/api/proxy/udp", httprouterBasicAuth(apiProxyUdp))
-	router.GET("/api/proxy/ftp", httprouterBasicAuth(apiProxyFtp))
-	router.GET("/api/proxy/http", httprouterBasicAuth(apiProxyHttp))
-	router.GET("/api/proxy/https", httprouterBasicAuth(apiProxyHttps))
+	router.GET("/api/proxy/tcp/:pageNo", httprouterBasicAuth(apiProxyTcp))
+	router.GET("/api/proxy/udp/:pageNo", httprouterBasicAuth(apiProxyUdp))
+	router.GET("/api/proxy/ftp/:pageNo", httprouterBasicAuth(apiProxyFtp))
+	router.GET("/api/proxy/http/:pageNo", httprouterBasicAuth(apiProxyHttp))
+	router.GET("/api/proxy/https/:pageNo", httprouterBasicAuth(apiProxyHttps))
 	router.GET("/api/proxy/traffic/:name", httprouterBasicAuth(apiProxyTraffic))
 	router.GET("/api/port/getfree/:proto", httprouterNoAuth(apiGetFreePort))
 	router.GET("/api/port/tcp/isfree/:port", httprouterNoAuth(apiIsTcpPortFree))
