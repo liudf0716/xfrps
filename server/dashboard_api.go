@@ -215,7 +215,7 @@ func apiProxyHttps(w http.ResponseWriter, r *http.Request, params httprouter.Par
 	w.Write(buf)
 }
 
-func getProxyStatsPageByType(proxyType string, int pageNo, int pageSize) (proxyInfos []*ProxyStatsInfo) {
+func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyInfos []*ProxyStatsInfo) {
 	startPos := pageNo*pageSize 
 	proxyStats := StatsGetProxiesByType(proxyType)
 	proxyInfos = make([]*ProxyStatsInfo, 0, len(proxyStats))
