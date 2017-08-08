@@ -52,7 +52,7 @@ type ServerInfoResp struct {
 	ProxyTypeCounts map[string]int64 `json:"proxy_type_count"`
 }
 
-func apiServerInfo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func apiServerInfo(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	var (
 		buf []byte
 		res ServerInfoResp
@@ -102,7 +102,7 @@ type GetProxyInfoResp struct {
 }
 
 // api/proxy/tcp
-func apiProxyTcp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func apiProxyTcp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	var (
 		buf []byte
 		res GetProxyInfoResp
@@ -112,14 +112,18 @@ func apiProxyTcp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}()
 	log.Info("Http request: [/api/proxy/tcp]")
 
-	res.Proxies = getProxyStatsByType(consts.TcpProxy)
+	if err != nil {
+		res.Proxies = getProxyStatsByType(consts.TcpProxy)
+	} else {
+		res.Proxies = getProxyStatsPageByType(consts.TcpProxy, pageIndex, 100)
+	}
 
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
 
 // api/proxy/udp
-func apiProxyUdp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func apiProxyUdp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	var (
 		buf []byte
 		res GetProxyInfoResp
@@ -129,14 +133,18 @@ func apiProxyUdp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}()
 	log.Info("Http request: [/api/proxy/udp]")
 
-	res.Proxies = getProxyStatsByType(consts.UdpProxy)
+	if err != nil {
+		res.Proxies = getProxyStatsByType(consts.UdpProxy)
+	} else {
+		res.Proxies = getProxyStatsPageByType(consts.UdpProxy, pageIndex, 100)
+	}
 
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
 
 // api/proxy/ftp
-func apiProxyFtp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func apiProxyFtp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	var (
 		buf []byte
 		res GetProxyInfoResp
@@ -146,14 +154,18 @@ func apiProxyFtp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}()
 	log.Info("Http request: [/api/proxy/ftp]")
 
-	res.Proxies = getProxyStatsByType(consts.FtpProxy)
+	if err != nil {
+		res.Proxies = getProxyStatsByType(consts.FtpProxy)
+	} else {
+		res.Proxies = getProxyStatsPageByType(consts.FtpProxy, pageIndex, 100)
+	}
 
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
 
 // api/proxy/http
-func apiProxyHttp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func apiProxyHttp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	var (
 		buf []byte
 		res GetProxyInfoResp
@@ -163,14 +175,20 @@ func apiProxyHttp(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}()
 	log.Info("Http request: [/api/proxy/http]")
 
-	res.Proxies = getProxyStatsByType(consts.HttpProxy)
+	pageNo := params.ByName("pageNo")
+	pageIndex,err :=strconv.Atoi(pageNo)
+	if err != nil {
+		res.Proxies = getProxyStatsByType(consts.HttpProxy)
+	} else {
+		res.Proxies = getProxyStatsPageByType(consts.HttpProxy, pageIndex, 100)
+	}
 
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
 
 // api/proxy/https
-func apiProxyHttps(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func apiProxyHttps(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	var (
 		buf []byte
 		res GetProxyInfoResp
@@ -179,14 +197,19 @@ func apiProxyHttps(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 		log.Info("Http response [/api/proxy/https]: code [%d]", res.Code)
 	}()
 	log.Info("Http request: [/api/proxy/https]")
-
-	res.Proxies = getProxyStatsByType(consts.HttpsProxy)
-
+	pageNo := params.ByName("pageNo")
+	pageIndex,err :=strconv.Atoi(pageNo)
+	if err != nil {
+		res.Proxies = getProxyStatsByType(consts.HttpsProxy)
+	} else {
+		res.Proxies = getProxyStatsPageByType(consts.HttpsProxy, pageIndex, 100)
+	}
+	
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
 
-func getProxyStatsPageByType(proxyType string, int64 pageNo, int64 pageSize) (proxyInfos []*ProxyStatsInfo) {
+func getProxyStatsPageByType(proxyType string, int pageNo, int pageSize) (proxyInfos []*ProxyStatsInfo) {
 	startPos := pageNo*pageSize 
 	proxyStats := StatsGetProxiesByType(proxyType)
 	proxyInfos = make([]*ProxyStatsInfo, 0, len(proxyStats))
