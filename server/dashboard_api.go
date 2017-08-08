@@ -112,6 +112,8 @@ func apiProxyTcp(w http.ResponseWriter, r *http.Request, params httprouter.Param
 	}()
 	log.Info("Http request: [/api/proxy/tcp]")
 
+	pageNo := params.ByName("pageNo")
+	pageIndex,err :=strconv.Atoi(pageNo)
 	if err != nil {
 		res.Proxies = getProxyStatsByType(consts.TcpProxy)
 	} else {
@@ -133,6 +135,8 @@ func apiProxyUdp(w http.ResponseWriter, r *http.Request, params httprouter.Param
 	}()
 	log.Info("Http request: [/api/proxy/udp]")
 
+	pageNo := params.ByName("pageNo")
+	pageIndex,err :=strconv.Atoi(pageNo)
 	if err != nil {
 		res.Proxies = getProxyStatsByType(consts.UdpProxy)
 	} else {
@@ -154,6 +158,8 @@ func apiProxyFtp(w http.ResponseWriter, r *http.Request, params httprouter.Param
 	}()
 	log.Info("Http request: [/api/proxy/ftp]")
 
+	pageNo := params.ByName("pageNo")
+	pageIndex,err :=strconv.Atoi(pageNo)
 	if err != nil {
 		res.Proxies = getProxyStatsByType(consts.FtpProxy)
 	} else {
