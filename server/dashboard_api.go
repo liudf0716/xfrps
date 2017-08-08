@@ -186,6 +186,39 @@ func apiProxyHttps(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	w.Write(buf)
 }
 
+func getProxyStatsPageByType(proxyType string, int64 pageNo, int64 pageSize) (proxyInfos []*ProxyStatsInfo) {
+	startPos := pageNo*pageSize 
+	proxyStats := StatsGetProxiesByType(proxyType)
+	proxyInfos = make([]*ProxyStatsInfo, 0, len(proxyStats))
+	index := 0
+	number := 0
+	for _, ps := range proxyStats {
+		index++
+		if index  < startPos {
+			continue
+		}
+		proxyInfo := &ProxyStatsInfo{}
+		if pxy, ok := ServerService.pxyManager.GetByName(ps.Name); ok {
+			proxyInfo.Conf = pxy.GetConf()
+			proxyInfo.Status = consts.Online
+		} else {
+			proxyInfo.Status = consts.Offline
+		}
+		proxyInfo.Name = ps.Name
+		proxyInfo.TodayTrafficIn = ps.TodayTrafficIn
+		proxyInfo.TodayTrafficOut = ps.TodayTrafficOut
+		proxyInfo.CurConns = ps.CurConns
+		proxyInfo.LastStartTime = ps.LastStartTime
+		proxyInfo.LastCloseTime = ps.LastCloseTime
+		proxyInfos = append(proxyInfos, proxyInfo)
+		number++
+		if number >= pageSize {
+			return
+		}
+	}
+	return
+}
+
 func getProxyStatsByType(proxyType string) (proxyInfos []*ProxyStatsInfo) {
 	proxyStats := StatsGetProxiesByType(proxyType)
 	proxyInfos = make([]*ProxyStatsInfo, 0, len(proxyStats))
