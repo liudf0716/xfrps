@@ -3,7 +3,7 @@ export GO15VENDOREXPERIMENT := 1
 
 all: fmt build
 
-build: frps frpc
+build: xfrps xfrpc
 
 # compile assets into binary file
 file:
@@ -17,12 +17,12 @@ file:
 fmt:
 	go fmt ./...
 	
-frps:
-	go build -o bin/frps ./cmd/frps
+xfrps:
+	go build -o bin/xfrps ./cmd/xfrps
 	@cp -rf ./assets/static ./bin
 
-frpc:
-	go build -o bin/frpc ./cmd/frpc
+xfrpc:
+	go build -o bin/xfrpc ./cmd/xfrpc
 
 test: gotest
 
@@ -40,8 +40,8 @@ alltest: gotest
 	cd ./tests && ./clean_test.sh && cd -
 
 clean:
-	rm -f ./bin/frpc
-	rm -f ./bin/frps
+	rm -f ./bin/xfrpc
+	rm -f ./bin/xfrps
 	cd ./tests && ./clean_test.sh && cd -
 
 save:
