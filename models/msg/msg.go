@@ -92,7 +92,7 @@ type NewProxy struct {
 	// tcp and udp only
 	RemotePort int64 `json:"remote_port"`
 
-	// tcp only
+	// ftp only
 	RemoteDataPort int64 `json:"remote_data_port"`
 
 	// http and https only
@@ -108,6 +108,9 @@ type NewProxyResp struct {
 	RunId     string `json:"run_id"`
 	ProxyName string `json:"proxy_name"`
 	Error     string `json:"error"`
+	
+	// tcp and udp only
+	RemotePort	int64	`json:"remote_port"`
 }
 
 type NewWorkConn struct {
