@@ -38,6 +38,7 @@ type Proxy interface {
 	GetName() string
 	GetConf() config.ProxyConf
 	GetWorkConnFromPool() (workConn frpNet.Conn, err error)
+	GetRemotePort()	int64
 	Close()
 	log.Logger
 }
@@ -182,6 +183,15 @@ func (pxy *TcpProxy) GetConf() config.ProxyConf {
 	return pxy.cfg
 }
 
+func (pxy *TcpProxy) GetRemotePort() int64 {
+	if pxy.cfg.RemotePort == 0 {
+		// get port for client
+		pxy.cfg.RemotePort = pxy.ctl.GetFreePort()
+	}
+	
+	return pxy.cfg.RemotePort
+}
+
 func (pxy *TcpProxy) Close() {
 	pxy.BaseProxy.Close()
 }
@@ -212,6 +222,16 @@ func (pxy *FtpProxy) Run() error {
 func (pxy *FtpProxy) GetConf() config.ProxyConf {
 	return pxy.cfg
 }
+
+func (pxy *FtpProxy) GetRemotePort() int64 {
+	if pxy.cfg.RemotePort == 0 {
+		// get port for client
+		pxy.cfg.RemotePort = pxy.ctl.GetFtpPort()
+	}
+	
+	return pxy.cfg.RemotePort
+}
+
 
 func (pxy *FtpProxy) Close() {
 	pxy.BaseProxy.Close()
@@ -269,6 +289,11 @@ func (pxy *HttpProxy) GetConf() config.ProxyConf {
 	return pxy.cfg
 }
 
+func (pxy *HttpProxy) GetRemotePort() int64 {
+	return 0
+}
+
+
 func (pxy *HttpProxy) Close() {
 	pxy.BaseProxy.Close()
 }
@@ -309,6 +334,10 @@ func (pxy *HttpsProxy) Run() (err error) {
 
 func (pxy *HttpsProxy) GetConf() config.ProxyConf {
 	return pxy.cfg
+}
+
+func (pxy *HttpsProxy) GetRemotePort() int64 {
+	return 0
 }
 
 func (pxy *HttpsProxy) Close() {
@@ -466,6 +495,10 @@ func (pxy *UdpProxy) Run() (err error) {
 
 func (pxy *UdpProxy) GetConf() config.ProxyConf {
 	return pxy.cfg
+}
+
+func (pxy *UdpProxy) GetRemotePort() int64 {
+	return 0
 }
 
 func (pxy *UdpProxy) Close() {
