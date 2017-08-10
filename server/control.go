@@ -342,10 +342,7 @@ func (ctl *Control) manager() {
 			switch m := rawMsg.(type) {
 			case *msg.NewProxy:
 				// register proxy in this control
-				err := ctl.RegisterProxy(m)
-				resp := &msg.NewProxyResp{
-					ProxyName: m.ProxyName,
-				}
+				resp, err := ctl.RegisterProxy(m)
 				if err != nil {
 					resp.Error = err.Error()
 					ctl.conn.Warn("new proxy [%s] error: %v", m.ProxyName, err)
@@ -363,7 +360,11 @@ func (ctl *Control) manager() {
 	}
 }
 
-func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (err error) {
+func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp msg.NewProxyResp, err error) {
+	resp = &msg.NewProxyResp{
+		ProxyName: pxyMsg.ProxyName,
+	}
+	
 	var pxyConf config.ProxyConf
 	// Load configures from NewProxy message and check.
 	pxyConf, err = config.NewProxyConf(pxyMsg)
@@ -388,6 +389,14 @@ func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (err error) {
 		}
 	}()
 
+	// if tcp or ftp and remote_port is 0, get its remote_port and set resp
+	// udp not support
+	if (pxyMsg.ProxyType == consts.TcpProxy || pxyMsg.ProxyType == consts.FtpProxy) &&
+		pxyMsg.RemotePort == 0 {
+			resp.RemotePort = pxy.GetRemotePort()	
+	}
+	
+	
 	err = ctl.svr.RegisterProxy(pxyMsg.ProxyName, pxy)
 	if err != nil {
 		return err
