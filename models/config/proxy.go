@@ -400,7 +400,6 @@ type FtpProxyConf struct {
 	LocalSvrConf
 
 	RemotePort     int64 `json:"remote_port"`
-	RemoteDataPort int64 `json:"remote_data_port"`
 }
 
 func (cfg *FtpProxyConf) LoadFromMsg(pMsg *msg.NewProxy) {
@@ -430,21 +429,12 @@ func (cfg *FtpProxyConf) LoadFromFile(name string, section ini.Section) (err err
 		cfg.RemotePort = 0
 	}
 
-	if tmpStr, ok = section["remote_data_port"]; ok {
-		if cfg.RemoteDataPort, err = strconv.ParseInt(tmpStr, 10, 64); err != nil {
-			return fmt.Errorf("Parse conf error: proxy [%s] remote_data_port error", name)
-		}
-	} else {
-		cfg.RemoteDataPort = 0
-	}
-
 	return
 }
 
 func (cfg *FtpProxyConf) UnMarshalToMsg(pMsg *msg.NewProxy) {
 	cfg.BaseProxyConf.UnMarshalToMsg(pMsg)
 	pMsg.RemotePort = cfg.RemotePort
-	pMsg.RemoteDataPort = cfg.RemoteDataPort
 }
 
 func (cfg *FtpProxyConf) Check() (err error) {
