@@ -57,6 +57,7 @@ type ProxyConf interface {
 	UnMarshalToMsg(pMsg *msg.NewProxy)
 	Check() error
 	FillLocalServer(ip string, port int)
+	FillRemotePort(rport int64)
 }
 
 func GetFtpDataProxyConf(cfg *FtpProxyConf) (ncfg ProxyConf, err error) {
@@ -203,6 +204,10 @@ func (cfg *BindInfoConf) check() (err error) {
 	}
 
 	return nil
+}
+
+func (cfg *BindInfoConf) FillRemotePort(rport int64) {
+	cfg.RemotePort = rport
 }
 
 // Domain info
@@ -354,6 +359,10 @@ func (cfg *TcpProxyConf) FillLocalServer(ip string, port int) {
 	cfg.LocalSvrConf.setLocalServer(ip, port)
 }
 
+func (cfg *TcpProxyConf) FillRemotePort(rport int64) {
+	cfg.BindInfoConf.FillRemotePort(rport)
+}
+
 // UDP
 type UdpProxyConf struct {
 	BaseProxyConf
@@ -392,6 +401,10 @@ func (cfg *UdpProxyConf) Check() (err error) {
 
 func (cfg *UdpProxyConf) FillLocalServer(ip string, port int) {
 	cfg.LocalSvrConf.setLocalServer(ip, port)
+}
+
+func (cfg *UdpProxyConf) FillRemotePort(rport int64) {
+	cfg.BindInfoConf.FillRemotePort(rport)
 }
 
 // ftp
@@ -452,6 +465,10 @@ func (cfg *FtpProxyConf) Check() (err error) {
 
 func (cfg *FtpProxyConf) FillLocalServer(ip string, port int) {
 	cfg.LocalSvrConf.setLocalServer(ip, port)
+}
+
+func (cfg *FtpProxyConf) FillRemotePort(rport int64) {
+	cfg.RemotePort = rport
 }
 
 // HTTP
@@ -527,6 +544,10 @@ func (cfg *HttpProxyConf) FillLocalServer(ip string, port int) {
 	cfg.LocalSvrConf.setLocalServer(ip, port)
 }
 
+func (cfg *HttpProxyConf) FillRemotePort(rport int64) {
+	return
+}
+
 // HTTPS
 type HttpsProxyConf struct {
 	BaseProxyConf
@@ -569,6 +590,10 @@ func (cfg *HttpsProxyConf) Check() (err error) {
 
 func (cfg *HttpsProxyConf) FillLocalServer(ip string, port int) {
 	cfg.LocalSvrConf.setLocalServer(ip, port)
+}
+
+func (cfg *HttpsProxyConf) FillRemotePort(rport int64) {
+	return
 }
 
 // if len(startProxy) is 0, start all
