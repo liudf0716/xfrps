@@ -393,6 +393,11 @@ func (ctl *Control) manager() {
 					ctl.Warn("[%s] no proxy conf found", m.ProxyName)
 					continue
 				}
+				// if RemotePort is not 0, set cfg's remote port
+				if m.RemotePort != 0 {
+					cfg.FillRemotePort(m.RemotePort)
+				}
+				
 				oldPxy, ok := ctl.proxies[m.ProxyName]
 				if ok {
 					oldPxy.Close()
