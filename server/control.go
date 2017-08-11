@@ -360,7 +360,7 @@ func (ctl *Control) manager() {
 	}
 }
 
-func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp msg.NewProxyResp, err error) {
+func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp, err error) {
 	resp = &msg.NewProxyResp{
 		ProxyName: pxyMsg.ProxyName,
 	}
