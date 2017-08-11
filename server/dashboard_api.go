@@ -113,7 +113,7 @@ func apiProxyTcp(w http.ResponseWriter, r *http.Request, params httprouter.Param
 	log.Info("Http request: [/api/proxy/tcp]")
 
 	pageNo := params.ByName("pageNo")
-	pageIndex,err :=strconv.Atoi(pageNo)
+	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		res.Proxies = getProxyStatsByType(consts.TcpProxy)
 	} else {
@@ -136,7 +136,7 @@ func apiProxyUdp(w http.ResponseWriter, r *http.Request, params httprouter.Param
 	log.Info("Http request: [/api/proxy/udp]")
 
 	pageNo := params.ByName("pageNo")
-	pageIndex,err :=strconv.Atoi(pageNo)
+	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		res.Proxies = getProxyStatsByType(consts.UdpProxy)
 	} else {
@@ -159,7 +159,7 @@ func apiProxyFtp(w http.ResponseWriter, r *http.Request, params httprouter.Param
 	log.Info("Http request: [/api/proxy/ftp]")
 
 	pageNo := params.ByName("pageNo")
-	pageIndex,err :=strconv.Atoi(pageNo)
+	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		res.Proxies = getProxyStatsByType(consts.FtpProxy)
 	} else {
@@ -182,7 +182,7 @@ func apiProxyHttp(w http.ResponseWriter, r *http.Request, params httprouter.Para
 	log.Info("Http request: [/api/proxy/http]")
 
 	pageNo := params.ByName("pageNo")
-	pageIndex,err :=strconv.Atoi(pageNo)
+	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		res.Proxies = getProxyStatsByType(consts.HttpProxy)
 	} else {
@@ -204,26 +204,26 @@ func apiProxyHttps(w http.ResponseWriter, r *http.Request, params httprouter.Par
 	}()
 	log.Info("Http request: [/api/proxy/https]")
 	pageNo := params.ByName("pageNo")
-	pageIndex,err :=strconv.Atoi(pageNo)
+	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		res.Proxies = getProxyStatsByType(consts.HttpsProxy)
 	} else {
 		res.Proxies = getProxyStatsPageByType(consts.HttpsProxy, pageIndex, 100)
 	}
-	
+
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
 
 func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyInfos []*ProxyStatsInfo) {
-	startPos := pageNo*pageSize 
+	startPos := pageNo * pageSize
 	proxyStats := StatsGetProxiesByType(proxyType)
 	proxyInfos = make([]*ProxyStatsInfo, 0, len(proxyStats))
 	index := 0
 	number := 0
 	for _, ps := range proxyStats {
 		index++
-		if index  < startPos {
+		if index < startPos {
 			continue
 		}
 		proxyInfo := &ProxyStatsInfo{}

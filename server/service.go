@@ -112,7 +112,7 @@ func NewService() (svr *Service, err error) {
 	if config.ServerCommonCfg.DashboardPort == 0 {
 		config.ServerCommonCfg.DashboardPort = config.ServerCommonCfg.BindPort + 1
 	}
-	
+
 	err = RunDashboardServer(config.ServerCommonCfg.BindAddr, config.ServerCommonCfg.DashboardPort)
 	if err != nil {
 		err = fmt.Errorf("Create dashboard web server error, %v", err)

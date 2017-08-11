@@ -397,7 +397,7 @@ func (ctl *Control) manager() {
 				if m.RemotePort != 0 {
 					cfg.FillRemotePort(m.RemotePort)
 				}
-				
+
 				oldPxy, ok := ctl.proxies[m.ProxyName]
 				if ok {
 					oldPxy.Close()

@@ -91,10 +91,10 @@ type NewProxy struct {
 
 	// tcp and udp only
 	RemotePort int64 `json:"remote_port"`
-	
+
 	// ftp only
-	RemoteDataPort	int64	`json:"remote_data_port"`
-	
+	RemoteDataPort int64 `json:"remote_data_port"`
+
 	// http and https only
 	CustomDomains     []string `json:"custom_domains"`
 	SubDomain         string   `json:"subdomain"`
@@ -108,9 +108,9 @@ type NewProxyResp struct {
 	RunId     string `json:"run_id"`
 	ProxyName string `json:"proxy_name"`
 	Error     string `json:"error"`
-	
+
 	// tcp and udp only
-	RemotePort	int64	`json:"remote_port"`
+	RemotePort int64 `json:"remote_port"`
 }
 
 type NewWorkConn struct {

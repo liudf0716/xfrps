@@ -364,7 +364,7 @@ func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp msg.NewProxyResp, 
 	resp = &msg.NewProxyResp{
 		ProxyName: pxyMsg.ProxyName,
 	}
-	
+
 	var pxyConf config.ProxyConf
 	// Load configures from NewProxy message and check.
 	pxyConf, err = config.NewProxyConf(pxyMsg)
@@ -393,10 +393,9 @@ func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp msg.NewProxyResp, 
 	// udp not support
 	if (pxyMsg.ProxyType == consts.TcpProxy || pxyMsg.ProxyType == consts.FtpProxy) &&
 		pxyMsg.RemotePort == 0 {
-			resp.RemotePort = pxy.GetRemotePort()	
+		resp.RemotePort = pxy.GetRemotePort()
 	}
-	
-	
+
 	err = ctl.svr.RegisterProxy(pxyMsg.ProxyName, pxy)
 	if err != nil {
 		return err
