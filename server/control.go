@@ -369,19 +369,19 @@ func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp,
 	// Load configures from NewProxy message and check.
 	pxyConf, err = config.NewProxyConf(pxyMsg)
 	if err != nil {
-		return err
+		return 
 	}
 
 	// NewProxy will return a interface Proxy.
 	// In fact it create different proxies by different proxy type, we just call run() here.
 	pxy, err := NewProxy(ctl, pxyConf)
 	if err != nil {
-		return err
+		return 
 	}
 
 	err = pxy.Run()
 	if err != nil {
-		return err
+		return 
 	}
 	defer func() {
 		if err != nil {
@@ -398,8 +398,8 @@ func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp,
 
 	err = ctl.svr.RegisterProxy(pxyMsg.ProxyName, pxy)
 	if err != nil {
-		return err
+		return 
 	}
 	ctl.proxies = append(ctl.proxies, pxy)
-	return nil
+	err = nil
 }
