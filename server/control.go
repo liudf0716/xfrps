@@ -402,4 +402,5 @@ func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp,
 	}
 	ctl.proxies = append(ctl.proxies, pxy)
 	err = nil
+	return
 }
