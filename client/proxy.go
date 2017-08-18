@@ -148,7 +148,8 @@ func SetFtpDataProxyLocalServer(bp *BaseProxy, cfg *config.FtpProxyConf, localIn
 		msg  msg.NewProxy
 	)
 	cfg.UnMarshalToMsg(&msg)
-	name = fmt.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
+	// cfg.FtpCfgProxyName = msg.ProxyName
+	name = fmt.Sprintf("%s_ftp_data_proxy", msg.ProxyName)
 	ftpDataConf, ok := bp.ctl.getProxyConfByName(name)
 	if !ok {
 		fmt.Printf("get ftpDataConf failed by %s\n", name)

@@ -102,6 +102,7 @@ type NewProxy struct {
 	HostHeaderRewrite string   `json:"host_header_rewrite"`
 	HttpUser          string   `json:"http_user"`
 	HttpPwd           string   `json:"http_pwd"`
+	FtpCfgProxyName   string   `json:"-"`
 }
 
 type NewProxyResp struct {

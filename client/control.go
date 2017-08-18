@@ -398,6 +398,19 @@ func (ctl *Control) manager() {
 					cfg.FillRemotePort(m.RemotePort)
 				}
 
+				cfgType, ok := cfg.(*config.TcpProxyConf)
+				if ok {
+					if cfgType.FtpCfgProxyName != "" {
+						ftpCfg := ctl.pxyCfgs[cfgType.FtpCfgProxyName]
+						ftpCfgType, ok := ftpCfg.(*config.FtpProxyConf)
+						if !ok {
+							ctl.Warn("[%s] is not Ftp proxy", cfgType.FtpCfgProxyName)
+							continue
+						}
+						ftpCfgType.RemoteDataPort = cfgType.RemotePort
+					}
+				}
+
 				oldPxy, ok := ctl.proxies[m.ProxyName]
 				if ok {
 					oldPxy.Close()

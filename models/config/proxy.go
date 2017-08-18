@@ -60,18 +60,6 @@ type ProxyConf interface {
 	FillRemotePort(rport int64)
 }
 
-func GetFtpDataProxyConf(cfg *FtpProxyConf) (ncfg ProxyConf, err error) {
-	var msg msg.NewProxy
-	cfg.UnMarshalToMsg(&msg)
-	msg.ProxyName = fmt.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
-	msg.ProxyType = consts.TcpProxy
-	msg.RemotePort = msg.RemoteDataPort
-
-	ncfg, err = NewProxyConf(&msg)
-
-	return
-}
-
 func NewProxyConf(pMsg *msg.NewProxy) (cfg ProxyConf, err error) {
 	if pMsg.ProxyType == "" {
 		pMsg.ProxyType = consts.TcpProxy
@@ -322,11 +310,14 @@ type TcpProxyConf struct {
 
 	LocalSvrConf
 	PluginConf
+
+	FtpCfgProxyName string `json:"-"`
 }
 
 func (cfg *TcpProxyConf) LoadFromMsg(pMsg *msg.NewProxy) {
 	cfg.BaseProxyConf.LoadFromMsg(pMsg)
 	cfg.BindInfoConf.LoadFromMsg(pMsg)
+	cfg.FtpCfgProxyName = pMsg.FtpCfgProxyName
 }
 
 func (cfg *TcpProxyConf) LoadFromFile(name string, section ini.Section) (err error) {
@@ -470,6 +461,10 @@ func (cfg *FtpProxyConf) FillLocalServer(ip string, port int) {
 func (cfg *FtpProxyConf) FillRemotePort(rport int64) {
 	cfg.RemotePort = rport
 }
+
+// func (cfg *FtpProxyConf) FillRemoteDataPort(rport int64) {
+// 	cfg.RemoteDataPort = rport
+// }
 
 // HTTP
 type HttpProxyConf struct {
@@ -621,7 +616,8 @@ func LoadProxyConfFromFile(prefix string, conf ini.File, startProxy map[string]s
 			if basePxyConf.ProxyType == consts.FtpProxy {
 				var msg msg.NewProxy
 				cfg.UnMarshalToMsg(&msg)
-				msg.ProxyName = fmt.Sprintf("%s%d", msg.ProxyName, msg.RemoteDataPort)
+				msg.FtpCfgProxyName = msg.ProxyName
+				msg.ProxyName = fmt.Sprintf("%s_ftp_data_proxy", msg.ProxyName)
 				msg.ProxyType = consts.TcpProxy
 				msg.RemotePort = msg.RemoteDataPort
 
