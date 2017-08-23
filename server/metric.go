@@ -53,6 +53,8 @@ type ServerStatistics struct {
 
 type ClientStatistics struct {
 	Online			int
+	ProxyNum		metric.Counter
+	ConnNum			metric.Counter
 	LastStartTime	time.Time
 	LastCloseTime	time.Time
 }
@@ -119,7 +121,10 @@ func StatsNewClient(runid string) {
 		defer globalStats.mu.Unlock()
 		clientStats, ok := globalStats.ClientStatistics[runid]
 		if !ok {
-			clientStats = &ClientStatistics{}
+			clientStats = &ClientStatistics{
+				ProxyNum:	metric.NewCounter(),
+				ConnNum:	metric.NewCounter(),
+			}
 			globalStats.ClientStatistics[runid] = clientStats
 		}
 		clientStats.LastStartTime 	= time.Now()
@@ -152,7 +157,11 @@ func StatsNewProxy(name string, proxyType string, runid string) {
 		}
 		counter.Inc(1)
 		globalStats.ProxyTypeCounts[proxyType] = counter
-
+		
+		if clientStats, ok := globalStats.ClientStatistics[runid]; ok {
+			clientStats.ProxyNum.Inc(1)
+		}
+		
 		proxyStats, ok := globalStats.ProxyStatistics[name]
 		if !(ok && proxyStats.ProxyType == proxyType) {
 			proxyStats = &ProxyStatistics{
@@ -178,6 +187,9 @@ func StatsCloseProxy(proxyName string, proxyType string) {
 		}
 		if proxyStats, ok := globalStats.ProxyStatistics[proxyName]; ok {
 			proxyStats.LastCloseTime = time.Now()
+			if clientStats, ok := globalStats.ClientStatistics[proxyStats.RunId]; ok {
+				clientStats.ProxyNum.Dec(1)
+			}
 		}
 	}
 }
@@ -192,6 +204,9 @@ func StatsOpenConnection(name string) {
 		if ok {
 			proxyStats.CurConns.Inc(1)
 			globalStats.ProxyStatistics[name] = proxyStats
+			if clientStats, ok := globalStats.ClientStatistics[runid]; ok {
+				clientStats.ConnNum.Inc(1)
+			}
 		}
 	}
 }
@@ -206,6 +221,9 @@ func StatsCloseConnection(name string) {
 		if ok {
 			proxyStats.CurConns.Dec(1)
 			globalStats.ProxyStatistics[name] = proxyStats
+			if clientStats, ok := globalStats.ClientStatistics[runid]; ok {
+				clientStats.ConnNum.Dec(1)
+			}
 		}
 	}
 }
@@ -265,6 +283,41 @@ func StatsGetServer() *ServerStats {
 	return s
 }
 
+type ClientStats struct {
+	RunId			string
+	ProxyNum		metric.Counter
+	ConnNum			metric.Counter
+	LastStartTime   string
+	LastCloseTime   string
+}
+
+// online is 1, means online; otherwise offline
+func StatsGetClient(online int) []*ClientStats {
+	res := make([]*ProxyStats, 0)
+	globalStats.mu.Lock()
+	defer globalStats.mu.Unlock()
+	
+	for runid, clientStats := range globalStats.ClientStatistics {
+		if proxyStats.Online != online {
+			continue
+		}
+
+		ps := &ClientStats{
+			RunId:				runid,
+			ProxyNum:			clientStats.ProxyNum,
+			ConnNum:			clientStats.ConnNum,
+		}
+		if !ClientStats.LastStartTime.IsZero() {
+			ps.LastStartTime = proxyStats.LastStartTime.Format("01-02 15:04:05")
+		}
+		if !ClientStats.LastCloseTime.IsZero() {
+			ps.LastCloseTime = proxyStats.LastCloseTime.Format("01-02 15:04:05")
+		}
+		res = append(res, ps)
+	}
+	return res
+}
+
 type ProxyStats struct {
 	Name            string
 	RunId			string
@@ -287,11 +340,12 @@ func StatsGetProxiesByType(proxyType string) []*ProxyStats {
 		}
 
 		ps := &ProxyStats{
-			Name:            name,
-			Type:            proxyStats.ProxyType,
-			TodayTrafficIn:  proxyStats.TrafficIn.TodayCount(),
-			TodayTrafficOut: proxyStats.TrafficOut.TodayCount(),
-			CurConns:        proxyStats.CurConns.Count(),
+			Name:            	name,
+			RunId:				proxyStats.RunId,
+			Type:            	proxyStats.ProxyType,
+			TodayTrafficIn:  	proxyStats.TrafficIn.TodayCount(),
+			TodayTrafficOut: 	proxyStats.TrafficOut.TodayCount(),
+			CurConns:        	proxyStats.CurConns.Count(),
 		}
 		if !proxyStats.LastStartTime.IsZero() {
 			ps.LastStartTime = proxyStats.LastStartTime.Format("01-02 15:04:05")
