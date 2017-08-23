@@ -87,8 +87,8 @@ func apiServerInfo(w http.ResponseWriter, r *http.Request, params httprouter.Par
 // Get client info
 type ClientStatsInfo struct {
 	RunId         string `json:"runid"`
-	ProxyNum      int64	`json:"proxy_num"`
-	ConnNum       int64 `json:"conn_num"`
+	ProxyNum      int64  `json:"proxy_num"`
+	ConnNum       int64  `json:"conn_num"`
 	LastStartTime string `json:"last_start_time"`
 	LastCloseTime string `json:"last_close_time"`
 }
