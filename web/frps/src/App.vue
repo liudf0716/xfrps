@@ -10,12 +10,16 @@
                 <el-col id="side-nav" :xs="24" :md="4">
                     <el-menu default-active="1" mode="vertical" theme="light" router="false" @select="handleSelect">
                         <el-menu-item index="/">Overview</el-menu-item>
-			 <el-menu-item index="/">Clients</el-menu-item>
+						<el-submenu index="/client">
+                            <template slot="title">Clients</template>
+                            <el-menu-item index="/client/online">Online</el-menu-item>
+                            <el-menu-item index="/client/offline">Offline</el-menu-item>	
+                        </el-submenu>
                         <el-submenu index="/proxies">
                             <template slot="title">Proxies</template>
                             <el-menu-item index="/proxies/tcp">TCP</el-menu-item>
                             <el-menu-item index="/proxies/udp">UDP</el-menu-item>
-			    <el-menu-item index="/proxies/ftp">FTP</el-menu-item>
+			    			<el-menu-item index="/proxies/ftp">FTP</el-menu-item>
                             <el-menu-item index="/proxies/http">HTTP</el-menu-item>
                             <el-menu-item index="/proxies/https">HTTPS</el-menu-item>
                         </el-submenu>
