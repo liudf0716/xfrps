@@ -226,7 +226,7 @@ func (svr *Service) RegisterControl(ctlConn frpNet.Conn, loginMsg *msg.Login) (e
 	ctl.Start()
 
 	// for statistics
-	StatsNewClient()
+	StatsNewClient(loginMsg.RunId)
 	return
 }
 
