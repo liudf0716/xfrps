@@ -348,7 +348,7 @@ func (ctl *Control) manager() {
 					ctl.conn.Warn("new proxy [%s] error: %v", m.ProxyName, err)
 				} else {
 					ctl.conn.Info("new proxy [%s] success", m.ProxyName)
-					StatsNewProxy(m.ProxyName, m.ProxyType)
+					StatsNewProxy(m.ProxyName, m.ProxyType, m.RunId)
 				}
 				ctl.sendCh <- resp
 			case *msg.Ping:
