@@ -132,7 +132,7 @@ func StatsNewClient(runid string) {
 	}
 }
 
-func StatsCloseClient() {
+func StatsCloseClient(runid string) {
 	if config.ServerCommonCfg.DashboardPort != 0 {
 		globalStats.ClientCounts.Dec(1)
 		
