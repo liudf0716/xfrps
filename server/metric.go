@@ -285,8 +285,8 @@ func StatsGetServer() *ServerStats {
 
 type ClientStats struct {
 	RunId			string
-	ProxyNum		metric.Counter
-	ConnNum			metric.Counter
+	ProxyNum		int64
+	ConnNum			int64
 	LastStartTime   string
 	LastCloseTime   string
 }
@@ -304,8 +304,8 @@ func StatsGetClient(online int) []*ClientStats {
 
 		ps := &ClientStats{
 			RunId:				runid,
-			ProxyNum:			clientStats.ProxyNum,
-			ConnNum:			clientStats.ConnNum,
+			ProxyNum:			clientStats.ProxyNum.Count(),
+			ConnNum:			clientStats.ConnNum.Count(),
 		}
 		if !clientStats.LastStartTime.IsZero() {
 			ps.LastStartTime = clientStats.LastStartTime.Format("01-02 15:04:05")
