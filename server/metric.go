@@ -204,7 +204,7 @@ func StatsOpenConnection(name string) {
 		if ok {
 			proxyStats.CurConns.Inc(1)
 			globalStats.ProxyStatistics[name] = proxyStats
-			if clientStats, ok := globalStats.ClientStatistics[runid]; ok {
+			if clientStats, ok := globalStats.ClientStatistics[proxyStats.RunId]; ok {
 				clientStats.ConnNum.Inc(1)
 			}
 		}
@@ -221,7 +221,7 @@ func StatsCloseConnection(name string) {
 		if ok {
 			proxyStats.CurConns.Dec(1)
 			globalStats.ProxyStatistics[name] = proxyStats
-			if clientStats, ok := globalStats.ClientStatistics[runid]; ok {
+			if clientStats, ok := globalStats.ClientStatistics[proxyStats.RunId]; ok {
 				clientStats.ConnNum.Dec(1)
 			}
 		}
@@ -293,7 +293,7 @@ type ClientStats struct {
 
 // online is 1, means online; otherwise offline
 func StatsGetClient(online int) []*ClientStats {
-	res := make([]*ProxyStats, 0)
+	res := make([]*ClientStats, 0)
 	globalStats.mu.Lock()
 	defer globalStats.mu.Unlock()
 	
@@ -308,10 +308,10 @@ func StatsGetClient(online int) []*ClientStats {
 			ConnNum:			clientStats.ConnNum,
 		}
 		if !clientStats.LastStartTime.IsZero() {
-			ps.LastStartTime = ClientStats.LastStartTime.Format("01-02 15:04:05")
+			ps.LastStartTime = clientStats.LastStartTime.Format("01-02 15:04:05")
 		}
 		if !clientStats.LastCloseTime.IsZero() {
-			ps.LastCloseTime = ClientStats.LastCloseTime.Format("01-02 15:04:05")
+			ps.LastCloseTime = clientStats.LastCloseTime.Format("01-02 15:04:05")
 		}
 		res = append(res, ps)
 	}
