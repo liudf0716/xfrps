@@ -86,9 +86,9 @@ func apiServerInfo(w http.ResponseWriter, r *http.Request, params httprouter.Par
 
 // Get client info
 type ClientStatsInfo struct {
-	RunId         string `json:"RunId"`
-	ProxyNum      string `json:"ProxyNum"`
-	ConnNum       string `json:"ConnNum"`
+	RunId         string `json:"runid"`
+	ProxyNum      int64	`json:"proxy_num"`
+	ConnNum       int64 `json:"conn_num"`
 	LastStartTime string `json:"last_start_time"`
 	LastCloseTime string `json:"last_close_time"`
 }
@@ -135,9 +135,9 @@ func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.
 func getClientStats(online int) (clientInfos []*ClientStatsInfo) {
 	clientStats := StatsGetClient(online)
 	clientInfos = make([]*ClientStatsInfo, 0, len(clientStats))
-	for runid, ps := range clientStats {
+	for _, ps := range clientStats {
 		clientInfo := &ClientStatsInfo{}
-		clientInfo.RunId = runid
+		clientInfo.RunId = ps.RunId
 		clientInfo.ProxyNum = ps.ProxyNum
 		clientInfo.ConnNum = ps.ConnNum
 		clientInfo.LastStartTime = ps.LastStartTime
