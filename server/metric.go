@@ -43,31 +43,31 @@ type ServerStatistics struct {
 	// statistics for different proxies
 	// key is proxy name
 	ProxyStatistics map[string]*ProxyStatistics
-	
+
 	// statistics for client
 	// key is runid
-	ClientStatistics	map[string]*ClientStatistics
+	ClientStatistics map[string]*ClientStatistics
 
 	mu sync.Mutex
 }
 
 type ClientStatistics struct {
-	Online			int
-	ProxyNum		metric.Counter
-	ConnNum			metric.Counter
-	LastStartTime	time.Time
-	LastCloseTime	time.Time
+	Online        int
+	ProxyNum      metric.Counter
+	ConnNum       metric.Counter
+	LastStartTime time.Time
+	LastCloseTime time.Time
 }
 
 type ProxyStatistics struct {
-	Name			string
-	RunId			string	
-	ProxyType		string
-	TrafficIn     	metric.DateCounter
-	TrafficOut    	metric.DateCounter
-	CurConns      	metric.Counter
-	LastStartTime 	time.Time
-	LastCloseTime 	time.Time
+	Name          string
+	RunId         string
+	ProxyType     string
+	TrafficIn     metric.DateCounter
+	TrafficOut    metric.DateCounter
+	CurConns      metric.Counter
+	LastStartTime time.Time
+	LastCloseTime time.Time
 }
 
 func init() {
@@ -80,8 +80,8 @@ func init() {
 		ProxyTypeCounts: make(map[string]metric.Counter),
 
 		ProxyStatistics: make(map[string]*ProxyStatistics),
-		
-		ClientStatistics:	make(map[string]*ClientStatistics),
+
+		ClientStatistics: make(map[string]*ClientStatistics),
 	}
 
 	go func() {
@@ -104,7 +104,7 @@ func StatsClearUselessInfo() {
 			log.Trace("clear proxy [%s]'s statistics data, lastCloseTime: [%s]", name, data.LastCloseTime.String())
 		}
 	}
-	
+
 	for runid, data := range globalStats.ClientStatistics {
 		if !data.LastCloseTime.IsZero() && time.Since(data.LastCloseTime) > time.Duration(7*24)*time.Hour {
 			delete(globalStats.ClientStatistics, runid)
@@ -116,34 +116,34 @@ func StatsClearUselessInfo() {
 func StatsNewClient(runid string) {
 	if config.ServerCommonCfg.DashboardPort != 0 {
 		globalStats.ClientCounts.Inc(1)
-		
+
 		globalStats.mu.Lock()
 		defer globalStats.mu.Unlock()
 		clientStats, ok := globalStats.ClientStatistics[runid]
 		if !ok {
 			clientStats = &ClientStatistics{
-				ProxyNum:	metric.NewCounter(),
-				ConnNum:	metric.NewCounter(),
+				ProxyNum: metric.NewCounter(),
+				ConnNum:  metric.NewCounter(),
 			}
 			globalStats.ClientStatistics[runid] = clientStats
 		}
-		clientStats.LastStartTime 	= time.Now()
-		clientStats.Online			= 1
+		clientStats.LastStartTime = time.Now()
+		clientStats.Online = 1
 	}
 }
 
 func StatsCloseClient(runid string) {
 	if config.ServerCommonCfg.DashboardPort != 0 {
 		globalStats.ClientCounts.Dec(1)
-		
+
 		globalStats.mu.Lock()
 		defer globalStats.mu.Unlock()
 		clientStats, ok := globalStats.ClientStatistics[runid]
 		if ok {
-			clientStats.LastCloseTime 	= time.Now()
-			clientStats.Online			= 0
+			clientStats.LastCloseTime = time.Now()
+			clientStats.Online = 0
 		}
-		
+
 	}
 }
 
@@ -157,16 +157,16 @@ func StatsNewProxy(name string, proxyType string, runid string) {
 		}
 		counter.Inc(1)
 		globalStats.ProxyTypeCounts[proxyType] = counter
-		
+
 		if clientStats, ok := globalStats.ClientStatistics[runid]; ok {
 			clientStats.ProxyNum.Inc(1)
 		}
-		
+
 		proxyStats, ok := globalStats.ProxyStatistics[name]
 		if !(ok && proxyStats.ProxyType == proxyType) {
 			proxyStats = &ProxyStatistics{
 				Name:       name,
-				RunId:		runid,
+				RunId:      runid,
 				ProxyType:  proxyType,
 				CurConns:   metric.NewCounter(),
 				TrafficIn:  metric.NewDateCounter(ReserveDays),
@@ -284,11 +284,11 @@ func StatsGetServer() *ServerStats {
 }
 
 type ClientStats struct {
-	RunId			string
-	ProxyNum		metric.Counter
-	ConnNum			metric.Counter
-	LastStartTime   string
-	LastCloseTime   string
+	RunId         string
+	ProxyNum      metric.Counter
+	ConnNum       metric.Counter
+	LastStartTime string
+	LastCloseTime string
 }
 
 // online is 1, means online; otherwise offline
@@ -296,16 +296,16 @@ func StatsGetClient(online int) []*ClientStats {
 	res := make([]*ProxyStats, 0)
 	globalStats.mu.Lock()
 	defer globalStats.mu.Unlock()
-	
+
 	for runid, clientStats := range globalStats.ClientStatistics {
 		if clientStats.Online != online {
 			continue
 		}
 
 		ps := &ClientStats{
-			RunId:				runid,
-			ProxyNum:			clientStats.ProxyNum,
-			ConnNum:			clientStats.ConnNum,
+			RunId:    runid,
+			ProxyNum: clientStats.ProxyNum,
+			ConnNum:  clientStats.ConnNum,
 		}
 		if !clientStats.LastStartTime.IsZero() {
 			ps.LastStartTime = ClientStats.LastStartTime.Format("01-02 15:04:05")
@@ -320,7 +320,7 @@ func StatsGetClient(online int) []*ClientStats {
 
 type ProxyStats struct {
 	Name            string
-	RunId			string
+	RunId           string
 	Type            string
 	TodayTrafficIn  int64
 	TodayTrafficOut int64
@@ -340,12 +340,12 @@ func StatsGetProxiesByType(proxyType string) []*ProxyStats {
 		}
 
 		ps := &ProxyStats{
-			Name:            	name,
-			RunId:				proxyStats.RunId,
-			Type:            	proxyStats.ProxyType,
-			TodayTrafficIn:  	proxyStats.TrafficIn.TodayCount(),
-			TodayTrafficOut: 	proxyStats.TrafficOut.TodayCount(),
-			CurConns:        	proxyStats.CurConns.Count(),
+			Name:            name,
+			RunId:           proxyStats.RunId,
+			Type:            proxyStats.ProxyType,
+			TodayTrafficIn:  proxyStats.TrafficIn.TodayCount(),
+			TodayTrafficOut: proxyStats.TrafficOut.TodayCount(),
+			CurConns:        proxyStats.CurConns.Count(),
 		}
 		if !proxyStats.LastStartTime.IsZero() {
 			ps.LastStartTime = proxyStats.LastStartTime.Format("01-02 15:04:05")
