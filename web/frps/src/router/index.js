@@ -6,6 +6,8 @@ import ProxiesUdp from '../components/ProxiesUdp.vue'
 import ProxiesFtp from '../components/ProxiesFtp.vue'
 import ProxiesHttp from '../components/ProxiesHttp.vue'
 import ProxiesHttps from '../components/ProxiesHttps.vue'
+import OnlineClient from '../components/OnlineClient.vue'
+import OfflineClient from '../components/OfflineClient.vue'
 
 Vue.use(Router)
 
@@ -14,6 +16,14 @@ export default new Router({
         path: '/',
         name: 'Overview',
         component: Overview
+    }, {
+        path: '/client/offline',
+        name: 'OfflineClient',
+        component: OfflineClient
+    }, {
+        path: '/client/online',
+        name: 'OnlineClient',
+        component: OnlineClient
     }, {
         path: '/proxies/tcp',
         name: 'ProxiesTcp',
