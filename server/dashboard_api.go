@@ -86,11 +86,11 @@ func apiServerInfo(w http.ResponseWriter, r *http.Request, params httprouter.Par
 
 // Get client info
 type ClientStatsInfo struct {
-	RunId			string		`json:"RunId"`
-	ProxyNum		string		`json:"ProxyNum"`
-	ConnNum			string		`json:"ConnNum"`
-	LastStartTime	string		`json:"last_start_time"`
-	LastCloseTime	string		`json:"last_close_time"`
+	RunId         string `json:"RunId"`
+	ProxyNum      string `json:"ProxyNum"`
+	ConnNum       string `json:"ConnNum"`
+	LastStartTime string `json:"last_start_time"`
+	LastCloseTime string `json:"last_close_time"`
 }
 
 type GetClientInfoResp struct {
@@ -110,7 +110,7 @@ func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.P
 	log.Info("Http request: [/api/client/online]")
 
 	res.Proxies = getClientStats(1)
-	
+
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
@@ -127,7 +127,7 @@ func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.
 	log.Info("Http request: [/api/client/offline]")
 
 	res.Proxies = getClientStats(0)
-	
+
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
