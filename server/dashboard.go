@@ -46,6 +46,8 @@ func RunDashboardServer(addr string, port int64) (err error) {
 	router.GET("/api/proxy/http/:pageNo", httprouterBasicAuth(apiProxyHttp))
 	router.GET("/api/proxy/https/:pageNo", httprouterBasicAuth(apiProxyHttps))
 	router.GET("/api/proxy/traffic/:name", httprouterBasicAuth(apiProxyTraffic))
+	router.GET("/api/client/online/:pageNo", httprouterBasicAuth(apiClientOnline))
+	router.GET("/api/client/offline/:pageNo", httprouterBasicAuth(apiClientOffline))
 	router.GET("/api/port/getfree/:proto", httprouterNoAuth(apiGetFreePort))
 	router.GET("/api/port/tcp/isfree/:port", httprouterNoAuth(apiIsTcpPortFree))
 	router.GET("/api/port/tcp/getport/:runid", httprouterNoAuth(apiGetPort))       // according runid, getting tcp port
