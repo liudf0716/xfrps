@@ -84,6 +84,54 @@ func apiServerInfo(w http.ResponseWriter, r *http.Request, params httprouter.Par
 	w.Write(buf)
 }
 
+// Get client info
+type ClientStatsInfo struct {
+	RunId			string		`json:"RunId"`
+	ProxyNum		string		`json:"ProxyNum"`
+	ConnNum			string		`json:"ConnNum"`
+	LastStartTime	string		`json:"last_start_time"`
+	LastCloseTime	string		`json:"last_close_time"`
+}
+
+type GetClientInfoResp struct {
+	GeneralResponse
+	Clients []*ClientStatsInfo `json:"clients"`
+}
+
+// api/client/online
+func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	var (
+		buf []byte
+		res GetClientInfoResp
+	)
+	defer func() {
+		log.Info("Http response [/api/client/online]: code [%d]", res.Code)
+	}()
+	log.Info("Http request: [/api/client/online]")
+
+	res.Proxies = getClientStats(1)
+	
+	buf, _ = json.Marshal(&res)
+	w.Write(buf)
+}
+
+// api/client/offline
+func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	var (
+		buf []byte
+		res GetClientInfoResp
+	)
+	defer func() {
+		log.Info("Http response [/api/client/offline]: code [%d]", res.Code)
+	}()
+	log.Info("Http request: [/api/client/offline]")
+
+	res.Proxies = getClientStats(0)
+	
+	buf, _ = json.Marshal(&res)
+	w.Write(buf)
+}
+
 // Get proxy info.
 type ProxyStatsInfo struct {
 	Name            string           `json:"name"`
