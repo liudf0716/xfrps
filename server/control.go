@@ -311,7 +311,7 @@ func (ctl *Control) stoper() {
 	ctl.allShutdown.Done()
 	ctl.conn.Info("client exit success")
 
-	StatsCloseClient()
+	StatsCloseClient(ctl.runId)
 }
 
 func (ctl *Control) manager() {
