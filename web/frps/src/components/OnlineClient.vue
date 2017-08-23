@@ -61,8 +61,6 @@
     data() {
       return {
         clients: null,
-        vhost_http_port: "",
-        subdomain_host: ""
       }
     },
     created() {
@@ -84,9 +82,6 @@
           })
       }
     },
-    components: {
-        'my-traffic-chart': Traffic
-    }
   }
 </script>
 
