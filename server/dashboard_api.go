@@ -109,7 +109,7 @@ func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.P
 	}()
 	log.Info("Http request: [/api/client/online]")
 
-	res.Proxies = getClientStats(1)
+	res.Clients = getClientStats(1)
 
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
@@ -126,10 +126,25 @@ func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.
 	}()
 	log.Info("Http request: [/api/client/offline]")
 
-	res.Proxies = getClientStats(0)
+	res.Clients = getClientStats(0)
 
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
+}
+
+func getClientStats(online int) (clientInfos []*ClientStatsInfo) {
+	clientStats := StatsGetClient(online)
+	clientInfos = make([]*ClientStatsInfo, 0, len(clientStats))
+	for runid, ps := range clientStats {
+		clientInfo := &ClientStatsInfo{}
+		clientInfo.RunId = runid
+		clientInfo.ProxyNum = ps.ProxyNum
+		clientInfo.ConnNum = ps.ConnNum
+		clientInfo.LastStartTime = ps.LastStartTime
+		clientInfo.LastCloseTime = ps.LastCloseTime
+		clientInfos = append(clientInfos, clientInfo)
+	}
+	return
 }
 
 // Get proxy info.
