@@ -394,7 +394,6 @@ func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp,
 	if (pxyMsg.ProxyType == consts.TcpProxy || pxyMsg.ProxyType == consts.FtpProxy) &&
 		pxyMsg.RemotePort == 0 {
 		resp.RemotePort = pxy.GetRemotePort()
-		fmt.Println("11111   resp.RemotePort = ", resp.RemotePort)
 	}
 
 	err = ctl.svr.RegisterProxy(pxyMsg.ProxyName, pxy)
