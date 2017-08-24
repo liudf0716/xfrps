@@ -54,13 +54,11 @@
 
 <script>
   import Humanize from 'humanize-plus';
-  import {
-    Client
-  } from '../utils/client.js'
+  import { Client } from '../utils/client.js'
   export default {
     data() {
       return {
-        clients: null,
+        clients: null
       }
     },
     created() {
@@ -80,8 +78,8 @@
               this.clients.push(new Client(clientStats))
             }
           })
-      }
-    },
+      } // end fetchData
+    } // end methods
   }
 </script>
 
