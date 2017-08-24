@@ -54,9 +54,7 @@
 
 <script>
   import Humanize from 'humanize-plus';
-  import {
-    Client
-  } from '../utils/client.js'
+  import { Client } from '../utils/client.js'
   export default {
     data() {
       return {
