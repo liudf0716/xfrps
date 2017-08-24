@@ -58,7 +58,7 @@
   export default {
     data() {
       return {
-        clients: null,
+        clients: null
       }
     },
     created() {
