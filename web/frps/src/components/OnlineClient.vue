@@ -49,16 +49,27 @@
       sortable>
     </el-table-column>
 </el-table>
+<pager
+    mode="event"
+    :total-page="totalPage"
+    :init-page="eventPage"
+    @go-page="goPage">
+</pager>
 </div>
 </template>
 
 <script>
   import Humanize from 'humanize-plus';
   import { Client } from '../utils/client.js'
+  import { pager } from '../utils/vue-pager.vue'
   export default {
     data() {
       return {
-        clients: null
+        clients: null,
+        eventPage: 1,
+        queryPage: 1,
+        paramsPage: 1,
+        totalPage: 10
       }
     },
     created() {
@@ -66,6 +77,9 @@
     },
     watch: {
       '$route': 'fetchData'
+    },
+    components: {
+        'pager': pager
     },
     methods: {
       fetchData() {
@@ -78,7 +92,10 @@
               this.clients.push(new Client(clientStats))
             }
           })
-      } // end fetchData
+      }, // end fetchData
+      goPage (data) {
+          this.eventPage = data.page
+      } // end goPage
     } // end method
   } // end default
 </script>
