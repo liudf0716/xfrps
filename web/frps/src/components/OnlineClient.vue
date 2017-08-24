@@ -49,14 +49,12 @@
       sortable>
     </el-table-column>
 </el-table>
-</div>
-<div>
+ <h1>pager used for event</h1>
   <pager
-      mode="event"
-      :total-page="totalPage"
-      :init-page="eventPage"
-      @go-page="goPage">
-  </pager>
+  mode="event"
+  :total-page="totalPage"
+  :init-page="eventPage"
+  @go-page="goPage"></pager>
 </div>
 </template>
 
