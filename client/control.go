@@ -19,9 +19,9 @@ import (
 	"io"
 	golangnet "net"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
-	"strings"
 
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
