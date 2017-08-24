@@ -49,27 +49,22 @@
       sortable>
     </el-table-column>
 </el-table>
- <h1>pager used for event</h1>
-  <pager
-  mode="event"
-  :total-page="totalPage"
-  :init-page="eventPage"
-  @go-page="goPage"></pager>
+ <h1 class="title" v-text="msg"></h1>
+ <pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="parentCallback"></pagination> 
 </div>
 </template>
 
 <script>
   import Humanize from 'humanize-plus';
+  import pagination from './pagination.vue';
   import { Client } from '../utils/client.js';
-  import { pager } from '../utils/vue-pager.vue';
+  
   export default {
     data() {
       return {
         clients: null,
-        eventPage: 1,
-        queryPage: 1,
-        paramsPage: 1,
-        totalPage: 10
+        parentTotalPage: 100,
+        parentCurrentpage: 1
       }
     },
     created() {
@@ -78,23 +73,7 @@
     watch: {
       '$route': 'fetchData'
     },
-    components: {
-        'pager': pager
-    },
-    route: {
-        data ({to: {query, params}}) {
-            if(params.page) {
-                this.paramsPage = parseInt(params.page) || 1
-            } else {
-                this.paramsPage = 1
-            }
-            if(query.page) {
-                this.queryPage = parseInt(query.page) || 1
-            } else {
-                this.queryPage = 1
-            }
-        }
-    },
+    components: { pagination },
     methods: {
       fetchData() {
         fetch('/api/client/online', {credentials: 'include'})
@@ -107,9 +86,10 @@
             }
           })
       }, // end fetchData
-      goPage (data) {
-          this.eventPage = data.page
-      } // end goPage
+      parentCallback( cPage )  {
+        //这里是页码变化后要做的事
+        this.msg = 'Update your data here. Page: ' + cPage;
+      }
     } // end method
   } // end default
 </script>
