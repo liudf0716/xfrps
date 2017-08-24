@@ -135,6 +135,7 @@ func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.
 func getClientStats(online int) (clientInfos []*ClientStatsInfo) {
 	clientStats := StatsGetClient(online)
 	clientInfos = make([]*ClientStatsInfo, 0, len(clientStats))
+	i := 0
 	for _, ps := range clientStats {
 		clientInfo := &ClientStatsInfo{}
 		clientInfo.RunId = ps.RunId
@@ -143,6 +144,9 @@ func getClientStats(online int) (clientInfos []*ClientStatsInfo) {
 		clientInfo.LastStartTime = ps.LastStartTime
 		clientInfo.LastCloseTime = ps.LastCloseTime
 		clientInfos = append(clientInfos, clientInfo)
+		if ++1 > 100 { // for debug
+			return
+		}
 	}
 	return
 }
@@ -314,6 +318,7 @@ func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyI
 func getProxyStatsByType(proxyType string) (proxyInfos []*ProxyStatsInfo) {
 	proxyStats := StatsGetProxiesByType(proxyType)
 	proxyInfos = make([]*ProxyStatsInfo, 0, len(proxyStats))
+	i := 0
 	for _, ps := range proxyStats {
 		proxyInfo := &ProxyStatsInfo{}
 		if pxy, ok := ServerService.pxyManager.GetByName(ps.Name); ok {
@@ -329,6 +334,9 @@ func getProxyStatsByType(proxyType string) (proxyInfos []*ProxyStatsInfo) {
 		proxyInfo.LastStartTime = ps.LastStartTime
 		proxyInfo.LastCloseTime = ps.LastCloseTime
 		proxyInfos = append(proxyInfos, proxyInfo)
+		if ++i > 100 { // only fetch 100
+			return
+		}
 	}
 	return
 }
