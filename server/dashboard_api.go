@@ -144,7 +144,8 @@ func getClientStats(online int) (clientInfos []*ClientStatsInfo) {
 		clientInfo.LastStartTime = ps.LastStartTime
 		clientInfo.LastCloseTime = ps.LastCloseTime
 		clientInfos = append(clientInfos, clientInfo)
-		if ++1 > 100 { // for debug
+		i++
+		if i > 100 { // for debug
 			return
 		}
 	}
@@ -336,7 +337,8 @@ func getProxyStatsByType(proxyType string) (proxyInfos []*ProxyStatsInfo) {
 		proxyInfo.LastStartTime = ps.LastStartTime
 		proxyInfo.LastCloseTime = ps.LastCloseTime
 		proxyInfos = append(proxyInfos, proxyInfo)
-		if ++i > 100 { // only fetch 100
+		i++
+		if i > 100 { // only fetch 100
 			return
 		}
 	}
