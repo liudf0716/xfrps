@@ -23,6 +23,7 @@
                             <el-menu-item index="/proxies/http">HTTP</el-menu-item>
                             <el-menu-item index="/proxies/https">HTTPS</el-menu-item>
                         </el-submenu>
+						<el-menu-item index="">Search</el-menu-item>
                         <el-menu-item index="">Help</el-menu-item>
                     </el-menu>
 				</el-col>
