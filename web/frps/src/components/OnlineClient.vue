@@ -78,9 +78,9 @@
               this.clients.push(new Client(clientStats))
             }
           })
-      }
-    },
-  }
+      } // end fetchData
+    } // end method
+  } // end default
 </script>
 
 <style>
