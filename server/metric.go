@@ -158,7 +158,9 @@ func StatsNewProxy(name string, proxyType string, runid string) {
 		counter.Inc(1)
 		globalStats.ProxyTypeCounts[proxyType] = counter
 
+		log.Debug("StatsNewProxy its runid is " + runid)
 		if clientStats, ok := globalStats.ClientStatistics[runid]; ok {
+			log.Debug("come here")
 			clientStats.ProxyNum.Inc(1)
 		}
 

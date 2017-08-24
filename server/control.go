@@ -360,7 +360,7 @@ func (ctl *Control) manager() {
 	}
 }
 
-func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp, err error) {	
+func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp, err error) {
 	resp = &msg.NewProxyResp{
 		ProxyName: pxyMsg.ProxyName,
 	}
@@ -370,7 +370,7 @@ func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp,
 		err = fmt.Errorf("xfrps need client provide runid")
 		return
 	}
-	
+
 	var pxyConf config.ProxyConf
 	// Load configures from NewProxy message and check.
 	pxyConf, err = config.NewProxyConf(pxyMsg)
