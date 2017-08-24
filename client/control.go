@@ -15,14 +15,13 @@
 package client
 
 import (
-	"crypto/sha1"
-	"encoding/hex"
 	"fmt"
 	"io"
 	golangnet "net"
 	"runtime"
 	"sync"
 	"time"
+	"strings"
 
 	"github.com/KunTengRom/xfrps/models/config"
 	"github.com/KunTengRom/xfrps/models/msg"
@@ -90,9 +89,8 @@ func GetRunIdByInterfaceName() (runId string) {
 	for _, inter := range interfaces {
 		if inter.Name != "lo" {
 			macAddress := inter.HardwareAddr
-			h := sha1.New()
-			h.Write([]byte(macAddress))
-			runId = hex.EncodeToString(h.Sum(nil))
+			macAddress = strings.ToUpper(macAddress)
+			runId = strings.Replace(macAddress, ":", "", -1)
 			return
 		}
 
@@ -161,6 +159,7 @@ func (ctl *Control) Run() error {
 	for _, cfg := range ctl.pxyCfgs {
 		var newProxyMsg msg.NewProxy
 		cfg.UnMarshalToMsg(&newProxyMsg)
+		newProxyMsg.RunId = ctl.runId
 		ctl.sendCh <- &newProxyMsg
 	}
 	return nil
