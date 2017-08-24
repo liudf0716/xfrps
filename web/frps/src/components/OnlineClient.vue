@@ -81,6 +81,20 @@
     components: {
         'pager': pager
     },
+    route: {
+        data ({to: {query, params}}) {
+            if(params.page) {
+                this.paramsPage = parseInt(params.page) || 1
+            } else {
+                this.paramsPage = 1
+            }
+            if(query.page) {
+                this.queryPage = parseInt(query.page) || 1
+            } else {
+                this.queryPage = 1
+            }
+        }
+    },
     methods: {
       fetchData() {
         fetch('/api/client/online', {credentials: 'include'})
