@@ -8,6 +8,7 @@ import ProxiesHttp from '../components/ProxiesHttp.vue'
 import ProxiesHttps from '../components/ProxiesHttps.vue'
 import OnlineClient from '../components/OnlineClient.vue'
 import OfflineClient from '../components/OfflineClient.vue'
+import Search from '../components/Search.vue'
 
 Vue.use(Router)
 
@@ -44,5 +45,9 @@ export default new Router({
         path: '/proxies/https',
         name: 'ProxiesHttps',
         component: ProxiesHttps
+    }, {
+        path:   '/search',
+        name:   'Search'
+        component:  Search
     }]
 })
