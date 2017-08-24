@@ -88,7 +88,7 @@ func GetRunIdByInterfaceName() (runId string) {
 
 	for _, inter := range interfaces {
 		if inter.Name != "lo" {
-			macAddress := inter.HardwareAddr
+			macAddress := inter.HardwareAddr.String()
 			macAddress = strings.ToUpper(macAddress)
 			runId = strings.Replace(macAddress, ":", "", -1)
 			return
