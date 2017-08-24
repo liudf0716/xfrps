@@ -7,3 +7,5 @@ class Client {
         this.last_close_time = clientStats.last_close_time
     }
 }
+
+export {Client}
