@@ -60,8 +60,8 @@
 
 <script>
   import Humanize from 'humanize-plus';
-  import { Client } from '../utils/client.js'
-  import { pager } from '../utils/vue-pager.vue'
+  import { Client } from '../utils/client.js';
+  import { pager } from '../utils/vue-pager.vue';
   export default {
     data() {
       return {
