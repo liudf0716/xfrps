@@ -299,6 +299,8 @@ func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyI
 			proxyInfo.Status = consts.Online
 		} else {
 			proxyInfo.Status = consts.Offline
+			// debug; only show online
+			continue
 		}
 		proxyInfo.Name = ps.Name
 		proxyInfo.TodayTrafficIn = ps.TodayTrafficIn
