@@ -50,13 +50,13 @@
     </el-table-column>
 </el-table>
  <h1 class="title" v-text="msg"></h1>
- <pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="parentCallback"></pagination> 
+ <pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="fetchData"></pagination> 
 </div>
 </template>
 
 <script>
   import Humanize from 'humanize-plus';
-  import pagination from './pagination.vue';
+  import pagination from '../utils/pagination.vue';
   import { Client } from '../utils/client.js';
   
   export default {
@@ -85,11 +85,7 @@
               this.clients.push(new Client(clientStats))
             }
           })
-      }, // end fetchData
-      parentCallback( cPage )  {
-        //这里是页码变化后要做的事
-        this.msg = 'Update your data here. Page: ' + cPage;
-      }
+      } // end fetchData
     } // end method
   } // end default
 </script>
