@@ -348,7 +348,7 @@ func (ctl *Control) manager() {
 					ctl.conn.Warn("new proxy [%s] error: %v", m.ProxyName, err)
 				} else {
 					ctl.conn.Info("new proxy [%s] success", m.ProxyName)
-					StatsNewProxy(m.ProxyName, m.ProxyType, m.RunId)
+					StatsNewProxy(m.ProxyName, m.ProxyType, ctl.runId)
 				}
 				ctl.sendCh <- resp
 			case *msg.Ping:
@@ -363,12 +363,6 @@ func (ctl *Control) manager() {
 func (ctl *Control) RegisterProxy(pxyMsg *msg.NewProxy) (resp *msg.NewProxyResp, err error) {
 	resp = &msg.NewProxyResp{
 		ProxyName: pxyMsg.ProxyName,
-	}
-
-	// client must provide its runid
-	if pxyMsg.RunId == "" {
-		err = fmt.Errorf("xfrps need client provide runid")
-		return
 	}
 
 	var pxyConf config.ProxyConf
