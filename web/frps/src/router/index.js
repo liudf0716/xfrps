@@ -47,7 +47,7 @@ export default new Router({
         component: ProxiesHttps
     }, {
         path:   '/search',
-        name:   'Search'
+        name:   'Search' ,
         component:  Search
     }]
 })
