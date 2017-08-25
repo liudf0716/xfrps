@@ -49,7 +49,6 @@
       sortable>
     </el-table-column>
 </el-table>
- <h1 class="title" v-text="msg"></h1>
  <pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="fetchData"></pagination> 
 </div>
 </template>
@@ -63,28 +62,49 @@
     data() {
       return {
         clients: null,
-        parentTotalPage: 100,
+        parentTotalPage: 1,
         parentCurrentpage: 1
       }
     },
     created() {
-      this.fetchData()
+      this.fetchData(0)
     },
     watch: {
       '$route': 'fetchData'
     },
     components: { pagination },
     methods: {
-      fetchData() {
-        fetch('/api/client/online', {credentials: 'include'})
-          .then(res => {
-            return res.json()
-          }).then(json => {
-            this.clients = new Array()
-            for (let clientStats of json.clients) {
-              this.clients.push(new Client(clientStats))
-            }
-          })
+      fetchData(cPage) {
+        if (cPage == 0) {
+          fetch('/api/client/online', {credentials: 'include'})
+            .then(res => {
+              return res.json()
+            }).then(json => {
+              this.parentTotalPage = json.total_page
+              this.parentCurrentPage = 1
+              
+              fetch('/api/client/online/1', {credentials: 'include'})
+              .then(res => {
+                return res.json()
+              }).then(json => {
+                this.clients = new Array()
+                for (let clientStats of json.clients) {
+                  this.clients.push(new Client(clientStats))
+                }
+              })
+            })
+          }
+        } else {
+          fetch('/api/client/online/'+cPage, {credentials: 'include'})
+            .then(res => {
+              return res.json()
+            }).then(json => {
+              this.clients = new Array()
+              for (let clientStats of json.clients) {
+                this.clients.push(new Client(clientStats))
+              }
+            })
+          }
       } // end fetchData
     } // end method
   } // end default
