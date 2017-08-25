@@ -163,7 +163,7 @@ func getAllClientStats(online int) {
 func getClientStatsByPage(page int) (clientInfos []*ClientStatsInfo) {
 	clientInfos = make([]*ClientStatsInfo, 0, 100)
 	start :=  page*100
-	for i: = start; i < len(globalClientStats) && i < start+100; i++ {
+	for i := start; i < len(globalClientStats) && i < start+100 ; i++ {
 		ps, err := globalClientStats[i]
 		if err == nil {
 			clientInfo := &ClientStatsInfo{}
