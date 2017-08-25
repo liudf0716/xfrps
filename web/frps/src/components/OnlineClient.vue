@@ -93,7 +93,6 @@
                 }
               })
             })
-          }
         } else {
           fetch('/api/client/online/'+cPage, {credentials: 'include'})
             .then(res => {
