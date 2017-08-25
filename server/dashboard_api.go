@@ -114,8 +114,8 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
-		getAllClientStats(int)
-		res.TotalPage = len(globalClientStats)/100 + 1
+		getAllClientStats(online)
+		res.TotalPage = int64(len(globalClientStats)/100 + 1)
 
 		buf, _ = json.Marshal(&res)
 		w.Write(buf)
@@ -146,16 +146,14 @@ func getClientStatsByPage(page int) (clientInfos []*ClientStatsInfo) {
 	clientInfos = make([]*ClientStatsInfo, 0, 100)
 	start := page * 100
 	for i := start; i < len(globalClientStats) && i < start+100; i++ {
-		ps, err := globalClientStats[i]
-		if err == nil {
-			clientInfo := &ClientStatsInfo{}
-			clientInfo.RunId = ps.RunId
-			clientInfo.ProxyNum = ps.ProxyNum
-			clientInfo.ConnNum = ps.ConnNum
-			clientInfo.LastStartTime = ps.LastStartTime
-			clientInfo.LastCloseTime = ps.LastCloseTime
-			clientInfos = append(clientInfos, clientInfo)
-		}
+		ps := globalClientStats[i]
+		clientInfo := &ClientStatsInfo{}
+		clientInfo.RunId = ps.RunId
+		clientInfo.ProxyNum = ps.ProxyNum
+		clientInfo.ConnNum = ps.ConnNum
+		clientInfo.LastStartTime = ps.LastStartTime
+		clientInfo.LastCloseTime = ps.LastCloseTime
+		clientInfos = append(clientInfos, clientInfo)
 	}
 	return
 }
