@@ -102,7 +102,7 @@ type GetClientInfoResp struct {
 
 type GetAllClientInfoResp struct {
 	GeneralResponse
-	ClientNum	int64	`json:"client_num"`
+	TotalPage	int64	`json:"total_page"`
 }
 
 // api/client/online
@@ -121,7 +121,7 @@ func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.P
 			res	GetAllClientInfoResp
 		)
 		getAllClientStats(1)
-		res.ClientNum = len(globalClientStats)
+		res.TotalPage = len(globalClientStats)/100 +1
 		
 		buf, _ = json.Marshal(&res)
 		w.Write(buf)
