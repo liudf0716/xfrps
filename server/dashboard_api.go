@@ -228,7 +228,6 @@ func apiProxyHttps(w http.ResponseWriter, r *http.Request, params httprouter.Par
 }
 
 func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyInfos []*ProxyStatsInfo) {
-	start := pageNo * pageSize
 	proxyInfos = make([]*ProxyStatsInfo, 0, pageSize)
 	start := pageNo * pageSize
 	for i := start; i < len(globalProxyStats) && i < start+pageSize; i++ {
