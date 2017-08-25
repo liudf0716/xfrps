@@ -123,7 +123,7 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 		res.TotalPage = int64(len(globalClientStats)/pageSize + 1)
 	} else {
 		res.TotalPage = 0
-		res.Clients = getClientStatsByPage(pageIndex)
+		res.Clients = getClientStatsByPage(pageIndex, 100)
 	}
 
 	buf, _ = json.Marshal(&res)
@@ -204,31 +204,30 @@ func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 
 // api/proxy/tcp
 func apiProxyTcp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	proxyOperation(w, r, params, consts.TcpProxy)
+	proxyOperation(w, r, params, consts.TcpProxy, 100)
 }
 
 // api/proxy/udp
 func apiProxyUdp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	proxyOperation(w, r, params, consts.UdpProxy)
+	proxyOperation(w, r, params, consts.UdpProxy, 100)
 }
 
 // api/proxy/ftp
 func apiProxyFtp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	proxyOperation(w, r, params, consts.FtpProxy)
+	proxyOperation(w, r, params, consts.FtpProxy, 100)
 }
 
 // api/proxy/http
 func apiProxyHttp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	proxyOperation(w, r, params, consts.HttpProxy)
+	proxyOperation(w, r, params, consts.HttpProxy, 100)
 }
 
 // api/proxy/https
 func apiProxyHttps(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	proxyOperation(w, r, params, consts.HttpsProxy)
+	proxyOperation(w, r, params, consts.HttpsProxy, 100)
 }
 
 func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyInfos []*ProxyStatsInfo) {
-	start := pageNo * pageSize
 	proxyInfos = make([]*ProxyStatsInfo, 0, pageSize)
 	start := pageNo * pageSize
 	for i := start; i < len(globalProxyStats) && i < start+pageSize; i++ {
