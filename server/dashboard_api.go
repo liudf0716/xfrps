@@ -28,8 +28,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-var globalClientStats 	[]*ClientStats
-var globalProxyStats	[]*ProxyStats
+var globalClientStats []*ClientStats
+var globalProxyStats []*ProxyStats
 
 type GeneralResponse struct {
 	Code int64  `json:"code"`
@@ -110,7 +110,7 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 	status := "online"
 	if online == 0 {
 		status = "offline"
-	} 
+	}
 	defer func() {
 		log.Info("Http response [/api/client/%s]: code [%d]", status, res.Code)
 	}()
@@ -125,7 +125,7 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 		res.TotalPage = 0
 		res.Clients = getClientStatsByPage(pageIndex)
 	}
-	
+
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
@@ -174,8 +174,8 @@ type ProxyStatsInfo struct {
 
 type GetProxyInfoResp struct {
 	GeneralResponse
-	TotalPage	int64	`json:"total_page"`
-	Proxies []*ProxyStatsInfo `json:"proxies"`
+	TotalPage int64             `json:"total_page"`
+	Proxies   []*ProxyStatsInfo `json:"proxies"`
 }
 
 func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Params, proxyType string, pageSize int) {
@@ -192,7 +192,7 @@ func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		getProxyStatsByType(proxyType)
-		res.TotalPage = int64(len(globalProxyStats)/pageSize+1)
+		res.TotalPage = int64(len(globalProxyStats)/pageSize + 1)
 	} else {
 		res.TotalPage = 0
 		res.Proxies = getProxyStatsPageByType(proxyType, pageIndex, pageSize)
