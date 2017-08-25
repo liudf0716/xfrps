@@ -130,15 +130,34 @@
             if (this.vhost_http_port == null || this.vhost_http_port == 0) {
               return
             } else {
-              fetch('/api/proxy/http', {credentials: 'include'})
-                .then(res => {
-                  return res.json()
-                }).then(json => {
-                  this.proxies = new Array()
-                  for (let proxyStats of json.proxies) {
-                    this.proxies.push(new HttpProxy(proxyStats, this.vhost_http_port, this.subdomain_host))
-                  }
-                })
+              if (cPage == 0) {
+                fetch('/api/proxy/http', {credentials: 'include'})
+                  .then(res => {
+                    return res.json()
+                  }).then(json => {
+                    this.parentTotalPage = json.total_page
+                    this.parentCurrentPage = 1
+                    
+                    fetch('/api/proxy/http/1', {credentials: 'include'})
+                    .then(res => {
+                      return res.json()
+                     }).then(json => {
+                      this.proxies = new Array()
+                      for (let proxyStats of json.proxies) {
+                        this.proxies.push(new HttpProxy(proxyStats, this.vhost_http_port, this.subdomain_host))
+                    })
+                  })
+                } else {
+                  fetch('/api/proxy/http/' + cPage, {credentials: 'include'})
+                  .then(res => {
+                    return res.json()
+                  }).then(json => {                  
+                    this.proxies = new Array()
+                    for (let proxyStats of json.proxies) {
+                      this.proxies.push(new HttpProxy(proxyStats, this.vhost_http_port, this.subdomain_host))
+                    }
+                  })
+                }
             }
           })
       }
