@@ -28,6 +28,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+var globalClientStats []*ClientStats
+
 type GeneralResponse struct {
 	Code int64  `json:"code"`
 	Msg  string `json:"msg"`
@@ -98,18 +100,40 @@ type GetClientInfoResp struct {
 	Clients []*ClientStatsInfo `json:"clients"`
 }
 
+type GetAllClientInfoResp struct {
+	GeneralResponse
+	ClientNum	int64	`json:"client_num"`
+}
+
 // api/client/online
 func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	var (
-		buf []byte
-		res GetClientInfoResp
-	)
+	
 	defer func() {
 		log.Info("Http response [/api/client/online]: code [%d]", res.Code)
 	}()
 	log.Info("Http request: [/api/client/online]")
 
-	res.Clients = getClientStats(1)
+	pageNo := params.ByName("pageNo")
+	pageIndex, err := strconv.Atoi(pageNo)
+	if err != nil {
+		var (
+			buf	[]byte
+			res	GetAllClientInfoResp
+		)
+		getAllClientStats(1)
+		res.ClientNum = len(globalClientStats)
+		
+		buf, _ = json.Marshal(&res)
+		w.Write(buf)
+		return
+	} 
+	
+	var (
+		buf []byte
+		res GetClientInfoResp
+	)
+	
+	res.Clients = getProxyStatsPageByType(consts.TcpProxy, pageIndex)
 
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
@@ -131,8 +155,6 @@ func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
-
-var globalClientStats []*ClientStats
 
 func getAllClientStats(online int) {
 	globalClientStats = StatsGetClient(online)
