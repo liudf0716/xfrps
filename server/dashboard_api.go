@@ -102,21 +102,25 @@ type GetClientInfoResp struct {
 	Clients   []*ClientStatsInfo `json:"clients"`
 }
 
-func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter.Params, online int) {
+func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter.Params, online int, pageSize int) {
 	var (
 		buf []byte
 		res GetClientInfoResp
 	)
+	status := "online"
+	if online == 0 {
+		status = "offline"
+	} 
 	defer func() {
-		log.Info("Http response [/api/client/%s]: code [%d]", online?"online":"offline", res.Code)
+		log.Info("Http response [/api/client/%s]: code [%d]", status, res.Code)
 	}()
-	log.Info("Http request: [/api/client/%s]", online?"online":"offline")
+	log.Info("Http request: [/api/client/%s]", status)
 
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		getAllClientStats(online)
-		res.TotalPage = int64(len(globalClientStats)/100 + 1)
+		res.TotalPage = int64(len(globalClientStats)/pageSize + 1)
 		res.Clients = {}
 	} else {
 		res.TotalPage = 0
@@ -129,12 +133,12 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 
 // api/client/online
 func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	apiClientByStatus(w, r, params, 1)
+	apiClientByStatus(w, r, params, 1, 100)
 }
 
 // api/client/offline
 func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	apiClientByStatus(w, r, params, 0)
+	apiClientByStatus(w, r, params, 0, 100)
 }
 
 func getAllClientStats(online int) {
