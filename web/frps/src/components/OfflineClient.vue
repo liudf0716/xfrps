@@ -61,7 +61,9 @@
   export default {
     data() {
       return {
-        clients: null
+        clients: null,
+        parentTotalPage: 1,
+        parentCurrentPage: 1
       }
     },
     created() {
