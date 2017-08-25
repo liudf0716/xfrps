@@ -132,21 +132,25 @@ func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.
 	w.Write(buf)
 }
 
-func getClientStats(online int) (clientInfos []*ClientStatsInfo) {
-	clientStats := StatsGetClient(online)
-	clientInfos = make([]*ClientStatsInfo, 0, len(clientStats))
-	i := 0
-	for _, ps := range clientStats {
-		clientInfo := &ClientStatsInfo{}
-		clientInfo.RunId = ps.RunId
-		clientInfo.ProxyNum = ps.ProxyNum
-		clientInfo.ConnNum = ps.ConnNum
-		clientInfo.LastStartTime = ps.LastStartTime
-		clientInfo.LastCloseTime = ps.LastCloseTime
-		clientInfos = append(clientInfos, clientInfo)
-		i++
-		if i > 100 { // for debug
-			return
+var globalClientStats []*ClientStats
+
+func getAllClientStats(online int) {
+	globalClientStats = StatsGetClient(online)
+}
+
+func getClientStatsByPage(page int) (clientInfos []*ClientStatsInfo) {
+	clientInfos = make([]*ClientStatsInfo, 0, 100)
+	start :=  page*100
+	for i: = start; i < len(globalClientStats) && i < start+100; i++ {
+		ps, err := globalClientStats[i]
+		if err == nil {
+			clientInfo := &ClientStatsInfo{}
+			clientInfo.RunId = ps.RunId
+			clientInfo.ProxyNum = ps.ProxyNum
+			clientInfo.ConnNum = ps.ConnNum
+			clientInfo.LastStartTime = ps.LastStartTime
+			clientInfo.LastCloseTime = ps.LastCloseTime
+			clientInfos = append(clientInfos, clientInfo)
 		}
 	}
 	return
