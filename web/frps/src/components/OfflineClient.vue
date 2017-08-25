@@ -49,12 +49,15 @@
       sortable>
     </el-table-column>
 </el-table>
+<pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="fetchData"></pagination> 
 </div>
 </template>
 
 <script>
   import Humanize from 'humanize-plus';
+  import pagination from '../utils/pagination.vue';
   import { Client } from '../utils/client.js'
+  
   export default {
     data() {
       return {
@@ -62,22 +65,43 @@
       }
     },
     created() {
-      this.fetchData()
+      this.fetchData(0)
     },
     watch: {
       '$route': 'fetchData'
     },
+    components: { pagination },
     methods: {
-      fetchData() {
-        fetch('/api/client/offline', {credentials: 'include'})
-          .then(res => {
-            return res.json()
-          }).then(json => {
-            this.clients = new Array()
-            for (let clientStats of json.clients) {
-              this.clients.push(new Client(clientStats))
-            }
-          })
+      fetchData(cPage) {
+        if (cPage == 0) {
+          fetch('/api/client/offline', {credentials: 'include'})
+            .then(res => {
+              return res.json()
+            }).then(json => {
+              this.parentTotalPage = json.total_page
+              this.parentCurrentPage = 1
+              
+              fetch('/api/client/offline/1', {credentials: 'include'})
+              .then(res => {
+                return res.json()
+              }).then(json => {
+                this.clients = new Array()
+                for (let clientStats of json.clients) {
+                  this.clients.push(new Client(clientStats))
+                }
+              })
+            })
+        } else {
+          fetch('/api/client/offline/'+cPage, {credentials: 'include'})
+            .then(res => {
+              return res.json()
+            }).then(json => {
+              this.clients = new Array()
+              for (let clientStats of json.clients) {
+                this.clients.push(new Client(clientStats))
+              }
+            })
+          }
       } // end fetchData
     } // end methods
   }
