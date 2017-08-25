@@ -28,7 +28,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-var globalClientStats []*ClientStats
+var globalClientStats 	[]*ClientStats
+var globalProxyStats	[]*ProxyStats
 
 type GeneralResponse struct {
 	Code int64  `json:"code"`
@@ -107,23 +108,21 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 		res GetClientInfoResp
 	)
 	defer func() {
-		log.Info("Http response [/api/client/online]: code [%d]", res.Code)
+		log.Info("Http response [/api/client/%s]: code [%d]", online?"online":"offline", res.Code)
 	}()
-	log.Info("Http request: [/api/client/online]")
+	log.Info("Http request: [/api/client/%s]", online?"online":"offline")
 
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		getAllClientStats(online)
 		res.TotalPage = int64(len(globalClientStats)/100 + 1)
-
-		buf, _ = json.Marshal(&res)
-		w.Write(buf)
-		return
+		res.Clients = {}
+	} else {
+		res.TotalPage = 0
+		res.Clients = getClientStatsByPage(pageIndex)
 	}
-
-	res.Clients = getClientStatsByPage(pageIndex)
-
+	
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
@@ -142,10 +141,10 @@ func getAllClientStats(online int) {
 	globalClientStats = StatsGetClient(online)
 }
 
-func getClientStatsByPage(page int) (clientInfos []*ClientStatsInfo) {
-	clientInfos = make([]*ClientStatsInfo, 0, 100)
-	start := page * 100
-	for i := start; i < len(globalClientStats) && i < start+100; i++ {
+func getClientStatsByPage(pageNo int, pageSize int) (clientInfos []*ClientStatsInfo) {
+	clientInfos = make([]*ClientStatsInfo, 0, pageSize)
+	start := pageNo * pageSize
+	for i := start; i < len(globalClientStats) && i < start+pageSize; i++ {
 		ps := globalClientStats[i]
 		clientInfo := &ClientStatsInfo{}
 		clientInfo.RunId = ps.RunId
@@ -172,142 +171,72 @@ type ProxyStatsInfo struct {
 
 type GetProxyInfoResp struct {
 	GeneralResponse
+	TotalPage	int64	`json:"total_page"`
 	Proxies []*ProxyStatsInfo `json:"proxies"`
+}
+
+func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Params, proxyType string, pageSize int) {
+	var (
+		buf []byte
+		res GetProxyInfoResp
+	)
+	defer func() {
+		log.Info("Http response [/api/proxy/%s]: code [%d]", proxyType, res.Code)
+	}()
+	log.Info("Http request: [/api/proxy/%s]", proxyType)
+
+	pageNo := params.ByName("pageNo")
+	pageIndex, err := strconv.Atoi(pageNo)
+	if err != nil {
+		getProxyStatsByType(proxyType)
+		res.TotalPage = int64(len(globalProxyStats)/pageSize+1)
+		res.Proxies = {}
+	} else {
+		res.TotalPage = 0
+		res.Proxies = getProxyStatsPageByType(proxyType, pageIndex, pageSize)
+	}
+
+	buf, _ = json.Marshal(&res)
+	w.Write(buf)
 }
 
 // api/proxy/tcp
 func apiProxyTcp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	var (
-		buf []byte
-		res GetProxyInfoResp
-	)
-	defer func() {
-		log.Info("Http response [/api/proxy/tcp]: code [%d]", res.Code)
-	}()
-	log.Info("Http request: [/api/proxy/tcp]")
-
-	pageNo := params.ByName("pageNo")
-	pageIndex, err := strconv.Atoi(pageNo)
-	if err != nil {
-		res.Proxies = getProxyStatsByType(consts.TcpProxy)
-	} else {
-		res.Proxies = getProxyStatsPageByType(consts.TcpProxy, pageIndex, 100)
-	}
-
-	buf, _ = json.Marshal(&res)
-	w.Write(buf)
+	proxyOperation(w, r, params, consts.TcpProxy)
 }
 
 // api/proxy/udp
 func apiProxyUdp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	var (
-		buf []byte
-		res GetProxyInfoResp
-	)
-	defer func() {
-		log.Info("Http response [/api/proxy/udp]: code [%d]", res.Code)
-	}()
-	log.Info("Http request: [/api/proxy/udp]")
-
-	pageNo := params.ByName("pageNo")
-	pageIndex, err := strconv.Atoi(pageNo)
-	if err != nil {
-		res.Proxies = getProxyStatsByType(consts.UdpProxy)
-	} else {
-		res.Proxies = getProxyStatsPageByType(consts.UdpProxy, pageIndex, 100)
-	}
-
-	buf, _ = json.Marshal(&res)
-	w.Write(buf)
+	proxyOperation(w, r, params, consts.UdpProxy)
 }
 
 // api/proxy/ftp
 func apiProxyFtp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	var (
-		buf []byte
-		res GetProxyInfoResp
-	)
-	defer func() {
-		log.Info("Http response [/api/proxy/ftp]: code [%d]", res.Code)
-	}()
-	log.Info("Http request: [/api/proxy/ftp]")
-
-	pageNo := params.ByName("pageNo")
-	pageIndex, err := strconv.Atoi(pageNo)
-	if err != nil {
-		res.Proxies = getProxyStatsByType(consts.FtpProxy)
-	} else {
-		res.Proxies = getProxyStatsPageByType(consts.FtpProxy, pageIndex, 100)
-	}
-
-	buf, _ = json.Marshal(&res)
-	w.Write(buf)
+	proxyOperation(w, r, params, consts.FtpProxy)
 }
 
 // api/proxy/http
 func apiProxyHttp(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	var (
-		buf []byte
-		res GetProxyInfoResp
-	)
-	defer func() {
-		log.Info("Http response [/api/proxy/http]: code [%d]", res.Code)
-	}()
-	log.Info("Http request: [/api/proxy/http]")
-
-	pageNo := params.ByName("pageNo")
-	pageIndex, err := strconv.Atoi(pageNo)
-	if err != nil {
-		res.Proxies = getProxyStatsByType(consts.HttpProxy)
-	} else {
-		res.Proxies = getProxyStatsPageByType(consts.HttpProxy, pageIndex, 100)
-	}
-
-	buf, _ = json.Marshal(&res)
-	w.Write(buf)
+	proxyOperation(w, r, params, consts.HttpProxy)
 }
 
 // api/proxy/https
 func apiProxyHttps(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	var (
-		buf []byte
-		res GetProxyInfoResp
-	)
-	defer func() {
-		log.Info("Http response [/api/proxy/https]: code [%d]", res.Code)
-	}()
-	log.Info("Http request: [/api/proxy/https]")
-	pageNo := params.ByName("pageNo")
-	pageIndex, err := strconv.Atoi(pageNo)
-	if err != nil {
-		res.Proxies = getProxyStatsByType(consts.HttpsProxy)
-	} else {
-		res.Proxies = getProxyStatsPageByType(consts.HttpsProxy, pageIndex, 100)
-	}
-
-	buf, _ = json.Marshal(&res)
-	w.Write(buf)
+	proxyOperation(w, r, params, consts.HttpsProxy)
 }
 
 func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyInfos []*ProxyStatsInfo) {
-	startPos := pageNo * pageSize
-	proxyStats := StatsGetProxiesByType(proxyType)
-	proxyInfos = make([]*ProxyStatsInfo, 0, len(proxyStats))
-	index := 0
-	number := 0
-	for _, ps := range proxyStats {
-		index++
-		if index < startPos {
-			continue
-		}
+	start := pageNo * pageSize
+	proxyInfos = make([]*ProxyStatsInfo, 0, pageSize)
+	start := pageNo * pageSize
+	for i := start; i < len(globalProxyStats) && i < start+pageSize; i++ {
+		ps := globalProxyStats[i]
 		proxyInfo := &ProxyStatsInfo{}
 		if pxy, ok := ServerService.pxyManager.GetByName(ps.Name); ok {
 			proxyInfo.Conf = pxy.GetConf()
 			proxyInfo.Status = consts.Online
 		} else {
 			proxyInfo.Status = consts.Offline
-			// debug; only show online
-			continue
 		}
 		proxyInfo.Name = ps.Name
 		proxyInfo.TodayTrafficIn = ps.TodayTrafficIn
@@ -316,39 +245,12 @@ func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyI
 		proxyInfo.LastStartTime = ps.LastStartTime
 		proxyInfo.LastCloseTime = ps.LastCloseTime
 		proxyInfos = append(proxyInfos, proxyInfo)
-		number++
-		if number >= pageSize {
-			return
-		}
 	}
 	return
 }
 
-func getProxyStatsByType(proxyType string) (proxyInfos []*ProxyStatsInfo) {
-	proxyStats := StatsGetProxiesByType(proxyType)
-	proxyInfos = make([]*ProxyStatsInfo, 0, len(proxyStats))
-	i := 0
-	for _, ps := range proxyStats {
-		proxyInfo := &ProxyStatsInfo{}
-		if pxy, ok := ServerService.pxyManager.GetByName(ps.Name); ok {
-			proxyInfo.Conf = pxy.GetConf()
-			proxyInfo.Status = consts.Online
-		} else {
-			proxyInfo.Status = consts.Offline
-		}
-		proxyInfo.Name = ps.Name
-		proxyInfo.TodayTrafficIn = ps.TodayTrafficIn
-		proxyInfo.TodayTrafficOut = ps.TodayTrafficOut
-		proxyInfo.CurConns = ps.CurConns
-		proxyInfo.LastStartTime = ps.LastStartTime
-		proxyInfo.LastCloseTime = ps.LastCloseTime
-		proxyInfos = append(proxyInfos, proxyInfo)
-		i++
-		if i > 100 { // only fetch 100
-			return
-		}
-	}
-	return
+func getProxyStatsByType(proxyType string) {
+	globalProxyStats = StatsGetProxiesByType(proxyType)
 }
 
 // api/proxy/traffic/:name
