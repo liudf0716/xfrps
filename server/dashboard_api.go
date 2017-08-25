@@ -121,7 +121,6 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 	if err != nil {
 		getAllClientStats(online)
 		res.TotalPage = int64(len(globalClientStats)/pageSize + 1)
-		res.Clients = &{}
 	} else {
 		res.TotalPage = 0
 		res.Clients = getClientStatsByPage(pageIndex)
@@ -194,7 +193,6 @@ func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 	if err != nil {
 		getProxyStatsByType(proxyType)
 		res.TotalPage = int64(len(globalProxyStats)/pageSize+1)
-		res.Proxies = &{}
 	} else {
 		res.TotalPage = 0
 		res.Proxies = getProxyStatsPageByType(proxyType, pageIndex, pageSize)
