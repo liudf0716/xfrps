@@ -97,17 +97,16 @@ type ClientStatsInfo struct {
 
 type GetClientInfoResp struct {
 	GeneralResponse
+	TotalPage	int64	`json:"total_page"`
 	Clients []*ClientStatsInfo `json:"clients"`
 }
 
-type GetAllClientInfoResp struct {
-	GeneralResponse
-	TotalPage	int64	`json:"total_page"`
-}
-
-// api/client/online
-func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	
+func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter.Params, online int)
+{
+	var (
+		buf	[]byte
+		res	GetClientInfoResp
+	)
 	defer func() {
 		log.Info("Http response [/api/client/online]: code [%d]", res.Code)
 	}()
@@ -116,11 +115,7 @@ func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.P
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
-		var (
-			buf	[]byte
-			res	GetAllClientInfoResp
-		)
-		getAllClientStats(1)
+		getAllClientStats(int)
 		res.TotalPage = len(globalClientStats)/100 +1
 		
 		buf, _ = json.Marshal(&res)
@@ -128,32 +123,20 @@ func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.P
 		return
 	} 
 	
-	var (
-		buf []byte
-		res GetClientInfoResp
-	)
-	
-	res.Clients = getProxyStatsPageByType(consts.TcpProxy, pageIndex)
+	res.Clients = getClientStatsByPage(pageIndex)
 
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
 
+// api/client/online
+func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	apiClientByStatus(w, r, params, 1)
+}
+
 // api/client/offline
 func apiClientOffline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	var (
-		buf []byte
-		res GetClientInfoResp
-	)
-	defer func() {
-		log.Info("Http response [/api/client/offline]: code [%d]", res.Code)
-	}()
-	log.Info("Http request: [/api/client/offline]")
-
-	res.Clients = getClientStats(0)
-
-	buf, _ = json.Marshal(&res)
-	w.Write(buf)
+	apiClientByStatus(w, r, params, 0)
 }
 
 func getAllClientStats(online int) {
