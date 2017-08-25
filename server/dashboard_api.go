@@ -102,12 +102,12 @@ type GetClientInfoResp struct {
 
 type GetAllClientInfoResp struct {
 	GeneralResponse
-	TotalPage	int64	`json:"total_page"`
+	TotalPage int64 `json:"total_page"`
 }
 
 // api/client/online
 func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	
+
 	defer func() {
 		log.Info("Http response [/api/client/online]: code [%d]", res.Code)
 	}()
@@ -117,22 +117,22 @@ func apiClientOnline(w http.ResponseWriter, r *http.Request, params httprouter.P
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
 		var (
-			buf	[]byte
-			res	GetAllClientInfoResp
+			buf []byte
+			res GetAllClientInfoResp
 		)
 		getAllClientStats(1)
-		res.TotalPage = len(globalClientStats)/100 +1
-		
+		res.TotalPage = len(globalClientStats)/100 + 1
+
 		buf, _ = json.Marshal(&res)
 		w.Write(buf)
 		return
-	} 
-	
+	}
+
 	var (
 		buf []byte
 		res GetClientInfoResp
 	)
-	
+
 	res.Clients = getProxyStatsPageByType(consts.TcpProxy, pageIndex)
 
 	buf, _ = json.Marshal(&res)
@@ -162,8 +162,8 @@ func getAllClientStats(online int) {
 
 func getClientStatsByPage(page int) (clientInfos []*ClientStatsInfo) {
 	clientInfos = make([]*ClientStatsInfo, 0, 100)
-	start :=  page*100
-	for i := start; i < len(globalClientStats) && i < start+100 ; i++ {
+	start := page * 100
+	for i := start; i < len(globalClientStats) && i < start+100; i++ {
 		ps, err := globalClientStats[i]
 		if err == nil {
 			clientInfo := &ClientStatsInfo{}
