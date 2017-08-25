@@ -85,12 +85,15 @@
       </template>
     </el-table-column>
 </el-table>
+<pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="fetchData"></pagination> 
 </div>
 </template>
 
 <script>
   import Humanize from 'humanize-plus';
+  import pagination from '../utils/pagination.vue';
   import Traffic from './Traffic.vue'
+  
   import {
     HttpProxy
   } from '../utils/proxy.js'
@@ -99,11 +102,13 @@
       return {
         proxies: null,
         vhost_http_port: "",
-        subdomain_host: ""
+        subdomain_host: "",
+        parentTotalPage: 1,
+        parentCurrentpage: 1
       }
     },
     created() {
-      this.fetchData()
+      this.fetchData(0)
     },
     watch: {
       '$route': 'fetchData'
@@ -115,7 +120,7 @@
       formatTrafficOut(row, column) {
         return Humanize.fileSize(row.traffic_out)
       },
-      fetchData() {
+      fetchData(cPage) {
         fetch('/api/serverinfo', {credentials: 'include'})
           .then(res => {
             return res.json()
@@ -139,7 +144,8 @@
       }
     },
     components: {
-        'my-traffic-chart': Traffic
+        'my-traffic-chart': Traffic,
+        'pagination': pagination
     }
   }
 </script>
