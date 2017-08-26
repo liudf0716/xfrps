@@ -109,21 +109,24 @@
       fetchData(cPage) {
         if (cPage == 0) {
           fetch('/api/proxy/tcp', {credentials: 'include'})
-            .then(res => {
+          .then(res => {
               return res.json()
-            }).then(json => {
+            })
+          .then(json => {
               this.parentCurrentpage = 1
               this.totalPage = json.total_page
               
               fetch('/api/proxy/tcp/1', {credentials: 'include'})
               .then(res => {
-                return res.json()
-              }).then(json => {
-                this.proxies = new Array()
-                for (let proxyStats of json.proxies) {
-                  this.proxies.push(new TcpProxy(proxyStats))
-                }
-            })   
+                  return res.json()
+                })
+              .then(json => {
+                  this.proxies = new Array()
+                  for (let proxyStats of json.proxies) {
+                    this.proxies.push(new TcpProxy(proxyStats))
+                  }
+                })
+            })
         } else {
           this.parentCurrentpage = cPage;
           fetch('/api/proxy/tcp'+cPage, {credentials: 'include'})
