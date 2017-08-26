@@ -186,7 +186,7 @@ func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 	defer func() {
 		log.Info("Http response [/api/proxy/%s]: code [%d]", proxyType, res.Code)
 	}()
-	
+
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
