@@ -114,15 +114,14 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 	defer func() {
 		log.Info("Http response [/api/client/%s]: code [%d]", status, res.Code)
 	}()
+	log.Info("Http request: [/api/client/%s]", status)
 
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
-		log.Info("Http request: [/api/client/%s] ", status)
 		getAllClientStats(online)
 		res.TotalPage = int64(len(globalClientStats)/pageSize + 1)
 	} else {
-		log.Info("Http request: [/api/client/%s/%d]", status, pageIndex)
 		res.TotalPage = 0
 		res.Clients = getClientStatsByPage(pageIndex, 100)
 	}
@@ -147,7 +146,7 @@ func getAllClientStats(online int) {
 
 func getClientStatsByPage(pageNo int, pageSize int) (clientInfos []*ClientStatsInfo) {
 	clientInfos = make([]*ClientStatsInfo, 0, pageSize)
-	start := (pageNo - 1) * pageSize
+	start := pageNo * pageSize
 	for i := start; i < len(globalClientStats) && i < start+pageSize; i++ {
 		ps := globalClientStats[i]
 		clientInfo := &ClientStatsInfo{}
@@ -187,14 +186,15 @@ func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 	defer func() {
 		log.Info("Http response [/api/proxy/%s]: code [%d]", proxyType, res.Code)
 	}()
-	log.Info("Http request: [/api/proxy/%s]", proxyType)
-
+	
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
+		log.Info("Http request: [/api/proxy/%s]", proxyType)
 		getProxyStatsByType(proxyType)
 		res.TotalPage = int64(len(globalProxyStats)/pageSize + 1)
 	} else {
+		log.Info("Http request: [/api/proxy/%s/%d]", proxyType, pageIndex)
 		res.TotalPage = 0
 		res.Proxies = getProxyStatsPageByType(proxyType, pageIndex, pageSize)
 	}
@@ -230,7 +230,7 @@ func apiProxyHttps(w http.ResponseWriter, r *http.Request, params httprouter.Par
 
 func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyInfos []*ProxyStatsInfo) {
 	proxyInfos = make([]*ProxyStatsInfo, 0, pageSize)
-	start := (pageNo - 1) * pageSize
+	start := pageNo * pageSize
 	for i := start; i < len(globalProxyStats) && i < start+pageSize; i++ {
 		ps := globalProxyStats[i]
 		proxyInfo := &ProxyStatsInfo{}
