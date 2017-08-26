@@ -145,7 +145,7 @@
                       this.proxies = new Array()
                       for (let proxyStats of json.proxies) {
                         this.proxies.push(new HttpProxy(proxyStats, this.vhost_http_port, this.subdomain_host))
-                    })
+                      }
                   })
                 } else {
                   fetch('/api/proxy/http/' + cPage, {credentials: 'include'})
