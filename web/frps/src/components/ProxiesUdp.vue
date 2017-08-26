@@ -84,7 +84,7 @@
   import Humanize from 'humanize-plus'
   import Traffic from './Traffic.vue'
   import pagination from '../utils/pagination.vue';
-  import { TcpProxy } from '../utils/proxy.js'
+  import { UdpProxy } from '../utils/proxy.js'
   export default {
     data() {
       return {
@@ -114,7 +114,7 @@
             })
           .then(json => {
               this.parentCurrentpage = 1
-              this.totalPage = json.total_page
+              this.parentTotalPage = json.total_page
               
               fetch('/api/proxy/udp/1', {credentials: 'include'})
               .then(res => {

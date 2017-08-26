@@ -114,7 +114,7 @@
             })
           .then(json => {
               this.parentCurrentpage = 1
-              this.totalPage = json.total_page
+              this.ParentTotalPage = json.total_page
               
               fetch('/api/proxy/tcp/1', {credentials: 'include'})
               .then(res => {
