@@ -129,7 +129,7 @@
             })
         } else {
           this.parentCurrentpage = cPage;
-          fetch('/api/proxy/tcp'+cPage, {credentials: 'include'})
+          fetch('/api/proxy/tcp/'+cPage, {credentials: 'include'})
             .then(res => {
               return res.json()
             }).then(json => {

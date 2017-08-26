@@ -27,6 +27,12 @@
             <el-form-item label="SubDomain">
               <span>{{ props.row.subdomain }}</span>
             </el-form-item>
+            <el-form-item label="locations">
+              <span>{{ props.row.locations }}</span>
+            </el-form-item>
+            <el-form-item label="HostRewrite">
+              <span>{{ props.row.host_header_rewrite }}</span>
+            </el-form-item>
             <el-form-item label="Encryption">
               <span>{{ props.row.encryption }}</span>
             </el-form-item>
@@ -79,26 +85,30 @@
       </template>
     </el-table-column>
 </el-table>
-
+<pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="fetchData"></pagination> 
 </div>
 </template>
 
 <script>
   import Humanize from 'humanize-plus';
-  import Traffic from './Traffic.vue'
+  import pagination from '../utils/pagination.vue';
+  import Traffic from './Traffic.vue';
+  
   import {
-    HttpsProxy
+    HttpProxy
   } from '../utils/proxy.js'
   export default {
     data() {
       return {
         proxies: null,
-        vhost_https_port: '',
-        subdomain_host: ''
+        vhost_https_port: "",
+        subdomain_host: "",
+        parentTotalPage: 1,
+        parentCurrentpage: 1
       }
     },
     created() {
-      this.fetchData()
+      this.fetchData(0)
     },
     watch: {
       '$route': 'fetchData'
@@ -110,7 +120,7 @@
       formatTrafficOut(row, column) {
         return Humanize.fileSize(row.traffic_out)
       },
-      fetchData() {
+      fetchData(cPage) {
         fetch('/api/serverinfo', {credentials: 'include'})
           .then(res => {
             return res.json()
@@ -120,21 +130,43 @@
             if (this.vhost_https_port == null || this.vhost_https_port == 0) {
               return
             } else {
-              fetch('/api/proxy/https', {credentials: 'include'})
-                .then(res => {
-                  return res.json()
-                }).then(json => {
-                  this.proxies = new Array()
-                  for (let proxyStats of json.proxies) {
-                    this.proxies.push(new HttpsProxy(proxyStats, this.vhost_https_port, this.subdomain_host))
-                  }
-                })
+              if (cPage == 0) {
+                fetch('/api/proxy/https', {credentials: 'include'})
+                  .then(res => {
+                    return res.json()
+                  }).then(json => {
+                    this.parentTotalPage = json.total_page;
+                    this.parentCurrentPage = 1;
+                    
+                    fetch('/api/proxy/https/1', {credentials: 'include'})
+                    .then(res => {
+                      return res.json()
+                     }).then(json => {
+                      this.proxies = new Array()
+                      for (let proxyStats of json.proxies) {
+                        this.proxies.push(new HttpsProxy(proxyStats, this.vhost_https_port, this.subdomain_host))
+                      }
+                    })
+                  })
+                } else {
+                  this.parentCurrentpage = cPage;
+                  fetch('/api/proxy/https/' + cPage, {credentials: 'include'})
+                  .then(res => {
+                    return res.json()
+                  }).then(json => {                  
+                    this.proxies = new Array()
+                    for (let proxyStats of json.proxies) {
+                      this.proxies.push(new HttpsProxy(proxyStats, this.vhost_https_port, this.subdomain_host))
+                    }
+                  })
+                }
             }
           })
       }
     },
     components: {
-        'my-traffic-chart': Traffic
+        'my-traffic-chart': Traffic,
+        'pagination': pagination
     }
   }
 </script>

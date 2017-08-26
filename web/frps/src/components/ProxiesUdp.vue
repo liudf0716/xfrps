@@ -12,7 +12,7 @@
             <my-traffic-chart :proxy_name="props.row.name"></my-traffic-chart>
           </el-popover>
   
-          <el-button v-popover:popover4 type="primary" size="small" icon="view" style="margin-bottom:10px">Traffic Statistics</el-button>
+          <el-button v-popover:popover4 type="primary" size="small" icon="view" :name="props.row.name" style="margin-bottom:10px" @click="fetchData2">Traffic Statistics</el-button>
   
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="Name">
@@ -37,7 +37,7 @@
               <span>{{ props.row.last_close_time }}</span>
             </el-form-item>
         </el-form>
-    </template>
+        </template>
     </el-table-column>
     <el-table-column
       label="Name"
@@ -76,23 +76,25 @@
       </template>
     </el-table-column>
   </el-table>
+  <pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="fetchData"></pagination> 
 </div>
 </template>
 
 <script>
-  import Humanize from 'humanize-plus';
+  import Humanize from 'humanize-plus'
   import Traffic from './Traffic.vue'
-  import {
-    UdpProxy
-  } from '../utils/proxy.js'
+  import pagination from '../utils/pagination.vue';
+  import { TcpProxy } from '../utils/proxy.js'
   export default {
     data() {
       return {
-        proxies: null
+        proxies: null,
+        parentTotalPage: 1,
+        parentCurrentpage: 1
       }
     },
     created() {
-      this.fetchData()
+      this.fetchData(0)
     },
     watch: {
       '$route': 'fetchData'
@@ -104,20 +106,44 @@
       formatTrafficOut(row, column) {
         return Humanize.fileSize(row.traffic_out)
       },
-      fetchData() {
-        fetch('/api/proxy/udp', {credentials: 'include'})
+      fetchData(cPage) {
+        if (cPage == 0) {
+          fetch('/api/proxy/udp', {credentials: 'include'})
           .then(res => {
-            return res.json()
-          }).then(json => {
-            this.proxies = new Array()
-            for (let proxyStats of json.proxies) {
-              this.proxies.push(new UdpProxy(proxyStats))
-            }
-          })
+              return res.json()
+            })
+          .then(json => {
+              this.parentCurrentpage = 1
+              this.totalPage = json.total_page
+              
+              fetch('/api/proxy/udp/1', {credentials: 'include'})
+              .then(res => {
+                  return res.json()
+                })
+              .then(json => {
+                  this.proxies = new Array()
+                  for (let proxyStats of json.proxies) {
+                    this.proxies.push(new UdpProxy(proxyStats))
+                  }
+                })
+            })
+        } else {
+          this.parentCurrentpage = cPage;
+          fetch('/api/proxy/udp/'+cPage, {credentials: 'include'})
+            .then(res => {
+              return res.json()
+            }).then(json => {
+              this.proxies = new Array()
+              for (let proxyStats of json.proxies) {
+                this.proxies.push(new UdpProxy(proxyStats))
+              }
+            })
+          }
       }
     },
     components: {
-        'my-traffic-chart': Traffic
+        'my-traffic-chart': Traffic,
+        'pagination': pagination
     }
   }
 </script>
