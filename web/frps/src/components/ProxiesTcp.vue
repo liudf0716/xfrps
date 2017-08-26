@@ -123,7 +123,6 @@
                 for (let proxyStats of json.proxies) {
                   this.proxies.push(new TcpProxy(proxyStats))
                 }
-              }    
             })   
         } else {
           fetch('/api/proxy/tcp'+cPage, {credentials: 'include'})
