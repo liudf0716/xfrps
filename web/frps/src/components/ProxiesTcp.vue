@@ -76,21 +76,25 @@
       </template>
     </el-table-column>
   </el-table>
+  <pagination :totalPage="parentTotalPage" :currentPage="parentCurrentpage" :changeCallback="fetchData"></pagination> 
 </div>
 </template>
 
 <script>
   import Humanize from 'humanize-plus'
   import Traffic from './Traffic.vue'
+  import pagination from '../utils/pagination.vue';
   import { TcpProxy } from '../utils/proxy.js'
   export default {
     data() {
       return {
-        proxies: null
+        proxies: null,
+        parentTotalPage: 1,
+        parentCurrentpage: 1
       }
     },
     created() {
-      this.fetchData()
+      this.fetchData(0)
     },
     watch: {
       '$route': 'fetchData'
@@ -102,20 +106,41 @@
       formatTrafficOut(row, column) {
         return Humanize.fileSize(row.traffic_out)
       },
-      fetchData() {
-        fetch('/api/proxy/tcp', {credentials: 'include'})
-          .then(res => {
-            return res.json()
-          }).then(json => {
-            this.proxies = new Array()
-            for (let proxyStats of json.proxies) {
-              this.proxies.push(new TcpProxy(proxyStats))
-            }
-          })
+      fetchData(cPage) {
+        if (cPage == 0) {
+          fetch('/api/proxy/tcp', {credentials: 'include'})
+            .then(res => {
+              return res.json()
+            }).then(json => {
+              this.parentCurrentpage = 1
+              this.totalPage = json.total_page
+              
+              fetch('/api/proxy/tcp/1', {credentials: 'include'})
+              .then(res => {
+                return res.json()
+              }).then(json => {
+                this.proxies = new Array()
+                for (let proxyStats of json.proxies) {
+                  this.proxies.push(new TcpProxy(proxyStats))
+                }
+              }    
+            })   
+        } else {
+          fetch('/api/proxy/tcp'+cPage, {credentials: 'include'})
+            .then(res => {
+              return res.json()
+            }).then(json => {
+              this.proxies = new Array()
+              for (let proxyStats of json.proxies) {
+                this.proxies.push(new TcpProxy(proxyStats))
+              }
+            })
+          }
       }
     },
     components: {
-        'my-traffic-chart': Traffic
+        'my-traffic-chart': Traffic,
+        'pagination': pagination
     }
   }
 </script>
