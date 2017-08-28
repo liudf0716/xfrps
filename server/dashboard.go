@@ -50,7 +50,7 @@ func RunDashboardServer(addr string, port int64) (err error) {
 	router.GET("/api/proxy/ftp/:pageNo", httprouterBasicAuth(apiProxyFtp))
 	router.GET("/api/proxy/http/:pageNo", httprouterBasicAuth(apiProxyHttp))
 	router.GET("/api/proxy/https/:pageNo", httprouterBasicAuth(apiProxyHttps))
-	router.GET("/api/proxy/traffic", httprouterBasicAuth(apiProxyTraffic))
+	router.GET("/api/proxy/traffic/:name", httprouterBasicAuth(apiProxyTraffic))
 	router.GET("/api/client/online", httprouterBasicAuth(apiClientOnline))
 	router.GET("/api/client/online/:pageNo", httprouterBasicAuth(apiClientOnline))
 	router.GET("/api/client/offline", httprouterBasicAuth(apiClientOffline))
