@@ -98,8 +98,9 @@ type ClientStatsInfo struct {
 
 type GetClientInfoResp struct {
 	GeneralResponse
-	TotalPage int64              `json:"total_page"`
-	Clients   []*ClientStatsInfo `json:"clients"`
+	TotalPage	int64              	`json:"total_page"`
+	TotalNum	int64				`json:"total_num"`
+	Clients		[]*ClientStatsInfo 	`json:"clients"`
 }
 
 func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter.Params, online int, pageSize int) {
@@ -121,13 +122,14 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 	if err != nil {
 		log.Info("Http request: [/api/client/%s]", status)
 		getAllClientStats(online)
-		res.TotalPage = int64(len(globalClientStats)/pageSize + 1)
+		res.TotalPage 	= int64(len(globalClientStats)/pageSize + 1)
 	} else {
 		log.Info("Http request: [/api/client/%s/%d]", status, pageIndex)
 		res.TotalPage = 0
 		res.Clients = getClientStatsByPage(pageIndex, 100)
 	}
-
+	res.TotalNum 	= int64(len(globalClientStats))
+	
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
@@ -176,8 +178,9 @@ type ProxyStatsInfo struct {
 
 type GetProxyInfoResp struct {
 	GeneralResponse
-	TotalPage int64             `json:"total_page"`
-	Proxies   []*ProxyStatsInfo `json:"proxies"`
+	TotalPage 	int64			`json:"total_page"`
+	TotalNum	int64			`json:"total_num"`
+	Proxies   	[]*ProxyStatsInfo `json:"proxies"`
 }
 
 func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Params, proxyType string, pageSize int) {
@@ -200,7 +203,8 @@ func proxyOperation(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 		res.TotalPage = 0
 		res.Proxies = getProxyStatsPageByType(proxyType, pageIndex, pageSize)
 	}
-
+	res.TotalNum 	= int64(len(globalProxyStats))
+	
 	buf, _ = json.Marshal(&res)
 	w.Write(buf)
 }
