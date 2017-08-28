@@ -114,7 +114,6 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 	defer func() {
 		log.Info("Http response [/api/client/%s]: code [%d]", status, res.Code)
 	}()
-	
 
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
