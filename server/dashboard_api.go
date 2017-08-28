@@ -114,14 +114,16 @@ func apiClientByStatus(w http.ResponseWriter, r *http.Request, params httprouter
 	defer func() {
 		log.Info("Http response [/api/client/%s]: code [%d]", status, res.Code)
 	}()
-	log.Info("Http request: [/api/client/%s]", status)
+	
 
 	pageNo := params.ByName("pageNo")
 	pageIndex, err := strconv.Atoi(pageNo)
 	if err != nil {
+		log.Info("Http request: [/api/client/%s]", status)
 		getAllClientStats(online)
 		res.TotalPage = int64(len(globalClientStats)/pageSize + 1)
 	} else {
+		log.Info("Http request: [/api/client/%s/%d]", status, pageIndex)
 		res.TotalPage = 0
 		res.Clients = getClientStatsByPage(pageIndex, 100)
 	}
