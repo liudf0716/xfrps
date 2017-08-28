@@ -149,7 +149,7 @@ func getAllClientStats(online int) {
 
 func getClientStatsByPage(pageNo int, pageSize int) (clientInfos []*ClientStatsInfo) {
 	clientInfos = make([]*ClientStatsInfo, 0, pageSize)
-	start := pageNo * pageSize
+	start := (pageNo - 1) * pageSize
 	for i := start; i < len(globalClientStats) && i < start+pageSize; i++ {
 		ps := globalClientStats[i]
 		clientInfo := &ClientStatsInfo{}
@@ -235,7 +235,7 @@ func apiProxyHttps(w http.ResponseWriter, r *http.Request, params httprouter.Par
 
 func getProxyStatsPageByType(proxyType string, pageNo int, pageSize int) (proxyInfos []*ProxyStatsInfo) {
 	proxyInfos = make([]*ProxyStatsInfo, 0, pageSize)
-	start := pageNo * pageSize
+	start := (pageNo - 1) * pageSize
 	for i := start; i < len(globalProxyStats) && i < start+pageSize; i++ {
 		ps := globalProxyStats[i]
 		proxyInfo := &ProxyStatsInfo{}
