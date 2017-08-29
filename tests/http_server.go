@@ -7,7 +7,7 @@ import (
 
 func StartHttpServer() {
 	http.HandleFunc("/", request)
-	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", 10702), nil)
+	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", 10722), nil)
 }
 
 func request(w http.ResponseWriter, r *http.Request) {
