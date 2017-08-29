@@ -98,7 +98,7 @@ func TestUdpEchoServer(t *testing.T) {
 }
 
 func TestUnixDomainServer(t *testing.T) {
-	c, err := frpNet.ConnectTcpServer(fmt.Sprintf("127.0.0.1:%d", 10704))
+	c, err := frpNet.ConnectTcpServer(fmt.Sprintf("127.0.0.1:%d", 10714))
 	if err != nil {
 		t.Fatalf("connect to echo server error: %v", err)
 	}
