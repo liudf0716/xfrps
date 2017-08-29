@@ -12,7 +12,7 @@ import (
 )
 
 func StartEchoServer() {
-	l, err := frpNet.ListenTcp("127.0.0.1", 10701)
+	l, err := frpNet.ListenTcp("127.0.0.1", 10721)
 	if err != nil {
 		fmt.Printf("echo server listen error: %v\n", err)
 		return
@@ -30,7 +30,7 @@ func StartEchoServer() {
 }
 
 func StartUdpEchoServer() {
-	l, err := frpNet.ListenUDP("127.0.0.1", 10703)
+	l, err := frpNet.ListenUDP("127.0.0.1", 10723)
 	if err != nil {
 		fmt.Printf("udp echo server listen error: %v\n", err)
 		return
