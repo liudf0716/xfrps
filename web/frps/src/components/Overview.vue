@@ -28,6 +28,9 @@
                         <el-form-item label="Client Counts">
                           <span>{{ client_counts }}</span>
                         </el-form-item>
+						<el-form-item label="Offline Client Counts">
+                          <span>{{ offline_client_counts }}</span>
+                        </el-form-item>
                         <el-form-item label="Current Connections">
                           <span>{{ cur_conns }}</span>
                         </el-form-item>
@@ -58,6 +61,7 @@
                 max_pool_count: '',
                 heart_beat_timeout: '',
                 client_counts: '',
+                offline_client_counts: '',
                 cur_conns: '',
                 proxy_counts: ''
             }
@@ -88,6 +92,7 @@
                 this.max_pool_count = json.max_pool_count
                 this.heart_beat_timeout = json.heart_beat_timeout
                 this.client_counts = json.client_counts
+				this.offline_client_counts = json.offline_client_counts
                 this.cur_conns = json.cur_conns
                 this.proxy_counts = 0
                 if (json.proxy_type_count != null) {
