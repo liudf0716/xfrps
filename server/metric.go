@@ -37,6 +37,9 @@ type ServerStatistics struct {
 	// counter for clients
 	ClientCounts metric.Counter
 
+	// counter for offline clients
+	OfflineClientCounts metric.Counter
+
 	// counter for proxy types
 	ProxyTypeCounts map[string]metric.Counter
 
@@ -76,7 +79,9 @@ func init() {
 		TotalTrafficOut: metric.NewDateCounter(ReserveDays),
 		CurConns:        metric.NewCounter(),
 
-		ClientCounts:    metric.NewCounter(),
+		ClientCounts:        metric.NewCounter(),
+		OfflineClientCounts: metric.NewCounter(),
+
 		ProxyTypeCounts: make(map[string]metric.Counter),
 
 		ProxyStatistics: make(map[string]*ProxyStatistics),
@@ -107,6 +112,7 @@ func StatsClearUselessInfo() {
 
 	for runid, data := range globalStats.ClientStatistics {
 		if !data.LastCloseTime.IsZero() && time.Since(data.LastCloseTime) > time.Duration(7*24)*time.Hour {
+			globalStats.OfflineClientCounts.Dec(1)
 			delete(globalStats.ClientStatistics, runid)
 			log.Trace("clear client [%s]'s statistics data, lastCloseTime: [%s]", runid, data.LastCloseTime.String())
 		}
@@ -135,6 +141,7 @@ func StatsNewClient(runid string) {
 func StatsCloseClient(runid string) {
 	if config.ServerCommonCfg.DashboardPort != 0 {
 		globalStats.ClientCounts.Dec(1)
+		globalStats.OfflineClientCounts.Inc(1)
 
 		globalStats.mu.Lock()
 		defer globalStats.mu.Unlock()
@@ -262,22 +269,24 @@ func StatsAddTrafficOut(name string, trafficOut int64) {
 
 // Functions for getting server stats.
 type ServerStats struct {
-	TotalTrafficIn  int64
-	TotalTrafficOut int64
-	CurConns        int64
-	ClientCounts    int64
-	ProxyTypeCounts map[string]int64
+	TotalTrafficIn      int64
+	TotalTrafficOut     int64
+	CurConns            int64
+	ClientCounts        int64
+	OfflineClientCounts int64
+	ProxyTypeCounts     map[string]int64
 }
 
 func StatsGetServer() *ServerStats {
 	globalStats.mu.Lock()
 	defer globalStats.mu.Unlock()
 	s := &ServerStats{
-		TotalTrafficIn:  globalStats.TotalTrafficIn.TodayCount(),
-		TotalTrafficOut: globalStats.TotalTrafficOut.TodayCount(),
-		CurConns:        globalStats.CurConns.Count(),
-		ClientCounts:    globalStats.ClientCounts.Count(),
-		ProxyTypeCounts: make(map[string]int64),
+		TotalTrafficIn:      globalStats.TotalTrafficIn.TodayCount(),
+		TotalTrafficOut:     globalStats.TotalTrafficOut.TodayCount(),
+		CurConns:            globalStats.CurConns.Count(),
+		ClientCounts:        globalStats.ClientCounts.Count(),
+		OfflineClientCounts: globalStats.OfflineClientCounts.Count(),
+		ProxyTypeCounts:     make(map[string]int64),
 	}
 	for k, v := range globalStats.ProxyTypeCounts {
 		s.ProxyTypeCounts[k] = v.Count()

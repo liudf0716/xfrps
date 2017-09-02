@@ -48,11 +48,12 @@ type ServerInfoResp struct {
 	MaxPoolCount     int64  `json:"max_pool_count"`
 	HeartBeatTimeout int64  `json:"heart_beat_timeout"`
 
-	TotalTrafficIn  int64            `json:"total_traffic_in"`
-	TotalTrafficOut int64            `json:"total_traffic_out"`
-	CurConns        int64            `json:"cur_conns"`
-	ClientCounts    int64            `json:"client_counts"`
-	ProxyTypeCounts map[string]int64 `json:"proxy_type_count"`
+	TotalTrafficIn      int64            `json:"total_traffic_in"`
+	TotalTrafficOut     int64            `json:"total_traffic_out"`
+	CurConns            int64            `json:"cur_conns"`
+	ClientCounts        int64            `json:"client_counts"`
+	OfflineClientCounts int64            `json:"offline_client_counts"`
+	ProxyTypeCounts     map[string]int64 `json:"proxy_type_count"`
 }
 
 func apiServerInfo(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -76,11 +77,12 @@ func apiServerInfo(w http.ResponseWriter, r *http.Request, params httprouter.Par
 		MaxPoolCount:     cfg.MaxPoolCount,
 		HeartBeatTimeout: cfg.HeartBeatTimeout,
 
-		TotalTrafficIn:  serverStats.TotalTrafficIn,
-		TotalTrafficOut: serverStats.TotalTrafficOut,
-		CurConns:        serverStats.CurConns,
-		ClientCounts:    serverStats.ClientCounts,
-		ProxyTypeCounts: serverStats.ProxyTypeCounts,
+		TotalTrafficIn:      serverStats.TotalTrafficIn,
+		TotalTrafficOut:     serverStats.TotalTrafficOut,
+		CurConns:            serverStats.CurConns,
+		ClientCounts:        serverStats.ClientCounts,
+		OfflineClientCounts: serverStats.OfflineClientCounts,
+		ProxyTypeCounts:     serverStats.ProxyTypeCounts,
 	}
 
 	buf, _ = json.Marshal(&res)
