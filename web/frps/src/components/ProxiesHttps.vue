@@ -95,7 +95,7 @@
   import Traffic from './Traffic.vue';
   
   import {
-    HttpProxy
+    HttpsProxy
   } from '../utils/proxy.js'
   export default {
     data() {
