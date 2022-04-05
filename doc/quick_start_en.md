@@ -9,11 +9,11 @@ We will use two simple demo to demonstrate how to use frp.
 
 ### Download SourceCode
 
-`go get github.com/KunTengRom/xfrps` is recommended, then the code will be copied to the directory `$GOPATH/src/github.com/KunTengRom/xfrps`.
+`go get github.com/liudf0716/xfrps` is recommended, then the code will be copied to the directory `$GOPATH/src/github.com/liudf0716/xfrps`.
 
-Or you can use `git clone https://github.com/KunTengRom/xfrps.git $GOPATH/src/github.com/KunTengRom/xfrps`.
+Or you can use `git clone https://github.com/liudf0716/xfrps.git $GOPATH/src/github.com/liudf0716/xfrps`.
 
-If you want to try it quickly, download the compiled program and configuration files from [https://github.com/KunTengRom/xfrps/releases](https://github.com/KunTengRom/xfrps/releases).
+If you want to try it quickly, download the compiled program and configuration files from [https://github.com/liudf0716/xfrps/releases](https://github.com/liudf0716/xfrps/releases).
 
 ### Compile
 
@@ -28,25 +28,25 @@ Enter the root directory and execute `make`, then wait until finished.
 
 ### Deploy
 
-1. Move `./bin/frps` and `./conf/frps.ini` to any directory of **server B**.
-2. Move `./bin/frpc` and `./conf/frpc.ini` to any directory of **server A**.
+1. Move `./bin/xfrps` and `./conf/xfrps.ini` to any directory of **server B**.
+2. Move `./bin/xfrpc` and `./conf/xfrpc.ini` to any directory of **server A**.
 3. Modify all configuration files, details in next paragraph.
-4. Execute `nohup ./frps &` or `nohup ./frps -c ./frps.ini &` in **server B**.
-5. Execute `nohup ./frpc &` or `nohup ./frpc -c ./frpc.ini &` in **server A**.
+4. Execute `nohup ./xfrps &` or `nohup ./xfrps -c ./xfrps.ini &` in **server B**.
+5. Execute `nohup ./xfrpc &` or `nohup ./xfrpc -c ./xfrpc.ini &` in **server A**.
 6. Use `ssh -oPort=6000 {user}@x.x.x.x` to test if frp is work(replace {user} to real username in **server A**), or visit custom domains by browser.
 
 ## Tcp port forwarding
 
 ### Configuration files
 
-#### frps.ini
+#### xfrps.ini
 
 ```ini
 [common]
 bind_addr = 0.0.0.0
-# for accept connections from frpc
+# for accept connections from xfrpc
 bind_port = 7000
-log_file = ./frps.log
+log_file = ./xfrps.log
 log_level = info
 
 # ssh is the custom name of proxy and there can be many proxies with unique name in one configure file
@@ -57,23 +57,23 @@ bind_addr = 0.0.0.0
 listen_port = 6000
 ```
 
-#### frpc.ini
+#### xfrpc.ini
 
 ```ini
 [common]
-# server address of frps
+# server address of xfrps
 server_addr = x.x.x.x
 server_port = 7000
-log_file = ./frpc.log
+log_file = ./xfrpc.log
 log_level = info
 # for authentication
 auth_token = 123
 
-# ssh is proxy name same with configure in frps.ini
+# ssh is proxy name same with configure in xfrps.ini
 [ssh]
 # local port which need to be transferred
 local_port = 22
-# if use_encryption equals true, messages between frpc and frps will be encrypted, default is false
+# if use_encryption equals true, messages between xfrpc and xfrps will be encrypted, default is false
 use_encryption = true
 ```
 
@@ -87,7 +87,7 @@ After that, you can visit your web pages in local server by custom domains.
 
 ### Configuration files
 
-#### frps.ini
+#### xfrps.ini
 
 ```ini
 [common]
@@ -95,7 +95,7 @@ bind_addr = 0.0.0.0
 bind_port = 7000
 # if you want to support vhost, specify one port for http services
 vhost_http_port = 80
-log_file = ./frps.log
+log_file = ./xfrps.log
 log_level = info
 
 [web01]
@@ -110,17 +110,17 @@ auth_token = 123
 custom_domains = web02.yourdomain.com
 ```
 
-#### frpc.ini
+#### xfrpc.ini
 
 ```ini
 [common]
 server_addr = x.x.x.x
 server_port = 7000
-log_file = ./frpc.log
+log_file = ./xfrpc.log
 log_level = info
 auth_token = 123 
 
-# custom domains are set in frps.ini
+# custom domains are set in xfrps.ini
 [web01]
 type = http
 local_ip = 127.0.0.1

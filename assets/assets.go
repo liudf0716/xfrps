@@ -25,7 +25,7 @@ import (
 
 	"github.com/rakyll/statik/fs"
 
-	_ "github.com/KunTengRom/xfrps/assets/statik"
+	_ "github.com/liudf0716/xfrps/assets/statik"
 )
 
 var (

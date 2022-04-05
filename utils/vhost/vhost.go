@@ -20,8 +20,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/KunTengRom/xfrps/utils/log"
-	frpNet "github.com/KunTengRom/xfrps/utils/net"
+	"github.com/liudf0716/xfrps/utils/log"
+	frpNet "github.com/liudf0716/xfrps/utils/net"
 )
 
 type muxFunc func(frpNet.Conn) (frpNet.Conn, map[string]string, error)

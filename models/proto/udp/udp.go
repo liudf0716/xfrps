@@ -20,9 +20,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/KunTengRom/xfrps/models/msg"
-	"github.com/KunTengRom/xfrps/utils/errors"
-	"github.com/KunTengRom/xfrps/utils/pool"
+	"github.com/liudf0716/xfrps/models/msg"
+	"github.com/liudf0716/xfrps/utils/errors"
+	"github.com/liudf0716/xfrps/utils/pool"
 )
 
 func NewUdpPacket(buf []byte, laddr, raddr *net.UDPAddr) *msg.UdpPacket {

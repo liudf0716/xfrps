@@ -22,14 +22,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/KunTengRom/xfrps/models/config"
-	"github.com/KunTengRom/xfrps/models/msg"
-	"github.com/KunTengRom/xfrps/models/proto/tcp"
-	"github.com/KunTengRom/xfrps/models/proto/udp"
-	"github.com/KunTengRom/xfrps/utils/errors"
-	"github.com/KunTengRom/xfrps/utils/log"
-	frpNet "github.com/KunTengRom/xfrps/utils/net"
-	"github.com/KunTengRom/xfrps/utils/vhost"
+	"github.com/liudf0716/xfrps/models/config"
+	"github.com/liudf0716/xfrps/models/msg"
+	"github.com/liudf0716/xfrps/models/proto/tcp"
+	"github.com/liudf0716/xfrps/models/proto/udp"
+	"github.com/liudf0716/xfrps/utils/errors"
+	"github.com/liudf0716/xfrps/utils/log"
+	frpNet "github.com/liudf0716/xfrps/utils/net"
+	"github.com/liudf0716/xfrps/utils/vhost"
 )
 
 type Proxy interface {

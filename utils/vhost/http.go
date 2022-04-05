@@ -25,8 +25,8 @@ import (
 	"strings"
 	"time"
 
-	frpNet "github.com/KunTengRom/xfrps/utils/net"
-	"github.com/KunTengRom/xfrps/utils/pool"
+	frpNet "github.com/liudf0716/xfrps/utils/net"
+	"github.com/liudf0716/xfrps/utils/pool"
 )
 
 type HttpMuxer struct {

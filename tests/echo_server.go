@@ -8,7 +8,7 @@ import (
 	"os"
 	"syscall"
 
-	frpNet "github.com/KunTengRom/xfrps/utils/net"
+	frpNet "github.com/liudf0716/xfrps/utils/net"
 )
 
 func StartEchoServer() {

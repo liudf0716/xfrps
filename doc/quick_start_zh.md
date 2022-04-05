@@ -1,17 +1,17 @@
-# frp 使用文档
+# xfrp 使用文档
 
-相比于其他项目而言 frp 更易于部署和使用，这里我们用两个简单的示例来演示 frp 的使用过程。
+相比于其他项目而言 xfrp 更易于部署和使用，这里我们用两个简单的示例来演示 xfrp 的使用过程。
 
 1. 如何通过一台拥有公网IP地址的**服务器B**，访问处于公司内部网络环境中的**服务器A**的**ssh**端口，**服务器B**的IP地址为 x.x.x.x（测试时替换为真实的IP地址）。
 2. 如何利用一台拥有公网IP地址的**服务器B**，使通过 **web01.yourdomain.com** 可以访问内网环境中**服务器A**上**8000端口**的web服务，**web02.yourdomain.com** 可以访问**服务器A**上**8001端口**的web服务。
 
 ### 下载源码
 
-推荐直接使用 `go get github.com/KunTengRom/xfrps` 下载源代码安装，执行命令后代码将会拷贝到 `$GOPATH/src/github.com/KunTengRom/xfrps` 目录下。
+推荐直接使用 `go get github.com/liudf0716/xfrps` 下载源代码安装，执行命令后代码将会拷贝到 `$GOPATH/src/github.com/liudf0716/xfrps` 目录下。
 
-或者可以使用 `git clone https://github.com/KunTengRom/xfrps.git $GOPATH/src/github.com/KunTengRom/xfrps` 拷贝到相应目录下。
+或者可以使用 `git clone https://github.com/liudf0716/xfrps.git $GOPATH/src/github.com/liudf0716/xfrps` 拷贝到相应目录下。
 
-如果您想快速进行测试，也可以根据您服务器的操作系统及架构直接下载编译好的程序及示例配置文件，[https://github.com/KunTengRom/xfrps/releases](https://github.com/KunTengRom/xfrps/releases)。
+如果您想快速进行测试，也可以根据您服务器的操作系统及架构直接下载编译好的程序及示例配置文件，[https://github.com/liudf0716/xfrps/releases](https://github.com/liudf0716/xfrps/releases)。
 
 ### 编译
 
@@ -26,30 +26,30 @@
 
 ### 部署
 
-1. 将 ./bin/frps 和 ./conf/frps.ini 拷贝至**服务器B**任意目录。
-2. 将 ./bin/frpc 和 ./conf/frpc.ini 拷贝至**服务器A**任意目录。
+1. 将 ./bin/xfrps 和 ./conf/xfrps.ini 拷贝至**服务器B**任意目录。
+2. 将 ./bin/xfrpc 和 ./conf/xfrpc.ini 拷贝至**服务器A**任意目录。
 3. 根据要实现的功能修改两边的配置文件，详细内容见后续章节说明。
-4. 在服务器B执行 `nohup ./frps &` 或者 `nohup ./frps -c ./frps.ini &`。
-5. 在服务器A执行 `nohup ./frpc &` 或者 `nohup ./frpc -c ./frpc.ini &`。
+4. 在服务器B执行 `nohup ./xfrps &` 或者 `nohup ./xfrps -c ./xfrps.ini &`。
+5. 在服务器A执行 `nohup ./xfrpc &` 或者 `nohup ./xfrpc -c ./xfrpc.ini &`。
 6. 通过 `ssh -oPort=6000 {user}@x.x.x.x` 测试是否能够成功连接**服务器A**（{user}替换为**服务器A**上存在的真实用户），或通过浏览器访问自定义域名验证 http 服务是否转发成功。
 
 ## tcp 端口转发
 
-转发 tcp 端口需要按照需求修改 frps 和 frpc 的配置文件。
+转发 tcp 端口需要按照需求修改 xfrps 和 xfrpc 的配置文件。
 
 ### 配置文件
 
-#### frps.ini
+#### xfrps.ini
 
 ```ini
 [common]
 bind_addr = 0.0.0.0
-# 用于接收 frpc 连接的端口
+# 用于接收 xfrpc 连接的端口
 bind_port = 7000
-log_file = ./frps.log
+log_file = ./xfrps.log
 log_level = info
 
-# ssh 为代理的自定义名称，可以有多个，不能重复，和frpc中名称对应
+# ssh 为代理的自定义名称，可以有多个，不能重复，和xfrpc中名称对应
 [ssh]
 auth_token = 123 
 bind_addr = 0.0.0.0
@@ -57,29 +57,29 @@ bind_addr = 0.0.0.0
 listen_port = 6000
 ```
 
-#### frpc.ini
+#### xfrpc.ini
 
 ```ini
 [common]
-# frps 所在服务器绑定的IP地址
+# xfrps 所在服务器绑定的IP地址
 server_addr = x.x.x.x
 server_port = 7000
-log_file = ./frpc.log
+log_file = ./xfrpc.log
 log_level = info
 # 用于身份验证
 auth_token = 123 
 
-# ssh 需要和 frps.ini 中配置一致
+# ssh 需要和 xfrps.ini 中配置一致
 [ssh]
 # 需要转发的本地端口
 local_port = 22
-# 启用加密，frpc与frps之间通信加密，默认为 false
+# 启用加密，xfrpc与xfrps之间通信加密，默认为 false
 use_encryption = true
 ```
 
 ## http 端口转发，自定义域名绑定
 
-如果只需要一对一的转发，例如**服务器B**的**80端口**转发**服务器A**的**8000端口**，则只需要配置 [tcp 端口转发](/doc/quick_start_zh.md#tcp-端口转发) 即可，如果需要使**服务器B**的**80端口**可以转发至**多个**web服务端口，则需要指定代理的类型为 http，并且在 frps 的配置文件中配置用于提供 http 转发服务的端口。
+如果只需要一对一的转发，例如**服务器B**的**80端口**转发**服务器A**的**8000端口**，则只需要配置 [tcp 端口转发](/doc/quick_start_zh.md#tcp-端口转发) 即可，如果需要使**服务器B**的**80端口**可以转发至**多个**web服务端口，则需要指定代理的类型为 http，并且在 xfrps 的配置文件中配置用于提供 http 转发服务的端口。
 
 按照如下的内容修改配置文件后，需要将自定义域名的 **A 记录**解析到 [server_addr]，如果 [server_addr] 是域名也可以将自定义域名的 **CNAME 记录**解析到 [server_addr]。
 
@@ -87,7 +87,7 @@ use_encryption = true
 
 ### 配置文件
 
-#### frps.ini
+#### xfrps.ini
 
 ```ini
 [common]
@@ -95,7 +95,7 @@ bind_addr = 0.0.0.0
 bind_port = 7000
 # 如果需要支持http类型的代理则需要指定一个端口
 vhost_http_port = 80
-log_file = ./frps.log
+log_file = ./xfrps.log
 log_level = info
 
 [web01]
@@ -111,18 +111,18 @@ auth_token = 123
 custom_domains = web02.yourdomain.com
 ```
 
-#### frpc.ini
+#### xfrpc.ini
 
 ```ini
 [common]
 server_addr = x.x.x.x
 server_port = 7000
-log_file = ./frpc.log
+log_file = ./xfrpc.log
 log_level = info
 auth_token = 123 
 
 
-# 自定义域名在 frps.ini 中配置，方便做统一管理
+# 自定义域名在 xfrps.ini 中配置，方便做统一管理
 [web01]
 type = http
 local_ip = 127.0.0.1

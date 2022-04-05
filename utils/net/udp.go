@@ -21,8 +21,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/KunTengRom/xfrps/utils/log"
-	"github.com/KunTengRom/xfrps/utils/pool"
+	"github.com/liudf0716/xfrps/utils/log"
+	"github.com/liudf0716/xfrps/utils/pool"
 )
 
 type UdpPacket struct {

@@ -20,15 +20,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/KunTengRom/xfrps/models/config"
-	"github.com/KunTengRom/xfrps/models/consts"
-	"github.com/KunTengRom/xfrps/models/msg"
-	"github.com/KunTengRom/xfrps/utils/crypto"
-	"github.com/KunTengRom/xfrps/utils/errors"
-	"github.com/KunTengRom/xfrps/utils/net"
-	"github.com/KunTengRom/xfrps/utils/shutdown"
-	"github.com/KunTengRom/xfrps/utils/util"
-	"github.com/KunTengRom/xfrps/utils/version"
+	"github.com/liudf0716/xfrps/models/config"
+	"github.com/liudf0716/xfrps/models/consts"
+	"github.com/liudf0716/xfrps/models/msg"
+	"github.com/liudf0716/xfrps/utils/crypto"
+	"github.com/liudf0716/xfrps/utils/errors"
+	"github.com/liudf0716/xfrps/utils/net"
+	"github.com/liudf0716/xfrps/utils/shutdown"
+	"github.com/liudf0716/xfrps/utils/util"
+	"github.com/liudf0716/xfrps/utils/version"
 )
 
 type Control struct {

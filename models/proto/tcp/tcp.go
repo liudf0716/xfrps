@@ -19,7 +19,7 @@ import (
 
 	"github.com/golang/snappy"
 
-	"github.com/KunTengRom/xfrps/utils/crypto"
+	"github.com/liudf0716/xfrps/utils/crypto"
 )
 
 func WithEncryption(rwc io.ReadWriteCloser, key []byte) (io.ReadWriteCloser, error) {

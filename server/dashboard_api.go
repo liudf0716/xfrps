@@ -19,11 +19,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/KunTengRom/xfrps/models/config"
-	"github.com/KunTengRom/xfrps/models/consts"
-	"github.com/KunTengRom/xfrps/utils/log"
-	"github.com/KunTengRom/xfrps/utils/util"
-	"github.com/KunTengRom/xfrps/utils/version"
+	"github.com/liudf0716/xfrps/models/config"
+	"github.com/liudf0716/xfrps/models/consts"
+	"github.com/liudf0716/xfrps/utils/log"
+	"github.com/liudf0716/xfrps/utils/util"
+	"github.com/liudf0716/xfrps/utils/version"
 
 	"github.com/julienschmidt/httprouter"
 )

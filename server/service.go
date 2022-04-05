@@ -18,14 +18,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/KunTengRom/xfrps/assets"
-	"github.com/KunTengRom/xfrps/models/config"
-	"github.com/KunTengRom/xfrps/models/msg"
-	"github.com/KunTengRom/xfrps/utils/log"
-	frpNet "github.com/KunTengRom/xfrps/utils/net"
-	"github.com/KunTengRom/xfrps/utils/util"
-	"github.com/KunTengRom/xfrps/utils/version"
-	"github.com/KunTengRom/xfrps/utils/vhost"
+	"github.com/liudf0716/xfrps/assets"
+	"github.com/liudf0716/xfrps/models/config"
+	"github.com/liudf0716/xfrps/models/msg"
+	"github.com/liudf0716/xfrps/utils/log"
+	frpNet "github.com/liudf0716/xfrps/utils/net"
+	"github.com/liudf0716/xfrps/utils/util"
+	"github.com/liudf0716/xfrps/utils/version"
+	"github.com/liudf0716/xfrps/utils/vhost"
 
 	"github.com/xtaci/smux"
 )

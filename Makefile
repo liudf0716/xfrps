@@ -18,11 +18,11 @@ fmt:
 	go fmt ./...
 	
 xfrps:
-	go build -o bin/xfrps ./cmd/frps
+	go build -o bin/xfrps ./cmd/xfrps
 	@cp -rf ./assets/static ./bin
 
 xfrpc:
-	go build -o bin/xfrpc ./cmd/frpc
+	go build -o bin/xfrpc ./cmd/xfrpc
 
 test: gotest
 

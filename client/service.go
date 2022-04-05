@@ -14,7 +14,7 @@
 
 package client
 
-import "github.com/KunTengRom/xfrps/models/config"
+import "github.com/liudf0716/xfrps/models/config"
 
 type Service struct {
 	// manager control connection with server

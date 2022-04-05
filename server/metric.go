@@ -18,9 +18,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/KunTengRom/xfrps/models/config"
-	"github.com/KunTengRom/xfrps/utils/log"
-	"github.com/KunTengRom/xfrps/utils/metric"
+	"github.com/liudf0716/xfrps/models/config"
+	"github.com/liudf0716/xfrps/utils/log"
+	"github.com/liudf0716/xfrps/utils/metric"
 )
 
 const (

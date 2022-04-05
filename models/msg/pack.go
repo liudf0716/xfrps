@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/KunTengRom/xfrps/utils/errors"
+	"github.com/liudf0716/xfrps/utils/errors"
 )
 
 func unpack(typeByte byte, buffer []byte, msgIn Message) (msg Message, err error) {

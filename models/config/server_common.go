@@ -19,7 +19,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/KunTengRom/xfrps/utils/util"
+	"github.com/liudf0716/xfrps/utils/util"
 	ini "github.com/vaughan0/go-ini"
 )
 
